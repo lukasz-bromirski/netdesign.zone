@@ -1,0 +1,44 @@
+router bgp 3356
+neighbor 10.33.56.254 remote-as 3356
+neighbor 10.33.56.254 update-source 10.33.56.1
+network 1 33.57.0.0/24 500
+community 1 random 5
+network 2 3.5.0.0/25 2500
+community 2 random 5
+aspath 2 random 6
+network 10 3.0.0.0/28 2000
+community 10 random 1
+aspath 10 random 2
+router bgp 1299
+neighbor 10.12.99.254 remote-as 1299
+neighbor 10.12.99.254 update-source 10.22.99.1
+network 3 12.100.0.0/24 500
+community 3 random 5
+network 4 1.9.0.0/25 2500
+community 4 random 5
+aspath 4 random 4
+network 11 12.0.0.0/28 2000
+community 11 random 1
+aspath 11 random 2
+router bgp 5617
+neighbor 10.56.17.254 remote-as 5617
+neighbor 10.56.17.254 update-source 10.56.17.1
+network 5 56.18.0.0/24 500
+community 5 random 5
+network 6 5.1.0.0/25 2500
+community 6 random 5
+aspath 6 random 5
+network 12 54.0.0.0/28 2000
+community 12 random 1
+aspath 12 random 2
+router bgp 8938
+neighbor 10.89.38.254 remote-as 8938
+neighbor 10.89.38.254 update-source 10.89.38.1
+network 7 89.39.0.0/24 500
+community 7 random 5
+network 8 8.3.0.0/25 2500
+community 8 random 5
+aspath 8 random 7
+network 13 89.89.0.0/28 2000
+community 13 random 1
+aspath 13 random 2

@@ -1,0 +1,1749 @@
+<?xml version='1.0' encoding='UTF-8' standalone='yes'?>
+<topology xmlns="http://www.cisco.com/VIRL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" schemaVersion="0.95" simulationEngine="OPENSTACK" xsi:schemaLocation="http://www.cisco.com/VIRL https://raw.github.com/CiscoVIRL/schema/v0.95/virl.xsd">
+    <extensions>
+        <entry key="AutoNetkit.address_family" type="String">dual_stack</entry>
+        <entry key="AutoNetkit.enable_routing" type="Boolean">false</entry>
+    </extensions>
+    <node name="AS5617-R1" type="SIMPLE" subtype="CSR1000v" location="577,282" ipv4="56.17.0.1" ipv6="2001:56:17:0::1">
+        <extensions>
+            <entry key="AutoNetkit.mgmt_ip" type="string"/>
+            <entry key="config" type="String">!
+! Last configuration change at 20:58:30 UTC Tue Sep 19 2017
+!
+version 16.5
+service timestamps debug datetime msec
+service timestamps log datetime msec
+platform qfp utilization monitor load 80
+no platform punt-keepalive disable-kernel-core
+platform console serial
+!
+hostname AS5617-R1
+!
+boot-start-marker
+boot-end-marker
+!
+!
+vrf definition Mgmt-intf
+ !
+ address-family ipv4
+ exit-address-family
+ !
+ address-family ipv6
+ exit-address-family
+!
+enable secret 4 tnhtc92DXBhelxjYk8LWJrPV36S2i4ntXrpb4RFmfqY
+enable password cisco
+!
+no aaa new-model
+!
+!
+!
+!
+!
+!
+!
+!
+!
+
+no ip domain lookup
+ip domain name virl.info
+!
+!
+!
+ipv6 unicast-routing
+!
+!
+!
+!
+!
+!
+!
+subscriber templating
+! 
+! 
+! 
+! 
+!
+!
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+license accept end user agreement
+license boot level ax
+diagnostic bootup level minimal
+!
+spanning-tree extend system-id
+!
+!
+username cisco privilege 15 secret 5 $1$xHQ4$hbSVcW45Ghxucw4mfAxbf.
+!
+redundancy
+!
+!
+!
+!
+!
+!
+! 
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+! 
+! 
+!
+!
+interface Loopback0
+ description Loopback
+ ip address 56.17.0.1 255.255.255.255
+ ipv6 address 2001:56:17::1/128
+!
+interface Loopback100
+ ip address 1.9.50.1 255.255.255.255
+!
+interface GigabitEthernet1
+ description OOB Management
+ vrf forwarding Mgmt-intf
+ ip address 10.255.0.84 255.255.0.0
+ negotiation auto
+ no mop enabled
+ no mop sysid
+!
+interface GigabitEthernet2
+ description to AS3356-R1
+ ip address 33.56.10.1 255.255.255.252
+ negotiation auto
+ ipv6 address 2001:33:56:10::1/126
+ no mop enabled
+ no mop sysid
+!
+interface GigabitEthernet3
+ description to rtm-as5617
+ ip address 10.56.17.254 255.255.255.0
+ negotiation auto
+ ipv6 address 2001:10:56:17::254/64
+ no mop enabled
+ no mop sysid
+!
+interface GigabitEthernet4
+ description to R1-AS109
+ ip address 56.17.20.1 255.255.255.252
+ negotiation auto
+ ipv6 address 2001:56:17:20::1/126
+ no mop enabled
+ no mop sysid
+!
+interface GigabitEthernet5
+ description to R2-AS109
+ ip address 56.17.21.1 255.255.255.252
+ negotiation auto
+ ipv6 address 2001:56:17:21::1/126
+ no mop enabled
+ no mop sysid
+!
+router bgp 5617
+ bgp log-neighbor-changes
+ no bgp default ipv4-unicast
+ neighbor 10.56.17.1 remote-as 5617
+ neighbor 2001:10:56:17::1 remote-as 5617
+ neighbor 2001:33:56:10::2 remote-as 3356
+ neighbor 2001:56:17:20::2 remote-as 109
+ neighbor 2001:56:17:21::2 remote-as 109
+ neighbor 33.56.10.2 remote-as 3356
+ neighbor 56.17.20.2 remote-as 109
+ neighbor 56.17.21.2 remote-as 109
+ !
+ address-family ipv4
+  network 83.0.0.0 mask 255.255.0.0
+  redistribute connected route-map RM-BGP-RED
+  neighbor 10.56.17.1 activate
+  neighbor 33.56.10.2 activate
+  neighbor 33.56.10.2 send-community
+  neighbor 56.17.20.2 activate
+  neighbor 56.17.20.2 send-community
+  neighbor 56.17.21.2 activate
+  neighbor 56.17.21.2 send-community
+ exit-address-family
+ !
+ address-family ipv6
+  redistribute connected route-map RM-BGP-RED
+  network 2001:83::/48
+  neighbor 2001:10:56:17::1 activate
+  neighbor 2001:33:56:10::2 activate
+  neighbor 2001:33:56:10::2 send-community
+  neighbor 2001:56:17:20::2 activate
+  neighbor 2001:56:17:20::2 send-community
+  neighbor 2001:56:17:21::2 activate
+  neighbor 2001:56:17:21::2 send-community
+ exit-address-family
+!
+
+threat-visibility
+!
+virtual-service csr_mgmt
+!
+ip forward-protocol nd
+ip http server
+ip http authentication local
+ip http secure-server
+ip route 83.0.0.0 255.255.0.0 Null0 name AS5617
+!
+ip bgp-community new-format
+ip ssh server algorithm encryption aes128-ctr aes192-ctr aes256-ctr
+ip ssh server algorithm authentication password
+ip ssh client algorithm encryption aes128-ctr aes192-ctr aes256-ctr
+!
+!
+!
+route-map RM-BGP-RED permit 10
+ match interface Loopback0
+ set origin igp
+ set community 5617:100
+!
+route-map RM-BGP-RED permit 20
+ match interface GigabitEthernet2
+!
+route-map RM-BGP-RED permit 30
+ match interface GigabitEthernet4
+!
+route-map RM-BGP-RED permit 40
+ match interface GigabitEthernet5
+!
+!
+!
+control-plane
+!
+ !
+ !
+ !
+ !
+!
+!
+!
+!
+!
+line con 0
+ privilege level 15
+ password cisco
+ logging synchronous
+ transport preferred none
+ stopbits 1
+line vty 0 4
+ exec-timeout 720 0
+ password cisco
+ login local
+ transport input telnet ssh
+!
+!
+!
+!
+!
+!
+end</entry>
+        </extensions>
+        <interface id="0" name="GigabitEthernet2" ipv4="10.0.0.26" ipv6="2001:db8:a:0:1:1:0:37" netPrefixLenV4="30" netPrefixLenV6="126"/>
+        <interface id="1" name="GigabitEthernet3"/>
+        <interface id="2" name="GigabitEthernet4" ipv4="10.0.128.6" ipv6="2001:db8:a:0:1:1:0:13" netPrefixLenV4="30" netPrefixLenV6="126"/>
+        <interface id="3" name="GigabitEthernet5" ipv4="10.0.128.18" ipv6="2001:db8:a:0:1:1:0:1f" netPrefixLenV4="30" netPrefixLenV6="126"/>
+    </node>
+    <node name="AS8938-R1" type="SIMPLE" subtype="CSR1000v" location="961,283" ipv4="89.38.0.1" ipv6="2001:89:38::1">
+        <extensions>
+            <entry key="AutoNetkit.mgmt_ip" type="string"/>
+            <entry key="config" type="String">!
+! Last configuration change at 14:52:15 UTC Tue Sep 19 2017
+!
+version 16.5
+service timestamps debug datetime msec
+service timestamps log datetime msec
+platform qfp utilization monitor load 80
+no platform punt-keepalive disable-kernel-core
+platform console serial
+!
+hostname AS8938-R1
+!
+boot-start-marker
+boot-end-marker
+!
+!
+vrf definition Mgmt-intf
+ !
+ address-family ipv4
+ exit-address-family
+ !
+ address-family ipv6
+ exit-address-family
+!
+enable secret 4 tnhtc92DXBhelxjYk8LWJrPV36S2i4ntXrpb4RFmfqY
+enable password cisco
+!
+no aaa new-model
+!
+!
+!
+!
+!
+!
+!
+!
+!
+
+no ip domain lookup
+ip domain name virl.info
+!
+!
+!
+ipv6 unicast-routing
+!
+!
+!
+!
+!
+!
+!
+subscriber templating
+! 
+! 
+! 
+! 
+!
+!
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+license accept end user agreement
+license boot level ax
+diagnostic bootup level minimal
+!
+spanning-tree extend system-id
+!
+!
+username cisco privilege 15 secret 5 $1$ceq7$.2Z5uhkjR8V0fMqnCo8q20
+!
+redundancy
+!
+!
+!
+!
+!
+!
+! 
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+! 
+! 
+!
+!
+interface Loopback0
+ description Loopback
+ ip address 89.38.0.1 255.255.255.255
+ ipv6 address 2001:89:38::1/128
+!
+interface GigabitEthernet1
+ description OOB Management
+ vrf forwarding Mgmt-intf
+ ip address 10.255.0.85 255.255.0.0
+ negotiation auto
+ no mop enabled
+ no mop sysid
+!
+interface GigabitEthernet2
+ description to AS1299-R1
+ ip address 89.38.10.1 255.255.255.252
+ negotiation auto
+ ipv6 address 2001:89:38:10::1/126
+ no mop enabled
+ no mop sysid
+!
+interface GigabitEthernet3
+ description to rtm-as8938
+ ip address 10.89.38.254 255.255.255.0
+ negotiation auto
+ ipv6 address 2001:10:89:38::254/64
+ no mop enabled
+ no mop sysid
+!
+interface GigabitEthernet4
+ description to R2-AS109
+ ip address 89.38.21.1 255.255.255.252
+ negotiation auto
+ ipv6 address 2001:89:38:21::1/126
+ no mop enabled
+ no mop sysid
+!
+interface GigabitEthernet5
+ description to R1-AS109
+ ip address 89.38.20.1 255.255.255.252
+ negotiation auto
+ ipv6 address 2001:89:38:20::1/126
+ no mop enabled
+ no mop sysid
+!
+router bgp 8938
+ bgp log-neighbor-changes
+ no bgp default ipv4-unicast
+ neighbor 10.89.38.1 remote-as 8938
+ neighbor 2001:10:89:38::1 remote-as 8938
+ neighbor 2001:89:38:10::2 remote-as 1299
+ neighbor 2001:89:38:20::2 remote-as 109
+ neighbor 2001:89:38:21::2 remote-as 109
+ neighbor 89.38.10.2 remote-as 1299
+ neighbor 89.38.20.2 remote-as 109
+ neighbor 89.38.21.2 remote-as 109
+ !
+ address-family ipv4
+  network 89.38.0.0 mask 255.255.0.0
+  redistribute connected route-map RM-BGP-RED
+  neighbor 10.89.38.1 activate
+  neighbor 89.38.10.2 activate
+  neighbor 89.38.10.2 send-community
+  neighbor 89.38.20.2 activate
+  neighbor 89.38.20.2 send-community
+  neighbor 89.38.21.2 activate
+  neighbor 89.38.21.2 send-community
+ exit-address-family
+ !
+ address-family ipv6
+  redistribute connected route-map RM-BGP-RED
+  network 2001:89:38::/48
+  neighbor 2001:10:89:38::1 activate
+  neighbor 2001:10:89:38::1 send-community
+  neighbor 2001:89:38:10::2 activate
+  neighbor 2001:89:38:10::2 send-community
+  neighbor 2001:89:38:20::2 activate
+  neighbor 2001:89:38:20::2 send-community
+  neighbor 2001:89:38:21::2 activate
+  neighbor 2001:89:38:21::2 send-community
+ exit-address-family
+!
+
+threat-visibility
+!
+virtual-service csr_mgmt
+!
+ip forward-protocol nd
+ip http server
+ip http authentication local
+ip http secure-server
+ip route 89.38.0.0 255.255.0.0 Null0 254 name AS8938
+!
+ip bgp-community new-format
+ip ssh server algorithm encryption aes128-ctr aes192-ctr aes256-ctr
+ip ssh server algorithm authentication password
+ip ssh client algorithm encryption aes128-ctr aes192-ctr aes256-ctr
+!
+ipv6 route 2001:89:38::/48 Null0 254 name AS8938
+!
+!
+route-map RM-BGP-RED permit 10
+ set origin igp
+ set community 8938:100
+!
+!
+!
+control-plane
+!
+ !
+ !
+ !
+ !
+!
+!
+!
+!
+!
+line con 0
+ privilege level 15
+ password cisco
+ logging synchronous
+ transport preferred none
+ stopbits 1
+line vty 0 4
+ exec-timeout 720 0
+ password cisco
+ login local
+ transport input telnet ssh
+!
+!
+!
+!
+!
+!
+end</entry>
+        </extensions>
+        <interface id="0" name="GigabitEthernet2" ipv4="10.0.0.22" ipv6="2001:db8:a:0:1:1:0:33" netPrefixLenV4="30" netPrefixLenV6="126"/>
+        <interface id="1" name="GigabitEthernet3"/>
+        <interface id="2" name="GigabitEthernet4" ipv4="10.0.128.22" ipv6="2001:db8:a:0:1:1:0:23" netPrefixLenV4="30" netPrefixLenV6="126"/>
+        <interface id="3" name="GigabitEthernet5" ipv4="10.0.128.10" ipv6="2001:db8:a:0:1:1:0:17" netPrefixLenV4="30" netPrefixLenV6="126"/>
+    </node>
+    <node name="R1-AS109" type="SIMPLE" subtype="CSR1000v" location="682,437" ipv4="1.9.0.1" ipv6="2001:1:9::1">
+        <extensions>
+            <entry key="AutoNetkit.mgmt_ip" type="string"/>
+            <entry key="config" type="String">!
+! Last configuration change at 21:11:15 UTC Tue Sep 19 2017
+!
+version 16.5
+service timestamps debug datetime msec
+service timestamps log datetime msec
+platform qfp utilization monitor load 80
+no platform punt-keepalive disable-kernel-core
+platform console serial
+!
+hostname R1-AS109
+!
+boot-start-marker
+boot-end-marker
+!
+!
+vrf definition Mgmt-intf
+ !
+ address-family ipv4
+ exit-address-family
+ !
+ address-family ipv6
+ exit-address-family
+!
+enable secret 4 tnhtc92DXBhelxjYk8LWJrPV36S2i4ntXrpb4RFmfqY
+enable password cisco
+!
+no aaa new-model
+!
+!
+!
+!
+!
+!
+!
+!
+!
+
+no ip domain lookup
+ip domain name virl.info
+!
+!
+!
+ipv6 unicast-routing
+!
+!
+!
+!
+!
+!
+!
+subscriber templating
+! 
+! 
+! 
+! 
+!
+!
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+license accept end user agreement
+license boot level ax
+diagnostic bootup level minimal
+!
+spanning-tree extend system-id
+!
+!
+username cisco privilege 15 secret 5 $1$vYbK$TjjnIk.W05Lbe7MEzoM5X1
+!
+redundancy
+!
+!
+!
+!
+!
+!
+! 
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+! 
+! 
+!
+!
+interface Loopback0
+ description Loopback
+ ip address 1.9.0.1 255.255.255.255
+ ip ospf 100 area 0
+ ipv6 address 2001:1:9::1/128
+!
+interface GigabitEthernet1
+ description OOB Management
+ vrf forwarding Mgmt-intf
+ ip address 10.255.0.86 255.255.0.0
+ negotiation auto
+ no mop enabled
+ no mop sysid
+!
+interface GigabitEthernet2
+ description to AS5617-R1
+ ip address 56.17.20.2 255.255.255.252
+ negotiation auto
+ ipv6 address 2001:56:17:20::2/126
+ no mop enabled
+ no mop sysid
+!
+interface GigabitEthernet3
+ description to AS8938-R1
+ ip address 89.38.20.2 255.255.255.252
+ shutdown
+ negotiation auto
+ ipv6 address 2001:89:38:20::2/126
+ no mop enabled
+ no mop sysid
+!
+interface GigabitEthernet4
+ description to R2-AS109
+ ip address 1.9.1.1 255.255.255.252
+ ip ospf 100 area 0
+ negotiation auto
+ ipv6 address 2001:1:9:1::1/126
+ no mop enabled
+ no mop sysid
+!
+interface GigabitEthernet5
+ description to AS109-sw
+ ip address 1.9.2.1 255.255.255.0
+ ip ospf 100 area 0
+ negotiation auto
+ ipv6 address 2001:1:9:2::1/64
+ no mop enabled
+ no mop sysid
+!
+router ospf 100
+!
+router bgp 109
+ bgp log-neighbor-changes
+ neighbor 1.9.1.2 remote-as 109
+ neighbor 2001:1:9:1::2 remote-as 109
+ neighbor 2001:56:17:20::1 remote-as 5617
+ neighbor 2001:89:38:20::1 remote-as 8938
+ neighbor 56.17.20.1 remote-as 5617
+ neighbor 89.38.20.1 remote-as 8938
+ !
+ address-family ipv4
+  network 1.9.0.0 mask 255.255.0.0
+  neighbor 1.9.1.2 activate
+  no neighbor 2001:1:9:1::2 activate
+  no neighbor 2001:56:17:20::1 activate
+  no neighbor 2001:89:38:20::1 activate
+  neighbor 56.17.20.1 activate
+  neighbor 89.38.20.1 activate
+ exit-address-family
+ !
+ address-family ipv6
+  network 2001:1:9::/48
+  neighbor 2001:1:9:1::2 activate
+  neighbor 2001:56:17:20::1 activate
+  neighbor 2001:89:38:20::1 activate
+ exit-address-family
+!
+
+threat-visibility
+!
+virtual-service csr_mgmt
+!
+ip forward-protocol nd
+ip http server
+ip http authentication local
+ip http secure-server
+ip route 1.9.0.0 255.255.0.0 Null0 254 name AS109
+!
+ip ssh server algorithm encryption aes128-ctr aes192-ctr aes256-ctr
+ip ssh server algorithm authentication password
+ip ssh client algorithm encryption aes128-ctr aes192-ctr aes256-ctr
+!
+!
+ip prefix-list pfx_24 seq 5 permit 0.0.0.0/0 le 24
+ipv6 route 2001:1:9::/48 Null0 254 name AS109
+!
+!
+route-map RM-01-PFX permit 10
+ match ip address prefix-list pfx_24
+!
+!
+!
+control-plane
+!
+ !
+ !
+ !
+ !
+!
+!
+!
+!
+!
+line con 0
+ privilege level 15
+ password cisco
+ logging synchronous
+ transport preferred none
+ stopbits 1
+line vty 0 4
+ exec-timeout 720 0
+ password cisco
+ login local
+ transport input telnet ssh
+!
+!
+!
+!
+!
+!
+end</entry>
+        </extensions>
+        <interface id="0" name="GigabitEthernet2" ipv4="10.0.128.5" ipv6="2001:db8:a:0:1:1:0:12" netPrefixLenV4="30" netPrefixLenV6="126"/>
+        <interface id="1" name="GigabitEthernet3" ipv4="10.0.128.9" ipv6="2001:db8:a:0:1:1:0:16" netPrefixLenV4="30" netPrefixLenV6="126"/>
+        <interface id="2" name="GigabitEthernet4" ipv4="10.0.128.1" ipv6="2001:db8:a:0:1:1:0:e" netPrefixLenV4="30" netPrefixLenV6="126"/>
+        <interface id="3" name="GigabitEthernet5" ipv4="10.0.0.2" ipv6="2001:db8:a:0:1:2:0:3" netPrefixLenV4="29" netPrefixLenV6="96"/>
+    </node>
+    <node name="R2-AS109" type="SIMPLE" subtype="IOS XRv" location="853,440" ipv4="1.9.0.2" ipv6="2001:1:9::2">
+        <extensions>
+            <entry key="AutoNetkit.mgmt_ip" type="string"/>
+            <entry key="config" type="String">!! IOS XR Configuration 6.1.3
+!! Last configuration change at Tue Sep 19 20:51:28 2017 by cisco
+!
+!  IOS-XR Config generated on 2017-09-19 06:27
+! by autonetkit_0.23.5
+hostname R2-AS109
+service timestamps log datetime msec
+service timestamps debug datetime msec
+telnet vrf default ipv4 server max-servers 10
+telnet vrf Mgmt-intf ipv4 server max-servers 10
+domain name virl.info
+domain lookup disable
+vrf Mgmt-intf
+ address-family ipv4 unicast
+ !
+ address-family ipv6 unicast
+ !
+!
+line template vty
+ timestamp
+ exec-timeout 720 0
+!
+line console
+ exec-timeout 0 0
+!
+line default
+ exec-timeout 720 0
+!
+vty-pool default 0 50
+control-plane
+ management-plane
+  inband
+   interface all
+    allow all
+   !
+  !
+ !
+!
+interface Loopback0
+ description Loopback
+ ipv4 address 1.9.0.2 255.255.255.255
+ ipv6 address 2001:1:9::2/128
+!
+interface MgmtEth0/0/CPU0/0
+ description OOB Management
+ ! Configured on launch
+ vrf Mgmt-intf
+ ipv4 address 10.255.0.87 255.255.0.0
+!
+interface GigabitEthernet0/0/0/0
+ description to AS8938-R1
+ ipv4 address 89.38.21.2 255.255.255.252
+ ipv6 address 2001:89:38:21::2/126
+!
+interface GigabitEthernet0/0/0/1
+ description to AS5617-R1
+ ipv4 address 56.17.21.2 255.255.255.252
+ ipv6 address 2001:56:17:21::2/126
+ shutdown
+!
+interface GigabitEthernet0/0/0/2
+ description to R1-AS109
+ ipv4 address 1.9.1.2 255.255.255.252
+ ipv6 address 2001:1:9:1::2/126
+!
+interface GigabitEthernet0/0/0/3
+ description to AS109-sw
+ ipv4 address 1.9.2.2 255.255.255.0
+ ipv6 address 2001:1:9:2::2/64
+!
+route-policy BGP-DROP
+  drop
+end-policy
+!
+route-policy BGP-PASS
+  pass
+end-policy
+!
+route-policy BGP-01-PFX-24
+  if destination in (0.0.0.0/0 le 24) then
+    done
+  else
+    drop
+  endif
+end-policy
+!
+router ospf AS109
+ area 0
+  interface Loopback0
+   passive enable
+  !
+  interface GigabitEthernet0/0/0/2
+  !
+  interface GigabitEthernet0/0/0/3
+  !
+ !
+!
+router bgp 109
+ address-family ipv4 unicast
+  network 1.9.0.0/16
+  aggregate-address 1.9.0.0/16 summary-only
+ !
+ address-family ipv6 unicast
+  network 2001:1:9::/48
+ !
+ neighbor 1.9.1.1
+  remote-as 109
+  address-family ipv4 unicast
+  !
+ !
+ neighbor 56.17.21.1
+  remote-as 5617
+  address-family ipv4 unicast
+   route-policy BGP-PASS in
+   route-policy BGP-PASS out
+  !
+ !
+ neighbor 89.38.21.1
+  remote-as 8938
+  address-family ipv4 unicast
+   route-policy BGP-PASS in
+   route-policy BGP-PASS out
+  !
+ !
+ neighbor 2001:1:9:1::1
+  remote-as 109
+  address-family ipv6 unicast
+  !
+ !
+ neighbor 2001:56:17:21::1
+  remote-as 5617
+  address-family ipv6 unicast
+   route-policy BGP-PASS in
+   route-policy BGP-PASS out
+  !
+ !
+ neighbor 2001:89:38:21::1
+  remote-as 8938
+  address-family ipv6 unicast
+   route-policy BGP-PASS in
+   route-policy BGP-PASS out
+  !
+ !
+!
+ssh server v2
+ssh server vrf Mgmt-intf
+end</entry>
+        </extensions>
+        <interface id="0" name="GigabitEthernet0/0/0/0" ipv4="10.0.128.21" ipv6="2001:db8:a:0:1:1:0:22" netPrefixLenV4="30" netPrefixLenV6="126"/>
+        <interface id="1" name="GigabitEthernet0/0/0/1" ipv4="10.0.128.17" ipv6="2001:db8:a:0:1:1:0:1e" netPrefixLenV4="30" netPrefixLenV6="126"/>
+        <interface id="2" name="GigabitEthernet0/0/0/2" ipv4="10.0.128.2" ipv6="2001:db8:a:0:1:1:0:f" netPrefixLenV4="30" netPrefixLenV6="126"/>
+        <interface id="3" name="GigabitEthernet0/0/0/3" ipv4="10.0.0.3" ipv6="2001:db8:a:0:1:2:0:4" netPrefixLenV4="29" netPrefixLenV6="96"/>
+    </node>
+    <node name="AS1299-R1" type="SIMPLE" subtype="CSR1000v" location="823,180" ipv4="12.99.0.1" ipv6="2001:12:99::1">
+        <extensions>
+            <entry key="AutoNetkit.mgmt_ip" type="string"/>
+            <entry key="config" type="String">!
+! Last configuration change at 14:53:08 UTC Tue Sep 19 2017
+!
+version 16.5
+service timestamps debug datetime msec
+service timestamps log datetime msec
+platform qfp utilization monitor load 80
+no platform punt-keepalive disable-kernel-core
+platform console serial
+!
+hostname AS1299-R1
+!
+boot-start-marker
+boot-end-marker
+!
+!
+vrf definition Mgmt-intf
+ !
+ address-family ipv4
+ exit-address-family
+ !
+ address-family ipv6
+ exit-address-family
+!
+enable secret 4 tnhtc92DXBhelxjYk8LWJrPV36S2i4ntXrpb4RFmfqY
+enable password cisco
+!
+no aaa new-model
+!
+!
+!
+!
+!
+!
+!
+!
+!
+
+no ip domain lookup
+ip domain name virl.info
+!
+!
+!
+ipv6 unicast-routing
+!
+!
+!
+!
+!
+!
+!
+subscriber templating
+! 
+! 
+! 
+! 
+!
+!
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+license accept end user agreement
+license boot level ax
+diagnostic bootup level minimal
+!
+spanning-tree extend system-id
+!
+!
+username cisco privilege 15 secret 5 $1$SGm3$RAvN/yDLhnwJFUL2pmpOB/
+!
+redundancy
+!
+!
+!
+!
+!
+!
+! 
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+! 
+! 
+!
+!
+interface Loopback0
+ description Loopback
+ ip address 12.99.0.1 255.255.255.255
+ ipv6 address 2001:12:99::1/128
+!
+interface GigabitEthernet1
+ description OOB Management
+ vrf forwarding Mgmt-intf
+ ip address 10.255.0.80 255.255.0.0
+ negotiation auto
+ no mop enabled
+ no mop sysid
+!
+interface GigabitEthernet2
+ description to rtm-t1
+ ip address 10.12.99.254 255.255.255.0
+ negotiation auto
+ ipv6 address 2001:10:12:99::254/64
+ no mop enabled
+ no mop sysid
+!
+interface GigabitEthernet3
+ description to AS8938-R1
+ ip address 89.38.10.2 255.255.255.252
+ negotiation auto
+ ipv6 address 2001:89:38:10::2/126
+ no mop enabled
+ no mop sysid
+!
+interface GigabitEthernet4
+ description to AS1299-host
+ ip address 10.0.128.14 255.255.255.252
+ negotiation auto
+ ipv6 address 2001:DB8:A:0:1:1:0:1B/126
+ no mop enabled
+ no mop sysid
+!
+interface GigabitEthernet5
+ description to-AS3356-R1
+ ip address 33.12.0.99 255.255.255.0
+ negotiation auto
+ ipv6 address 2001:33:12::99/64
+ no mop enabled
+ no mop sysid
+!
+router bgp 1299
+ bgp log-neighbor-changes
+ neighbor 10.12.99.1 remote-as 1299
+ neighbor 2001:10:12:99::1 remote-as 1299
+ neighbor 2001:33:12::56 remote-as 3356
+ neighbor 2001:89:38:10::1 remote-as 8938
+ neighbor 33.12.0.56 remote-as 3356
+ neighbor 89.38.10.1 remote-as 8938
+ !
+ address-family ipv4
+  network 12.99.0.0 mask 255.255.0.0
+  redistribute connected route-map RM-BGP-RED
+  neighbor 10.12.99.1 activate
+  neighbor 10.12.99.1 send-community
+  no neighbor 2001:10:12:99::1 activate
+  no neighbor 2001:33:12::56 activate
+  no neighbor 2001:89:38:10::1 activate
+  neighbor 33.12.0.56 activate
+  neighbor 33.12.0.56 send-community
+  neighbor 89.38.10.1 activate
+  neighbor 89.38.10.1 send-community
+ exit-address-family
+ !
+ address-family ipv6
+  redistribute connected route-map RM-BGP-RED
+  network 2001:12:99::/48
+  neighbor 2001:10:12:99::1 activate
+  neighbor 2001:10:12:99::1 send-community
+  neighbor 2001:33:12::56 activate
+  neighbor 2001:33:12::56 send-community
+  neighbor 2001:89:38:10::1 activate
+  neighbor 2001:89:38:10::1 send-community
+ exit-address-family
+!
+
+threat-visibility
+!
+virtual-service csr_mgmt
+!
+ip forward-protocol nd
+ip http server
+ip http authentication local
+ip http secure-server
+ip route 12.99.0.0 255.255.0.0 Null0 254 name AS1299
+!
+ip ssh server algorithm encryption aes128-ctr aes192-ctr aes256-ctr
+ip ssh server algorithm authentication password
+ip ssh client algorithm encryption aes128-ctr aes192-ctr aes256-ctr
+!
+ipv6 route 2001:12:99::/48 Null0 254 name AS1299
+!
+!
+route-map RM-BGP-RED permit 10
+ set origin igp
+ set community 85131364
+!
+!
+!
+control-plane
+!
+ !
+ !
+ !
+ !
+!
+!
+!
+!
+!
+line con 0
+ privilege level 15
+ password cisco
+ logging synchronous
+ transport preferred none
+ stopbits 1
+line vty 0 4
+ exec-timeout 720 0
+ password cisco
+ login local
+ transport input telnet ssh
+!
+!
+!
+!
+!
+!
+end</entry>
+        </extensions>
+        <interface id="0" name="GigabitEthernet2" ipv4="10.0.0.10" ipv6="2001:db8:a:0:1:1:0:7" netPrefixLenV4="30" netPrefixLenV6="126"/>
+        <interface id="1" name="GigabitEthernet3" ipv4="10.0.0.21" ipv6="2001:db8:a:0:1:1:0:32" netPrefixLenV4="30" netPrefixLenV6="126"/>
+        <interface id="2" name="GigabitEthernet4" ipv4="10.0.128.14" ipv6="2001:db8:a:0:1:1:0:1b" netPrefixLenV4="30" netPrefixLenV6="126"/>
+        <interface id="3" name="GigabitEthernet5"/>
+    </node>
+    <node name="AS3356-R1" type="SIMPLE" subtype="CSR1000v" location="696,180" ipv4="33.56.0.1" ipv6="2001:33:56::1">
+        <extensions>
+            <entry key="AutoNetkit.mgmt_ip" type="string"/>
+            <entry key="config" type="String">!
+! Last configuration change at 14:10:41 UTC Tue Sep 19 2017
+!
+version 16.5
+service timestamps debug datetime msec
+service timestamps log datetime msec
+platform qfp utilization monitor load 80
+no platform punt-keepalive disable-kernel-core
+platform console serial
+!
+hostname AS3356-R1
+!
+boot-start-marker
+boot-end-marker
+!
+!
+vrf definition Mgmt-intf
+ !
+ address-family ipv4
+ exit-address-family
+ !
+ address-family ipv6
+ exit-address-family
+!
+enable secret 4 tnhtc92DXBhelxjYk8LWJrPV36S2i4ntXrpb4RFmfqY
+enable password cisco
+!
+no aaa new-model
+!
+!
+!
+!
+!
+!
+!
+!
+!
+
+no ip domain lookup
+ip domain name virl.info
+!
+!
+!
+ipv6 unicast-routing
+!
+!
+!
+!
+!
+!
+!
+subscriber templating
+! 
+! 
+! 
+! 
+!
+!
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+license accept end user agreement
+license boot level ax
+diagnostic bootup level minimal
+!
+spanning-tree extend system-id
+!
+!
+username cisco privilege 15 secret 5 $1$0uCW$z8XHz5W2sA2uaqeRO7pGQ.
+!
+redundancy
+!
+!
+!
+!
+!
+!
+! 
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+! 
+! 
+!
+!
+interface Loopback0
+ description Loopback
+ ip address 33.56.0.1 255.255.255.255
+ ipv6 address 2001:33:56::1/128
+!
+interface GigabitEthernet1
+ description OOB Management
+ vrf forwarding Mgmt-intf
+ ip address 10.255.0.82 255.255.0.0
+ negotiation auto
+ no mop enabled
+ no mop sysid
+!
+interface GigabitEthernet2
+ description to rtm-t1
+ ip address 10.33.56.254 255.255.255.0
+ negotiation auto
+ ipv6 address 2001:10:33:56::254/64
+ no mop enabled
+ no mop sysid
+!
+interface GigabitEthernet3
+ description to AS5617-R1
+ ip address 33.56.10.2 255.255.255.252
+ negotiation auto
+ ipv6 address 2001:33:56:10::2/126
+ no mop enabled
+ no mop sysid
+!
+interface GigabitEthernet4
+ description to AS3356-host
+ ip address 10.0.128.26 255.255.255.252
+ negotiation auto
+ ipv6 address 2001:DB8:A:0:1:1:0:27/126
+ no mop enabled
+ no mop sysid
+!
+interface GigabitEthernet5
+ description to-AS1299-R1
+ ip address 33.12.0.56 255.255.255.0
+ negotiation auto
+ ipv6 address 2001:33:12::56/64
+ no mop enabled
+ no mop sysid
+!
+router bgp 3356
+ bgp log-neighbor-changes
+ no bgp default ipv4-unicast
+ neighbor 10.33.56.1 remote-as 3356
+ neighbor 2001:10:33:56::1 remote-as 3356
+ neighbor 2001:33:12::99 remote-as 1299
+ neighbor 2001:33:56:10::1 remote-as 5617
+ neighbor 33.12.0.99 remote-as 1299
+ neighbor 33.56.10.1 remote-as 5617
+ !
+ address-family ipv4
+  network 33.56.0.0 mask 255.255.0.0
+  redistribute connected route-map RM-BGP-RED
+  neighbor 10.33.56.1 activate
+  neighbor 33.12.0.99 activate
+  neighbor 33.56.10.1 activate
+ exit-address-family
+ !
+ address-family ipv6
+  redistribute connected route-map RM-BGP-RED
+  network 2001:33:56::/48
+  neighbor 2001:10:33:56::1 activate
+  neighbor 2001:33:12::99 activate
+  neighbor 2001:33:56:10::1 activate
+ exit-address-family
+!
+
+threat-visibility
+!
+virtual-service csr_mgmt
+!
+ip forward-protocol nd
+ip http server
+ip http authentication local
+ip http secure-server
+ip route 33.56.0.0 255.255.0.0 Null0 254 name AS3356
+!
+ip bgp-community new-format
+ip ssh server algorithm encryption aes128-ctr aes192-ctr aes256-ctr
+ip ssh server algorithm authentication password
+ip ssh client algorithm encryption aes128-ctr aes192-ctr aes256-ctr
+!
+ipv6 route 2001:33:56::/48 Null0 254 name AS3356
+!
+!
+route-map RM-BGP-RED permit 10
+ set origin igp
+ set community 3356:100
+!
+!
+!
+control-plane
+!
+ !
+ !
+ !
+ !
+!
+!
+!
+!
+!
+line con 0
+ privilege level 15
+ password cisco
+ logging synchronous
+ transport preferred none
+ stopbits 1
+line vty 0 4
+ exec-timeout 720 0
+ password cisco
+ login local
+ transport input telnet ssh
+!
+!
+!
+!
+!
+!
+end</entry>
+        </extensions>
+        <interface id="0" name="GigabitEthernet2" ipv4="10.0.0.14" ipv6="2001:db8:a:0:1:1:0:b" netPrefixLenV4="30" netPrefixLenV6="126"/>
+        <interface id="1" name="GigabitEthernet3" ipv4="10.0.0.25" ipv6="2001:db8:a:0:1:1:0:36" netPrefixLenV4="30" netPrefixLenV6="126"/>
+        <interface id="2" name="GigabitEthernet4" ipv4="10.0.128.26" ipv6="2001:db8:a:0:1:1:0:27" netPrefixLenV4="30" netPrefixLenV6="126"/>
+        <interface id="3" name="GigabitEthernet5"/>
+    </node>
+    <node name="rtm-t1" type="SIMPLE" subtype="lxc-routem" location="781,278">
+        <extensions>
+            <entry key="config" type="String">#cloud-config
+bootcmd:
+- ln -s -t /etc/rc.d /etc/rc.local
+hostname: rtm-t1
+manage_etc_hosts: true
+runcmd:
+- systemctl start rc-local
+- sed -i '/^\s*PasswordAuthentication\s\+no/d' /etc/ssh/sshd_config
+- echo "UseDNS no" &gt;&gt; /etc/ssh/sshd_config
+- service ssh restart
+- service sshd restart
+users:
+- default
+- gecos: User configured by VIRL Configuration Engine 0.23.10
+  lock-passwd: false
+  name: cisco
+  plain-text-passwd: cisco
+  shell: /bin/bash
+  ssh-authorized-keys:
+  - VIRL-USER-SSH-PUBLIC-KEY
+  sudo: ALL=(ALL) ALL
+write_files:
+- path: /etc/systemd/system/dhclient@.service
+  content: |
+    [Unit]
+    Description=Run dhclient on %i interface
+    After=network.target
+    [Service]
+    Type=oneshot
+    ExecStart=/sbin/dhclient %i -pf /var/run/dhclient.%i.pid -lf /var/lib/dhclient/dhclient.%i.lease
+    RemainAfterExit=yes
+  owner: root:root
+  permissions: '0644'
+- path: /etc/rc.local
+  owner: root:root
+  permissions: '0755'
+  content: |-
+    #!/bin/sh
+    ifconfig eth1 up 10.33.56.1 netmask 255.255.255.0
+    ifconfig eth2 up 10.12.99.1 netmask 255.255.255.0
+    ifconfig eth3 up 10.56.17.1 netmask 255.255.255.0
+    ifconfig eth4 up 10.89.38.1 netmask 255.255.255.0
+    ifconfig eth1 add 2001:10:33:56::1/64
+    ifconfig eth2 add 2001:10:12:99::1/64
+    ifconfig eth3 add 2001:10:56:17::1/64
+    ifconfig eth4 add 2001:10:89:38::1/64
+    exit 0
+</entry>
+        </extensions>
+        <interface id="0" name="eth1" ipv4="10.33.56.1" ipv6="2001:db8:a:0:1:1:0:a" netPrefixLenV4="30" netPrefixLenV6="126"/>
+        <interface id="1" name="eth2" ipv4="10.12.99.1" ipv6="2001:db8:a:0:1:1:0:6" netPrefixLenV4="30" netPrefixLenV6="126"/>
+        <interface id="2" name="eth3" ipv4="10.56.17.1"/>
+        <interface id="3" name="eth4" ipv4="10.89.38.1"/>
+    </node>
+    <node name="AS109-host" type="SIMPLE" subtype="server" location="765,633">
+        <extensions>
+            <entry key="config" type="String">#cloud-config
+bootcmd:
+- ln -s -t /etc/rc.d /etc/rc.local
+hostname: AS109-host
+manage_etc_hosts: true
+runcmd:
+- start ttyS0
+- systemctl start getty@ttyS0.service
+- systemctl start rc-local
+- sed -i '/^\s*PasswordAuthentication\s\+no/d' /etc/ssh/sshd_config
+- echo "UseDNS no" &gt;&gt; /etc/ssh/sshd_config
+- service ssh restart
+- service sshd restart
+users:
+- default
+- gecos: User configured by VIRL Configuration Engine 0.23.10
+  lock-passwd: false
+  name: cisco
+  plain-text-passwd: cisco
+  shell: /bin/bash
+  ssh-authorized-keys:
+  - VIRL-USER-SSH-PUBLIC-KEY
+  sudo: ALL=(ALL) ALL
+write_files:
+- path: /etc/init/ttyS0.conf
+  owner: root:root
+  content: |
+    # ttyS0 - getty
+    # This service maintains a getty on ttyS0 from the point the system is
+    # started until it is shut down again.
+    start on stopped rc or RUNLEVEL=[12345]
+    stop on runlevel [!12345]
+    respawn
+    exec /sbin/getty -L 115200 ttyS0 vt102
+  permissions: '0644'
+- path: /etc/systemd/system/dhclient@.service
+  content: |
+    [Unit]
+    Description=Run dhclient on %i interface
+    After=network.target
+    [Service]
+    Type=oneshot
+    ExecStart=/sbin/dhclient %i -pf /var/run/dhclient.%i.pid -lf /var/lib/dhclient/dhclient.%i.lease
+    RemainAfterExit=yes
+  owner: root:root
+  permissions: '0644'
+- path: /etc/rc.local
+  owner: root:root
+  permissions: '0755'
+  content: |-
+    #!/bin/sh
+    ifconfig eth1 up 10.0.0.1 netmask 255.255.255.248
+    ifconfig eth1 add 2001:db8:a:0:1:2:0:2/96
+    exit 0
+</entry>
+        </extensions>
+        <interface id="0" name="eth1" ipv4="10.0.0.1" ipv6="2001:db8:a:0:1:2:0:2" netPrefixLenV4="29" netPrefixLenV6="96"/>
+    </node>
+    <node name="AS3356-host" type="SIMPLE" subtype="server" location="634,33">
+        <extensions>
+            <entry key="config" type="String">#cloud-config
+bootcmd:
+- ln -s -t /etc/rc.d /etc/rc.local
+hostname: AS3356-host
+manage_etc_hosts: true
+runcmd:
+- start ttyS0
+- systemctl start getty@ttyS0.service
+- systemctl start rc-local
+- sed -i '/^\s*PasswordAuthentication\s\+no/d' /etc/ssh/sshd_config
+- echo "UseDNS no" &gt;&gt; /etc/ssh/sshd_config
+- service ssh restart
+- service sshd restart
+users:
+- default
+- gecos: User configured by VIRL Configuration Engine 0.23.10
+  lock-passwd: false
+  name: cisco
+  plain-text-passwd: cisco
+  shell: /bin/bash
+  ssh-authorized-keys:
+  - VIRL-USER-SSH-PUBLIC-KEY
+  sudo: ALL=(ALL) ALL
+write_files:
+- path: /etc/init/ttyS0.conf
+  owner: root:root
+  content: |
+    # ttyS0 - getty
+    # This service maintains a getty on ttyS0 from the point the system is
+    # started until it is shut down again.
+    start on stopped rc or RUNLEVEL=[12345]
+    stop on runlevel [!12345]
+    respawn
+    exec /sbin/getty -L 115200 ttyS0 vt102
+  permissions: '0644'
+- path: /etc/systemd/system/dhclient@.service
+  content: |
+    [Unit]
+    Description=Run dhclient on %i interface
+    After=network.target
+    [Service]
+    Type=oneshot
+    ExecStart=/sbin/dhclient %i -pf /var/run/dhclient.%i.pid -lf /var/lib/dhclient/dhclient.%i.lease
+    RemainAfterExit=yes
+  owner: root:root
+  permissions: '0644'
+- path: /etc/rc.local
+  owner: root:root
+  permissions: '0755'
+  content: |-
+    #!/bin/sh
+    ifconfig eth1 up 10.0.128.25 netmask 255.255.255.252
+    ifconfig eth1 add 2001:db8:a:0:1:1:0:26/126
+    exit 0
+</entry>
+        </extensions>
+        <interface id="0" name="eth1" ipv4="10.0.128.25" ipv6="2001:db8:a:0:1:1:0:26" netPrefixLenV4="30" netPrefixLenV6="126"/>
+    </node>
+    <node name="AS1299-host" type="SIMPLE" subtype="server" location="892,33">
+        <extensions>
+            <entry key="config" type="String">#cloud-config
+bootcmd:
+- ln -s -t /etc/rc.d /etc/rc.local
+hostname: AS1299-host
+manage_etc_hosts: true
+runcmd:
+- start ttyS0
+- systemctl start getty@ttyS0.service
+- systemctl start rc-local
+- sed -i '/^\s*PasswordAuthentication\s\+no/d' /etc/ssh/sshd_config
+- echo "UseDNS no" &gt;&gt; /etc/ssh/sshd_config
+- service ssh restart
+- service sshd restart
+users:
+- default
+- gecos: User configured by VIRL Configuration Engine 0.23.10
+  lock-passwd: false
+  name: cisco
+  plain-text-passwd: cisco
+  shell: /bin/bash
+  ssh-authorized-keys:
+  - VIRL-USER-SSH-PUBLIC-KEY
+  sudo: ALL=(ALL) ALL
+write_files:
+- path: /etc/init/ttyS0.conf
+  owner: root:root
+  content: |
+    # ttyS0 - getty
+    # This service maintains a getty on ttyS0 from the point the system is
+    # started until it is shut down again.
+    start on stopped rc or RUNLEVEL=[12345]
+    stop on runlevel [!12345]
+    respawn
+    exec /sbin/getty -L 115200 ttyS0 vt102
+  permissions: '0644'
+- path: /etc/systemd/system/dhclient@.service
+  content: |
+    [Unit]
+    Description=Run dhclient on %i interface
+    After=network.target
+    [Service]
+    Type=oneshot
+    ExecStart=/sbin/dhclient %i -pf /var/run/dhclient.%i.pid -lf /var/lib/dhclient/dhclient.%i.lease
+    RemainAfterExit=yes
+  owner: root:root
+  permissions: '0644'
+- path: /etc/rc.local
+  owner: root:root
+  permissions: '0755'
+  content: |-
+    #!/bin/sh
+    ifconfig eth1 up 10.0.128.13 netmask 255.255.255.252
+    ifconfig eth1 add 2001:db8:a:0:1:1:0:1a/126
+    exit 0
+</entry>
+        </extensions>
+        <interface id="0" name="eth1" ipv4="10.0.128.13" ipv6="2001:db8:a:0:1:1:0:1a" netPrefixLenV4="30" netPrefixLenV6="126"/>
+    </node>
+    <node name="AS109-sw" type="SIMPLE" subtype="IOSvL2" location="769,537">
+        <extensions>
+            <entry key="AutoNetkit.mgmt_ip" type="string"/>
+            <entry key="config" type="String">!
+! Last configuration change at 14:03:13 UTC Tue Sep 19 2017
+!
+version 15.2
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service password-encryption
+service compress-config
+!
+hostname AS109-sw
+!
+boot-start-marker
+boot-end-marker
+!
+!
+vrf definition Mgmt-intf
+ !
+ address-family ipv4
+ exit-address-family
+ !
+ address-family ipv6
+ exit-address-family
+!
+enable password cisco
+!
+no aaa new-model
+!
+!
+!
+!
+!
+vtp domain virl.lab
+vtp mode transparent
+!
+!
+!
+no ip domain-lookup
+ip cef
+no ipv6 cef
+!
+!
+!
+spanning-tree mode pvst
+spanning-tree extend system-id
+!
+vlan internal allocation policy ascending
+!
+vlan 2
+ name ank_vlan2
+no cdp run
+!
+! 
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+interface Loopback0
+ description Loopback
+ no ip address
+!
+interface GigabitEthernet0/0
+ description OOB management
+ no switchport
+ vrf forwarding Mgmt-intf
+ ip address 10.255.0.79 255.255.0.0
+ negotiation auto
+!
+interface GigabitEthernet0/1
+ description to R1-AS109
+ switchport access vlan 2
+ switchport mode access
+ media-type rj45
+ negotiation auto
+!
+interface GigabitEthernet0/2
+ description to R2-AS109
+ switchport access vlan 2
+ switchport mode access
+ media-type rj45
+ negotiation auto
+!
+interface GigabitEthernet0/3
+ description to AS109-host
+ switchport access vlan 2
+ switchport mode access
+ media-type rj45
+ negotiation auto
+!
+ip forward-protocol nd
+!
+no ip http server
+no ip http secure-server
+!
+!
+!
+!
+!
+!
+control-plane
+!
+line con 0
+ password cisco
+line aux 0
+line vty 0 4
+ exec-timeout 720 0
+ password cisco
+ login
+ transport input telnet ssh
+!
+!
+end</entry>
+        </extensions>
+        <interface id="0" name="GigabitEthernet0/1"/>
+        <interface id="1" name="GigabitEthernet0/2"/>
+        <interface id="2" name="GigabitEthernet0/3"/>
+    </node>
+    <connection dst="/virl:topology/virl:node[7]/virl:interface[1]" src="/virl:topology/virl:node[6]/virl:interface[1]"/>
+    <connection dst="/virl:topology/virl:node[7]/virl:interface[2]" src="/virl:topology/virl:node[5]/virl:interface[1]"/>
+    <connection dst="/virl:topology/virl:node[1]/virl:interface[1]" src="/virl:topology/virl:node[6]/virl:interface[2]"/>
+    <connection dst="/virl:topology/virl:node[2]/virl:interface[1]" src="/virl:topology/virl:node[5]/virl:interface[2]"/>
+    <connection dst="/virl:topology/virl:node[1]/virl:interface[3]" src="/virl:topology/virl:node[3]/virl:interface[1]"/>
+    <connection dst="/virl:topology/virl:node[2]/virl:interface[3]" src="/virl:topology/virl:node[4]/virl:interface[1]"/>
+    <connection dst="/virl:topology/virl:node[2]/virl:interface[4]" src="/virl:topology/virl:node[3]/virl:interface[2]"/>
+    <connection dst="/virl:topology/virl:node[1]/virl:interface[4]" src="/virl:topology/virl:node[4]/virl:interface[2]"/>
+    <connection dst="/virl:topology/virl:node[4]/virl:interface[3]" src="/virl:topology/virl:node[3]/virl:interface[3]"/>
+    <connection dst="/virl:topology/virl:node[6]/virl:interface[3]" src="/virl:topology/virl:node[9]/virl:interface[1]"/>
+    <connection dst="/virl:topology/virl:node[5]/virl:interface[3]" src="/virl:topology/virl:node[10]/virl:interface[1]"/>
+    <connection dst="/virl:topology/virl:node[11]/virl:interface[1]" src="/virl:topology/virl:node[3]/virl:interface[4]"/>
+    <connection dst="/virl:topology/virl:node[11]/virl:interface[2]" src="/virl:topology/virl:node[4]/virl:interface[4]"/>
+    <connection dst="/virl:topology/virl:node[8]/virl:interface[1]" src="/virl:topology/virl:node[11]/virl:interface[3]"/>
+    <connection dst="/virl:topology/virl:node[5]/virl:interface[4]" src="/virl:topology/virl:node[6]/virl:interface[4]"/>
+    <connection dst="/virl:topology/virl:node[1]/virl:interface[2]" src="/virl:topology/virl:node[7]/virl:interface[3]"/>
+    <connection dst="/virl:topology/virl:node[2]/virl:interface[2]" src="/virl:topology/virl:node[7]/virl:interface[4]"/>
+</topology>
