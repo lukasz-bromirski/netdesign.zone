@@ -6,7 +6,7 @@ at http://netdesign.zone portal.
 As time permits and our development continues, we'll publish more open source stuff
 here.
 
-Piotr Jabłoński & Łukasz Bromirski
+(C) 2015-2019, Piotr Jabłoński & Łukasz Bromirski
 
 ## CCIE SP Zero-To-Hero additional materials
 
