@@ -8,13 +8,13 @@ here.
 
 (C) 2015-2019, Piotr Jabłoński & Łukasz Bromirski
 
-## CCIE SP Zero-To-Hero additional materials
+## CCIE SP bootcamp additional materials
 
 You may find additional CCIE SP related materials in this repository.
 
 Included are:
 
-* SP.ZTH.v1.0.w01.virl - initial configuration for IPv4/IPv6 open topology file we're using in our CCIE SP Zero-to-Hero class; more information about this specific class can be found here: https://micronicstraining.com/event/service-provider-zero-to-hero/
+* CCIE.SP.1.0.Initial.Configs - initial configuration for CCIE SP topologies we're using in our CCIE SP online class; more information about this specific class can be [found here](https://micronicstraining.com/event/ccie-service-provider-v4-boot-camp/)
 
 * CCIE.SP.Scenario1 - folder with basic CCIE SP configuration and troubleshooting scenario, with both starting and final configuration as well as sample workbook
 
