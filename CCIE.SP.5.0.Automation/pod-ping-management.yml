@@ -1,0 +1,19 @@
+---
+
+- name: "IOS XR ping management station"
+  hosts: xr
+  gather_facts: no
+
+  tasks:
+   - name: ping management station in VRF
+     iosxr_command:
+       commands: ping vrf Mgmt-intf 10.10.10.254
+
+- name: "IOS XE ping management station"
+  hosts: xe
+  gather_facts: no
+
+  tasks:
+    - name: ping management station in VRF
+      ios_command:
+        commands: ping vrf Mgmt-intf 10.10.10.254
