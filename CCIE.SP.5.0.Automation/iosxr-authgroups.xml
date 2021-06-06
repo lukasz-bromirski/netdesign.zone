@@ -1,0 +1,20 @@
+devices authgroups group CCIESP5
+ default-map remote-name cisco
+ default-map remote-password $9$pB4mjK/yivS9VV3a98ahtLy2jy7RU1626ecA9fRNh1o=
+!
+devices device SP1R1 address 10.10.10.11 authgroup CCIESP5
+ device-type cli ned-id cisco-iosxr-cli-3.5 
+ state admin-state unlocked 
+devices device SP1R2 address 10.10.10.12 authgroup CCIESP5
+ device-type cli ned-id cisco-iosxr-cli-3.5                
+ state admin-state unlocked                                
+devices device SP1R3 address 10.10.10.13 authgroup CCIESP5
+ device-type cli ned-id cisco-iosxr-cli-3.5                
+ state admin-state unlocked                                
+devices device SP1R4 address 10.10.10.14 authgroup CCIESP5
+ device-type cli ned-id cisco-iosxr-cli-3.5                
+ state admin-state unlocked                                
+devices device SP1R5 address 10.10.10.15 authgroup CCIESP5
+ device-type cli ned-id cisco-ios-cli-3.8                  
+ state admin-state unlocked    
+!
