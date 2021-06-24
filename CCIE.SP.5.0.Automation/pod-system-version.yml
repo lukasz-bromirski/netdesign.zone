@@ -1,0 +1,20 @@
+---
+
+- name: "IOS XR show version execution"
+  hosts: xr
+  gather_facts: no
+
+  tasks:
+   - name: run show version on remote devices
+     iosxr_command:
+       commands: show version
+
+
+- name: "IOS XE show version execution"
+  hosts: xe
+  gather_facts: no
+
+  tasks:
+    - name: run show version on remote devices
+      ios_command:
+        commands: show version

@@ -1,0 +1,31 @@
+---
+
+- name: "IOS XR routers configuration"
+  hosts: xr
+  gather_facts: no
+
+  tasks:
+   - name: configure domain-name (default vrf=default)
+     iosxr_system:
+      domain_name: netdesign.zone
+
+   - name: configure name servers
+     iosxr_system:
+      name_servers:
+       - 208.67.222.222
+       - 208.67.220.220       
+
+- name: "IOS XE routers configuration"
+  hosts: xe
+  gather_facts: no
+
+  tasks:
+    - name: configure domain-name
+      ios_system:
+       domain_name: netdesign.zone
+
+    - name: configure name servers
+      ios_system:
+       name_servers:
+        - 208.67.222.222
+        - 208.67.220.220

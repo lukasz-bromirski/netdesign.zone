@@ -1,0 +1,5207 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+
+<!-- 
+ 
+ CCIE SP v5.0 workbook VIRL 1.x config file
+ (c) 2015-2021 Lukasz Bromirski and Piotr Jablonski
+ All rights reserved
+
+ v1.0 - Multicast labs
+ 
+ -->
+
+<topology xmlns="http://www.cisco.com/VIRL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" schemaVersion="0.95" xsi:schemaLocation="http://www.cisco.com/VIRL https://raw.github.com/CiscoVIRL/schema/v0.95/virl.xsd">
+    <extensions>
+        <entry key="AutoNetkit.enable_routing" type="Boolean">false</entry>
+    </extensions>
+    <node name="CEL7" type="SIMPLE" subtype="CSR1000v" location="92,160" ipv4="172.16.7.7">
+        <extensions>
+            <entry key="config" type="String">!
+!
+version 16.4
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no platform punt-keepalive disable-kernel-core
+platform console serial
+!
+hostname CEL7
+!
+boot-start-marker
+boot-end-marker
+!
+!
+vrf definition Mgmt-intf
+ !
+ address-family ipv4
+ exit-address-family
+ !
+ address-family ipv6
+ exit-address-family
+!
+vrf definition csc-cust
+ rd 1:1
+ !
+ address-family ipv4
+  route-target export 1:1
+  route-target import 1:1
+ exit-address-family
+ !
+ address-family ipv6
+ exit-address-family
+!
+enable secret 4 tnhtc92DXBhelxjYk8LWJrPV36S2i4ntXrpb4RFmfqY
+enable password cisco
+!
+no aaa new-model
+!
+!
+!
+!
+!
+!
+!
+!
+!
+
+
+
+no ip domain lookup
+ip domain name virl.info
+!
+!
+!
+ipv6 general-prefix gp1 6rd Tunnel1
+ipv6 unicast-routing
+!
+!
+!
+!
+!
+!
+!
+subscriber templating
+!
+mpls ldp discovery targeted-hello accept
+mpls traffic-eng signalling interpret explicit-null verbatim
+!
+!
+multilink bundle-name authenticated
+l2vpn vfi context vpls-bgp 
+ vpn id 3434
+ autodiscovery bgp signaling bgp 
+  ve id 1
+  ve range 11
+  rd 7:7
+  route-target export 3:3
+  route-target import 3:3
+!
+l2vpn vfi context vpls2 
+ vpn id 200
+ autodiscovery bgp signaling bgp 
+  ve id 1
+  rd 200:1
+  route-target export 200:1
+  route-target import 200:1
+!
+!
+!
+!
+!
+username cisco privilege 15 secret 5 $1$zAa3$NJMe88qwwHfRJGYsX2XPI/
+!
+redundancy
+bridge-domain 33 
+bridge-domain 34 
+ member GigabitEthernet3 service-instance 34
+ member vfi vpls-bgp
+!
+bridge-domain 100 
+!
+!
+!
+!
+!
+!
+pseudowire-class l2tpv3
+ encapsulation l2tpv3
+ ip local interface Loopback2
+!
+l2 vfi hvpls manual 
+ vpn id 3367
+ bridge-domain 33
+ neighbor 172.16.6.6 encapsulation mpls no-split-horizon
+ neighbor 192.168.7.72 encapsulation mpls
+!
+l2 vfi mpw point-to-point
+ neighbor 192.168.7.72 3232 encapsulation mpls
+ neighbor 172.16.6.6 3232 encapsulation mpls
+!
+l2 vfi p1 point-to-point
+ neighbor 172.16.6.6 6060 encapsulation mpls
+ neighbor 192.168.7.72 60 encapsulation mpls
+!
+! 
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+! 
+! 
+! 
+! 
+! 
+! 
+!
+!
+interface Loopback0
+ description Loopback
+ ip address 172.16.7.7 255.255.255.255
+ ip ospf 100 area 0
+ ipv6 address 2001:44:66:CC::7/128
+ ipv6 ospf 100 area 0
+!
+interface Loopback1
+ ip address 172.16.7.71 255.255.255.255
+!
+interface Loopback2
+ ip address 172.16.7.72 255.255.255.255
+!
+interface Loopback3
+ ip address 172.16.7.73 255.255.255.255
+ ip ospf 100 area 0
+!
+interface Loopback4
+ vrf forwarding csc-cust
+ no ip address
+ shutdown
+ ipv6 address 2001:1111:0:400:0:A90:404:0/128
+ ipv6 address 2001:2222:4::AF4:404:0/128
+ ipv6 address 2004::1/128
+ ipv6 address 2010:CAFE:FEED::D201:101/128
+ ipv6 address 2010:CAFE:FEED::D201:1A1/128
+ ospfv3 2 ipv6 area 0
+!
+interface Loopback10
+ vrf forwarding csc-cust
+ ip address 17.1.1.1 255.255.255.255
+!
+interface Tunnel1
+ no ip address
+ no ip redirects
+ ipv6 enable
+ tunnel source Loopback0
+ tunnel mode ipv6ip 6rd
+ tunnel 6rd prefix 2001:B000::/32
+!
+interface Tunnel2
+ vrf forwarding csc-cust
+ ip address 22.1.1.1 255.255.255.0
+ ip ospf 2 area 0
+ ipv6 enable
+ ospfv3 2 ipv6 area 0
+ tunnel source 2001:44:66:CC::7
+ tunnel mode ipv6
+ tunnel destination 2001:66:66:67::7
+ tunnel path-mtu-discovery
+!
+interface LISP0
+!
+interface GigabitEthernet1
+ description OOB Management
+ vrf forwarding Mgmt-intf
+ ip address 10.255.0.108 255.255.0.0
+ negotiation auto
+ no mop enabled
+ no mop sysid
+!
+interface GigabitEthernet2
+ description to SP1R2
+ ip address 40.60.27.7 255.255.255.0
+ ip ospf network point-to-point
+ ip ospf 100 area 1
+ negotiation auto
+ nat64 enable
+ ipv6 address FE80::7 link-local
+ ipv6 address 2001:40:60:27::7/64
+ ipv6 ospf network point-to-point
+ no mop enabled
+ no mop sysid
+!
+interface GigabitEthernet2.41
+!
+interface GigabitEthernet2.72
+ encapsulation dot1Q 72
+ ip address 10.1.27.7 255.255.255.0
+ ip nat outside
+ mpls bgp forwarding
+!
+interface GigabitEthernet3
+ description to CEL6
+ no ip address
+ ip ospf network point-to-point
+ ip ospf 100 area 0
+ ip ospf cost 300
+ negotiation auto
+ mpls ip
+ ipv6 ospf network point-to-point
+ no mop enabled
+ no mop sysid
+ service instance 34 ethernet
+  encapsulation dot1q 34
+  rewrite ingress tag pop 1 symmetric
+  snmp ifindex persist
+ !
+ service instance 36 ethernet
+  encapsulation dot1q 36 second-dot1q 100
+  rewrite ingress tag translate 2-to-1 dot1q 200
+  snmp ifindex persist
+ !
+!
+interface GigabitEthernet3.30
+ encapsulation dot1Q 30
+ xconnect 192.168.7.72 3030 encapsulation mpls
+!
+interface GigabitEthernet3.31
+ encapsulation dot1Q 100 second-dot1q 31
+ xconnect 192.168.7.72 3131 encapsulation mpls
+!
+interface GigabitEthernet3.32
+ encapsulation dot1Q 32
+ ip address 10.1.67.7 255.255.255.0
+ ipv6 address 2100:100:100::1/48
+ ipv6 address 5000::1/16
+ ipv6 address gp1 2001:B000::/64 eui-64
+ mpls ip
+!
+interface GigabitEthernet3.37
+ encapsulation dot1Q 37
+ xconnect 192.168.7.72 3737 encapsulation l2tpv3 pw-class l2tpv3
+!
+interface GigabitEthernet3.41
+ encapsulation dot1Q 41
+ vrf forwarding csc-cust
+ ip address 10.2.41.1 255.255.255.0
+ ip nat inside
+ ip ospf 2 area 0
+!
+interface GigabitEthernet3.42
+ encapsulation dot1Q 42
+ ip address 10.4.42.1 255.255.255.0
+ nat64 enable
+ ipv6 enable
+!
+interface GigabitEthernet3.60
+ encapsulation dot1Q 60
+ xconnect 192.168.7.72 6060 encapsulation mpls
+!
+interface GigabitEthernet4
+ description to SP2R3
+ ip address 22.42.37.7 255.255.255.0
+ negotiation auto
+ ipv6 address FE80::7 link-local
+ ipv6 address 2001:22:42:37::7/64
+ no mop enabled
+ no mop sysid
+!
+interface GigabitEthernet5
+ description to SP1R1
+ ip address 40.60.17.7 255.255.255.0
+ shutdown
+ negotiation auto
+ ipv6 address FE80::7 link-local
+ ipv6 address 2001:40:60:17::7/64
+ no mop enabled
+ no mop sysid
+!
+interface BDI34
+ ip address 34.1.1.1 255.255.255.0
+ no mop enabled
+ no mop sysid
+!
+interface BDI100
+ ip address 100.1.1.1 255.255.255.0
+ no mop enabled
+ no mop sysid
+!
+router lisp
+ eid-table default instance-id 0
+  database-mapping 2100:100:100::/48 40.60.27.7 priority 1 weight 10
+  database-mapping 2100:100:100::10/128 40.60.27.7 priority 1 weight 10
+  database-mapping 5000::/16 40.60.27.7 priority 100 weight 20
+  exit
+ !
+ ipv6 itr map-resolver 100.1.1.1
+ ipv6 itr
+ ipv6 etr map-server 100.1.1.1 key as100
+ ipv6 etr
+ exit
+!
+router ospfv3 100
+ !
+ address-family ipv6 unicast
+ exit-address-family
+!
+router ospfv3 2
+ !
+ address-family ipv6 unicast vrf csc-cust
+ exit-address-family
+!
+router ospf 2 vrf csc-cust
+!
+router ospf 100
+ router-id 172.16.7.7
+ area 1 virtual-link 33.56.2.2
+ passive-interface Loopback0
+ network 10.1.67.0 0.0.0.255 area 0
+ network 44.44.67.0 0.0.0.255 area 0
+!
+router rip
+ version 2
+ no auto-summary
+ !
+ address-family ipv4 vrf csc-cust
+  network 22.0.0.0
+  neighbor 22.1.1.2
+  no auto-summary
+  version 2
+ exit-address-family
+!
+router bgp 100
+ bgp router-id 172.16.7.7
+ bgp log-neighbor-changes
+ no bgp default ipv4-unicast
+ neighbor 10.1.27.2 remote-as 3356
+ neighbor 2001:40:60:27::2 remote-as 3356
+ neighbor 2001:40:60:27::2 password LEFT
+ neighbor 2001:44:66:CC::6 remote-as 100
+ neighbor 2001:44:66:CC::6 password AS100
+ neighbor 40.60.27.2 remote-as 3356
+ neighbor 40.60.27.2 password LEFT
+ neighbor 172.16.6.6 remote-as 100
+ neighbor 172.16.6.6 password AS100
+ neighbor 172.16.6.6 update-source Loopback0
+ neighbor 192.168.7.72 remote-as 200
+ neighbor 192.168.7.72 ebgp-multihop 255
+ neighbor 192.168.7.72 update-source Loopback2
+ !
+ address-family ipv4
+  redistribute connected route-map CONN-&gt;BGP
+  neighbor 10.1.27.2 activate
+  neighbor 10.1.27.2 prefix-list route72 out
+  neighbor 10.1.27.2 send-label
+  neighbor 40.60.27.2 activate
+  neighbor 40.60.27.2 prefix-list not-route72 in
+  neighbor 40.60.27.2 route-map not-route72 out
+  neighbor 172.16.6.6 activate
+  neighbor 172.16.6.6 next-hop-self
+  neighbor 172.16.6.6 route-map not-route72 out
+ exit-address-family
+ !
+ address-family vpnv4
+  neighbor 192.168.7.72 activate
+  neighbor 192.168.7.72 send-community extended
+ exit-address-family
+ !
+ address-family ipv6
+  redistribute connected route-map CONN-&gt;BGPv6
+  redistribute static
+  neighbor 2001:40:60:27::2 activate
+  neighbor 2001:44:66:CC::6 activate
+  neighbor 2001:44:66:CC::6 next-hop-self
+ exit-address-family
+ !
+ address-family l2vpn vpls
+  neighbor 172.16.6.6 activate
+  neighbor 172.16.6.6 suppress-signaling-protocol ldp
+  neighbor 192.168.7.72 activate
+  neighbor 192.168.7.72 send-community extended
+  neighbor 192.168.7.72 suppress-signaling-protocol ldp
+ exit-address-family
+ !
+ address-family l2vpn evpn
+  neighbor 172.16.6.6 activate
+ exit-address-family
+ !
+ address-family ipv4 vrf csc-cust
+  redistribute connected
+  redistribute static
+ exit-address-family
+!
+!
+virtual-service csr_mgmt
+!
+ip nat settings mode cgn
+no ip nat settings support mapping outside
+ip nat pool cgn 1.1.41.100 1.1.41.150 prefix-length 24
+ip nat inside source list 102 pool cgn vrf csc-cust
+ip forward-protocol nd
+ip http server
+ip http authentication local
+ip http secure-server
+!
+ip bgp-community new-format
+ip community-list 1 permit 72:72
+ip community-list expanded route72 permit 72:72
+ip community-list expanded route72 permit 4718664
+ip route 172.16.6.6 255.255.255.255 10.1.67.6
+ip route vrf csc-cust 1.1.41.0 255.255.255.0 Null0
+ip ssh server algorithm authentication password
+!
+!
+!
+ip prefix-list not-route72 seq 5 deny 192.168.7.72/32
+ip prefix-list not-route72 seq 10 deny 172.16.7.72/32
+!
+ip prefix-list route72 seq 5 permit 172.16.7.72/32
+ip prefix-list route72 seq 10 permit 1.1.41.0/24
+access-list 102 permit ip any any
+ipv6 route 2001:1111::/32 GigabitEthernet3.42
+ipv6 route 2001:2222::/32 GigabitEthernet3.42
+ipv6 route 2001:B000::/32 Tunnel1
+!
+!
+route-map CONN-&gt;BGPv6 permit 10
+ match interface Loopback0
+ set origin igp
+!
+route-map CONN-&gt;BGPv6 permit 20
+ match interface GigabitEthernet3
+ set origin igp
+!
+route-map not-route72 deny 10
+ match community 1
+!
+route-map not-route72 permit 20
+!
+route-map CONN-&gt;BGP permit 10
+ match interface Loopback1
+ set origin igp
+!
+route-map CONN-&gt;BGP permit 20
+ match interface GigabitEthernet3
+ set origin igp
+!
+route-map CONN-&gt;BGP permit 30
+ match interface Loopback2
+ set community 72:72
+!
+route-map Filter-4B permit 10
+ match as-path 10
+ set local-preference 5000
+!
+route-map route72 permit 10
+ match ip address prefix-list route72
+ match community 1
+!
+l2vpn evpn instance 1 point-to-point
+ !
+ vpws context evpn1
+  service target 3535 source 3535
+  member GigabitEthernet3 service-instance 36
+!
+!
+!
+control-plane
+!
+ !
+ !
+ !
+ !
+!
+!
+!
+!
+!
+line con 0
+ privilege level 15
+ password cisco
+ logging synchronous
+ stopbits 1
+line vty 0 4
+ exec-timeout 720 0
+ password cisco
+ login local
+ transport input telnet ssh
+!
+!
+!
+!
+!
+!
+end</entry>
+        </extensions>
+        <interface id="0" name="GigabitEthernet2"/>
+        <interface id="1" name="GigabitEthernet3"/>
+        <interface id="2" name="GigabitEthernet4"/>
+        <interface id="3" name="GigabitEthernet5"/>
+    </node>
+    <node name="CEL6" type="SIMPLE" subtype="CSR1000v" location="92,368" ipv4="172.16.6.6">
+        <extensions>
+            <entry key="config" type="String">!
+! Last configuration change at 18:15:00 UTC Thu May 25 2017
+!
+version 16.4
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no platform punt-keepalive disable-kernel-core
+platform console serial
+!
+hostname CEL6
+!
+boot-start-marker
+boot-end-marker
+!
+!
+vrf definition Mgmt-intf
+ !
+ address-family ipv4
+ exit-address-family
+ !
+ address-family ipv6
+ exit-address-family
+!
+enable secret 4 tnhtc92DXBhelxjYk8LWJrPV36S2i4ntXrpb4RFmfqY
+enable password cisco
+!
+no aaa new-model
+!
+ip vrf vrf-test1
+ rd 41:1
+!
+ip vrf vrf-test2
+ rd 2:2
+!
+!
+!
+!
+!
+!
+!
+!
+!
+
+
+
+no ip domain lookup
+ip domain name virl.info
+!
+!
+!
+ipv6 unicast-routing
+!
+!
+!
+!
+!
+!
+!
+subscriber templating
+!
+!
+!
+multilink bundle-name authenticated
+l2vpn vfi context vpls-bgp 
+ vpn id 3434
+ autodiscovery bgp signaling bgp 
+  ve id 3
+  ve range 11
+  rd 7:7
+  route-target export 3:3
+  route-target import 3:3
+!
+l2vpn vfi context vpls2 
+ vpn id 200
+ autodiscovery bgp signaling bgp 
+  ve id 2
+  rd 200:1
+  route-target export 200:1
+  route-target import 200:1
+!
+!
+!
+!
+!
+!
+username cisco privilege 15 secret 5 $1$lvVa$rPpFvSkx0ZfWF3vw.RhIE.
+!
+redundancy
+bridge-domain 34 
+ member GigabitEthernet2 service-instance 34
+ member vfi vpls-bgp
+!
+!
+!
+!
+!
+!
+!
+! 
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+! 
+! 
+! 
+! 
+! 
+! 
+!
+!
+interface Loopback0
+ description Loopback
+ ip address 172.16.6.6 255.255.255.255
+ ip ospf 100 area 0
+ ipv6 address 2001:44:66:CC::6/128
+ ipv6 ospf 100 area 0
+ ipv6 ospf prefix-suppression disable
+!
+interface Loopback1
+ ip address 172.16.6.61 255.255.255.255
+!
+interface GigabitEthernet1
+ description OOB Management
+ vrf forwarding Mgmt-intf
+ ip address 10.255.0.107 255.255.0.0
+ negotiation auto
+ no mop enabled
+ no mop sysid
+!
+interface GigabitEthernet2
+ description to SP1R1
+ no ip address
+ ip ospf 100 area 2
+ negotiation auto
+ no mop enabled
+ no mop sysid
+ service instance 31 ethernet
+  encapsulation dot1q 31
+  snmp ifindex persist
+  bridge-domain 31
+ !
+ service instance 33 ethernet
+  encapsulation dot1q 33
+  rewrite ingress tag pop 1 symmetric
+  xconnect 172.16.7.7 3367 encapsulation mpls
+ !
+ service instance 34 ethernet
+  encapsulation dot1q 34
+  rewrite ingress tag pop 1 symmetric
+  snmp ifindex persist
+ !
+ service instance 35 ethernet
+  encapsulation dot1q 35
+  rewrite ingress tag pop 1 symmetric
+  snmp ifindex persist
+ !
+ service instance 60 ethernet
+  encapsulation dot1q 61
+  rewrite ingress tag translate 1-to-2 dot1q 200 second-dot1q 60 symmetric
+  snmp ifindex persist
+  xconnect 172.16.7.7 6060 encapsulation mpls
+ !
+ service instance 132 ethernet
+  encapsulation dot1q 102
+  rewrite ingress tag translate 1-to-2 dot1q 132 second-dot1q 101 symmetric
+  snmp ifindex persist
+  xconnect 172.16.7.7 3232 encapsulation mpls
+ !
+!
+interface GigabitEthernet3
+ description to CEL7
+ no ip address
+ ip ospf network point-to-point
+ negotiation auto
+ mpls ip
+ ipv6 ospf network point-to-point
+ no mop enabled
+ no mop sysid
+ service instance 31 ethernet
+  encapsulation dot1q 100 second-dot1q 31
+  rewrite ingress tag pop 1 symmetric
+  bridge-domain 31
+ !
+ service instance 36 ethernet
+  encapsulation dot1q 36
+  rewrite ingress tag pop 1 symmetric
+  snmp ifindex persist
+  bridge-domain 36
+ !
+ service instance 37 ethernet
+  encapsulation dot1q 37
+  rewrite ingress tag pop 1 symmetric
+  snmp ifindex persist
+  bridge-domain 37
+ !
+ service instance 60 ethernet
+  encapsulation dot1q 60
+  rewrite ingress tag pop 1 symmetric
+  snmp ifindex persist
+  bridge-domain 60
+ !
+!
+interface GigabitEthernet3.30
+ encapsulation dot1Q 30
+ ip address 30.1.1.1 255.255.255.0
+!
+interface GigabitEthernet3.32
+ encapsulation dot1Q 32
+ ip address 10.1.67.6 255.255.255.0
+ ipv6 address 2100:100:100::10/48
+ ipv6 address 5000::10/16
+ mpls ip
+!
+interface GigabitEthernet3.34
+ encapsulation dot1Q 34
+ ip address 34.1.1.6 255.255.255.0
+!
+interface GigabitEthernet3.41
+ encapsulation dot1Q 41
+ ip vrf forwarding vrf-test1
+ ip address 10.2.41.2 255.255.255.0
+!
+interface GigabitEthernet3.42
+ encapsulation dot1Q 42
+ ip vrf forwarding vrf-test2
+ ip address 10.4.42.4 255.255.255.0
+!
+interface GigabitEthernet4
+ description to SP2R4
+ ip address 21.41.46.6 255.255.255.0
+ negotiation auto
+ ipv6 address FE80::6 link-local
+ ipv6 address 2001:21:41:46::6/64
+ no mop enabled
+ no mop sysid
+!
+interface GigabitEthernet5
+ description to SP1R2
+ ip address 41.61.26.6 255.255.255.0
+ ip ospf network point-to-point
+ shutdown
+ negotiation auto
+ ipv6 address FE80::6 link-local
+ ipv6 address 2001:21:41:26::6/64
+ no mop enabled
+ no mop sysid
+!
+interface BDI34
+ no ip address
+ shutdown
+ no mop enabled
+ no mop sysid
+!
+interface BDI36
+ ip address 35.1.1.6 255.255.255.0
+ no mop enabled
+ no mop sysid
+!
+interface BDI37
+ ip address 37.1.1.1 255.255.255.0
+ no mop enabled
+ no mop sysid
+!
+interface BDI60
+ ip address 60.1.1.1 255.255.255.0
+ no mop enabled
+ no mop sysid
+!
+router ospfv3 100
+ !
+ address-family ipv6 unicast
+ exit-address-family
+!
+router ospf 100
+ router-id 172.16.6.6
+ area 2 virtual-link 33.56.1.1
+ passive-interface Loopback0
+ network 10.1.67.0 0.0.0.255 area 0
+ network 44.44.67.0 0.0.0.255 area 0
+!
+router bgp 100
+ bgp router-id 172.16.6.6
+ bgp log-neighbor-changes
+ no bgp default ipv4-unicast
+ neighbor 2001:41:61:16::1 remote-as 3356
+ neighbor 2001:41:61:16::1 password LEFT
+ neighbor 2001:44:66:CC::7 remote-as 100
+ neighbor 2001:44:66:CC::7 password AS100
+ neighbor 2001:44:66:CC::7 update-source Loopback0
+ neighbor 41.61.16.1 remote-as 3356
+ neighbor 41.61.16.1 password LEFT
+ neighbor 172.16.7.7 remote-as 100
+ neighbor 172.16.7.7 password AS100
+ neighbor 172.16.7.7 update-source Loopback0
+ !
+ address-family ipv4
+  redistribute connected route-map CONN-&gt;BGP
+  neighbor 41.61.16.1 activate
+  neighbor 172.16.7.7 activate
+  neighbor 172.16.7.7 next-hop-self
+ exit-address-family
+ !
+ address-family ipv6
+  redistribute connected route-map CONN-&gt;BGPv6
+  neighbor 2001:41:61:16::1 activate
+  neighbor 2001:44:66:CC::7 activate
+  neighbor 2001:44:66:CC::7 next-hop-self
+ exit-address-family
+ !
+ address-family l2vpn vpls
+  neighbor 172.16.7.7 activate
+  neighbor 172.16.7.7 suppress-signaling-protocol ldp
+ exit-address-family
+ !
+ address-family l2vpn evpn
+  neighbor 172.16.7.7 activate
+ exit-address-family
+!
+!
+virtual-service csr_mgmt
+!
+ip forward-protocol nd
+ip http server
+ip http authentication local
+ip http secure-server
+!
+ip route vrf vrf-test1 0.0.0.0 0.0.0.0 10.2.41.1
+ip route vrf vrf-test2 0.0.0.0 0.0.0.0 10.4.42.1
+ip ssh server algorithm authentication password
+!
+!
+ipv6 route ::/0 2100:100:100::1
+!
+!
+route-map CONN-&gt;BGPv6 permit 10
+ match interface Loopback0
+ set origin igp
+!
+route-map CONN-&gt;BGPv6 permit 20
+ match interface GigabitEthernet3
+ set origin igp
+!
+route-map CONN-&gt;BGP permit 10
+ match interface Loopback1
+ set origin igp
+!
+route-map CONN-&gt;BGP permit 20
+ match interface GigabitEthernet3
+ set origin igp
+!
+l2vpn evpn instance 1 point-to-point
+ !
+ vpws context evpn1
+  service target 3535 source 3535
+  member GigabitEthernet2 service-instance 35
+!
+!
+!
+control-plane
+!
+ !
+ !
+ !
+ !
+!
+!
+!
+!
+!
+line con 0
+ exec-timeout 0 0
+ privilege level 15
+ password cisco
+ logging synchronous
+ stopbits 1
+line vty 0 4
+ exec-timeout 720 0
+ password cisco
+ login local
+ transport input telnet ssh
+!
+!
+!
+!
+!
+!
+end</entry>
+        </extensions>
+        <interface id="0" name="GigabitEthernet2"/>
+        <interface id="1" name="GigabitEthernet3"/>
+        <interface id="2" name="GigabitEthernet4"/>
+        <interface id="3" name="GigabitEthernet5"/>
+    </node>
+    <node name="SP1R5" type="SIMPLE" subtype="CSR1000v" location="398,101" ipv4="33.56.5.5">
+        <extensions>
+            <entry key="config" type="String">!
+!
+version 16.4
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no platform punt-keepalive disable-kernel-core
+platform console serial
+!
+hostname SP1-R5-RR
+!
+boot-start-marker
+boot-end-marker
+!
+shell processing full
+!
+vrf definition Mgmt-intf
+ !
+ address-family ipv4
+ exit-address-family
+ !
+ address-family ipv6
+ exit-address-family
+!
+enable secret 4 tnhtc92DXBhelxjYk8LWJrPV36S2i4ntXrpb4RFmfqY
+enable password cisco
+!
+no aaa new-model
+!
+!
+!
+!
+!
+!
+!
+!
+!
+
+
+
+no ip domain lookup
+ip domain name virl.info
+!
+!
+!
+ipv6 unicast-routing
+!
+!
+!
+!
+!
+!
+!
+subscriber templating
+!
+mpls label range 105000 105999
+no mpls ip propagate-ttl 
+mpls ldp explicit-null
+mpls ldp session protection
+mpls ldp label
+ allocate global host-routes
+!
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+username cisco privilege 15 secret 5 $1$dJch$FvahVpfsj/CcNG4hfuilT.
+!
+redundancy
+!
+!
+!
+!
+!
+!
+! 
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+! 
+! 
+! 
+! 
+! 
+! 
+!
+!
+interface Loopback0
+ description Loopback
+ ip address 33.56.5.5 255.255.255.255
+ ip ospf network point-to-point
+ ip ospf prefix-suppression disable
+ ip ospf 100 area 0
+ ipv6 address 2001:33:56:AA::5/128
+ ipv6 ospf 100 area 0
+ ipv6 ospf prefix-suppression disable
+!
+interface GigabitEthernet1
+ description OOB Management
+ vrf forwarding Mgmt-intf
+ ip address 10.255.0.115 255.255.0.0
+ negotiation auto
+ no mop enabled
+ no mop sysid
+!
+interface GigabitEthernet2
+ description to SP1R3
+ ip address 33.56.35.5 255.255.255.0
+ ip ospf network point-to-point
+ negotiation auto
+ ipv6 address FE80::5 link-local
+ ipv6 address 2001:33:56:35::5/64
+ ipv6 ospf 100 area 0
+ ipv6 ospf network point-to-point
+ no mop enabled
+ no mop sysid
+!
+interface GigabitEthernet3
+ description to SP1R1
+ ip address 33.56.15.5 255.255.255.0
+ ip ospf network point-to-point
+ negotiation auto
+ ipv6 address FE80::5 link-local
+ ipv6 address 2001:33:56:15::5/64
+ ipv6 ospf 100 area 0
+ ipv6 ospf network point-to-point
+ no mop enabled
+ no mop sysid
+!
+router ospfv3 100
+ !
+ address-family ipv6 unicast
+  passive-interface Loopback0
+ exit-address-family
+!
+router ospf 100
+ passive-interface Loopback0
+ network 33.56.15.0 0.0.0.255 area 0
+ network 33.56.35.0 0.0.0.255 area 0
+ mpls ldp sync
+ mpls ldp autoconfig
+!
+router bgp 3356
+ bgp router-id 33.56.5.5
+ bgp log-neighbor-changes
+ no bgp default ipv4-unicast
+ neighbor 12.39.5.5 remote-as 1239
+ neighbor 12.39.5.5 ebgp-multihop 255
+ neighbor 12.39.5.5 password interas
+ neighbor 12.39.5.5 update-source Loopback0
+ neighbor 2001:33:56:AA::1 remote-as 3356
+ neighbor 2001:33:56:AA::1 password AS3356
+ neighbor 2001:33:56:AA::1 update-source Loopback0
+ neighbor 2001:33:56:AA::2 remote-as 3356
+ neighbor 2001:33:56:AA::2 password AS3356
+ neighbor 2001:33:56:AA::2 update-source Loopback0
+ neighbor 2001:33:56:AA::3 remote-as 3356
+ neighbor 2001:33:56:AA::3 password AS3356
+ neighbor 2001:33:56:AA::3 update-source Loopback0
+ neighbor 2001:33:56:AA::4 remote-as 3356
+ neighbor 2001:33:56:AA::4 password AS3356
+ neighbor 2001:33:56:AA::4 update-source Loopback0
+ neighbor 33.56.1.1 remote-as 3356
+ neighbor 33.56.1.1 password AS3356
+ neighbor 33.56.1.1 update-source Loopback0
+ neighbor 33.56.2.2 remote-as 3356
+ neighbor 33.56.2.2 password AS3356
+ neighbor 33.56.2.2 update-source Loopback0
+ neighbor 33.56.3.3 remote-as 3356
+ neighbor 33.56.3.3 password AS3356
+ neighbor 33.56.3.3 update-source Loopback0
+ neighbor 33.56.4.4 remote-as 3356
+ neighbor 33.56.4.4 password AS3356
+ neighbor 33.56.4.4 update-source Loopback0
+ !
+ address-family ipv4
+  neighbor 33.56.1.1 activate
+  neighbor 33.56.1.1 route-reflector-client
+  neighbor 33.56.2.2 activate
+  neighbor 33.56.2.2 route-reflector-client
+  neighbor 33.56.3.3 activate
+  neighbor 33.56.3.3 route-reflector-client
+  neighbor 33.56.4.4 activate
+  neighbor 33.56.4.4 route-reflector-client
+ exit-address-family
+ !
+ address-family vpnv4
+  neighbor 12.39.5.5 activate
+  neighbor 12.39.5.5 send-community extended
+  neighbor 12.39.5.5 next-hop-unchanged
+  neighbor 12.39.5.5 route-map interas-c in
+  neighbor 33.56.1.1 activate
+  neighbor 33.56.1.1 send-community extended
+  neighbor 33.56.1.1 route-reflector-client
+  neighbor 33.56.2.2 activate
+  neighbor 33.56.2.2 send-community extended
+  neighbor 33.56.2.2 route-reflector-client
+  neighbor 33.56.3.3 activate
+  neighbor 33.56.3.3 send-community extended
+  neighbor 33.56.3.3 route-reflector-client
+  neighbor 33.56.4.4 activate
+  neighbor 33.56.4.4 send-community extended
+  neighbor 33.56.4.4 route-reflector-client
+ exit-address-family
+ !
+ address-family ipv6
+  neighbor 33.56.1.1 activate
+  neighbor 33.56.1.1 route-reflector-client
+  neighbor 33.56.1.1 send-label
+  neighbor 33.56.2.2 activate
+  neighbor 33.56.2.2 route-reflector-client
+  neighbor 33.56.2.2 send-label
+  neighbor 33.56.3.3 activate
+  neighbor 33.56.3.3 route-reflector-client
+  neighbor 33.56.3.3 send-label
+  neighbor 33.56.4.4 activate
+  neighbor 33.56.4.4 route-reflector-client
+  neighbor 33.56.4.4 send-label
+ exit-address-family
+ !
+ address-family vpnv6
+  neighbor 12.39.5.5 activate
+  neighbor 12.39.5.5 send-community extended
+  neighbor 12.39.5.5 next-hop-unchanged
+  neighbor 33.56.1.1 activate
+  neighbor 33.56.1.1 send-community extended
+  neighbor 33.56.1.1 route-reflector-client
+  neighbor 33.56.2.2 activate
+  neighbor 33.56.2.2 send-community extended
+  neighbor 33.56.2.2 route-reflector-client
+  neighbor 33.56.3.3 activate
+  neighbor 33.56.3.3 send-community extended
+  neighbor 33.56.3.3 route-reflector-client
+  neighbor 33.56.4.4 activate
+  neighbor 33.56.4.4 send-community extended
+  neighbor 33.56.4.4 route-reflector-client
+ exit-address-family
+ !
+ address-family l2vpn vpls
+  neighbor 33.56.1.1 activate
+  neighbor 33.56.1.1 route-reflector-client
+  neighbor 33.56.1.1 suppress-signaling-protocol ldp
+  neighbor 33.56.2.2 activate
+  neighbor 33.56.2.2 route-reflector-client
+  neighbor 33.56.2.2 suppress-signaling-protocol ldp
+  neighbor 33.56.3.3 activate
+  neighbor 33.56.3.3 route-reflector-client
+  neighbor 33.56.3.3 suppress-signaling-protocol ldp
+  neighbor 33.56.4.4 activate
+  neighbor 33.56.4.4 route-reflector-client
+  neighbor 33.56.4.4 suppress-signaling-protocol ldp
+ exit-address-family
+ !
+ address-family l2vpn evpn
+  neighbor 33.56.1.1 activate
+  neighbor 33.56.1.1 send-community both
+  neighbor 33.56.1.1 route-reflector-client
+  neighbor 33.56.2.2 activate
+  neighbor 33.56.2.2 send-community both
+  neighbor 33.56.2.2 route-reflector-client
+  neighbor 33.56.2.2 soft-reconfiguration inbound
+  neighbor 33.56.3.3 activate
+  neighbor 33.56.3.3 send-community both
+  neighbor 33.56.3.3 route-reflector-client
+  neighbor 33.56.4.4 activate
+  neighbor 33.56.4.4 send-community both
+  neighbor 33.56.4.4 route-reflector-client
+ exit-address-family
+!
+!
+virtual-service csr_mgmt
+!
+ip forward-protocol nd
+ip http server
+ip http authentication local
+ip http secure-server
+!
+ip extcommunity-list expanded rt-77 permit 77:77
+ip ssh server algorithm authentication password
+!
+!
+!
+ip prefix-list match-r7 seq 5 permit 192.168.7.71/32
+!
+!
+route-map interas-c permit 10
+ match ip address prefix-list match-r7
+ match extcommunity rt-77
+ set local-preference 170
+!
+route-map interas-c permit 20
+!
+!
+!
+control-plane
+!
+ !
+ !
+ !
+ !
+!
+!
+!
+!
+!
+line con 0
+ exec-timeout 0 0
+ privilege level 15
+ password cisco
+ logging synchronous
+ stopbits 1
+line vty 0 4
+ exec-timeout 720 0
+ password cisco
+ login local
+ transport input telnet ssh
+!
+!
+!
+!
+!
+!
+end</entry>
+        </extensions>
+        <interface id="0" name="GigabitEthernet2"/>
+        <interface id="1" name="GigabitEthernet3"/>
+    </node>
+    <node name="SP2R5" type="SIMPLE" subtype="CSR1000v" location="940,101" ipv4="12.39.5.5">
+        <extensions>
+            <entry key="config" type="String">!
+!
+version 16.4
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no platform punt-keepalive disable-kernel-core
+platform console serial
+!
+hostname SP2-R5-RR
+!
+boot-start-marker
+boot-end-marker
+!
+!
+vrf definition Mgmt-intf
+ !
+ address-family ipv4
+ exit-address-family
+ !
+ address-family ipv6
+ exit-address-family
+!
+enable secret 4 tnhtc92DXBhelxjYk8LWJrPV36S2i4ntXrpb4RFmfqY
+enable password cisco
+!
+no aaa new-model
+!
+!
+!
+!
+!
+!
+!
+!
+!
+
+
+
+no ip domain lookup
+ip domain name virl.info
+!
+!
+!
+ipv6 unicast-routing
+!
+!
+!
+!
+!
+!
+!
+subscriber templating
+!
+mpls label range 123500 123599
+mpls ldp explicit-null
+mpls ldp label
+ allocate global host-routes
+!
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+username cisco privilege 15 secret 5 $1$ljXR$mCGPdmclnxNxNrg.ygMCa0
+!
+redundancy
+!
+!
+!
+!
+!
+!
+! 
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+! 
+! 
+! 
+! 
+! 
+! 
+!
+!
+interface Loopback0
+ description Loopback
+ ip address 12.39.5.5 255.255.255.255
+ ip router isis AS1239
+ ipv6 address 2001:12:39:FF::5/128
+ ipv6 router isis AS1239
+!
+interface GigabitEthernet1
+ description OOB Management
+ vrf forwarding Mgmt-intf
+ ip address 10.255.0.120 255.255.0.0
+ negotiation auto
+ no mop enabled
+ no mop sysid
+!
+interface GigabitEthernet2
+ description to SP2R3
+ ip address 12.39.35.5 255.255.255.0
+ ip router isis AS1239
+ negotiation auto
+ ipv6 address FE80::5 link-local
+ ipv6 address 2001:12:39:35::5/64
+ ipv6 router isis AS1239
+ no mop enabled
+ no mop sysid
+ isis network point-to-point 
+!
+interface GigabitEthernet3
+ description to SP2R1
+ ip address 12.39.15.5 255.255.255.0
+ ip router isis AS1239
+ negotiation auto
+ ipv6 address FE80::5 link-local
+ ipv6 address 2001:12:39:15::5/64
+ ipv6 router isis AS1239
+ no mop enabled
+ no mop sysid
+ isis network point-to-point 
+!
+router isis AS1239
+ net 12.3900.0000.0000.0500
+ is-type level-2-only
+ router-id Loopback0
+ metric-style wide
+ !
+ address-family ipv6
+  multi-topology
+ exit-address-family
+ mpls ldp autoconfig
+!
+router bgp 1239
+ bgp router-id 12.39.5.5
+ bgp log-neighbor-changes
+ no bgp default ipv4-unicast
+ neighbor 12.39.1.1 remote-as 1239
+ neighbor 12.39.1.1 password AS1239
+ neighbor 12.39.1.1 update-source Loopback0
+ neighbor 12.39.2.2 remote-as 1239
+ neighbor 12.39.2.2 password AS1239
+ neighbor 12.39.2.2 update-source Loopback0
+ neighbor 12.39.3.3 remote-as 1239
+ neighbor 12.39.3.3 password AS1239
+ neighbor 12.39.3.3 update-source Loopback0
+ neighbor 12.39.4.4 remote-as 1239
+ neighbor 12.39.4.4 password AS1239
+ neighbor 12.39.4.4 update-source Loopback0
+ neighbor 2001:12:39:FF::1 remote-as 1239
+ neighbor 2001:12:39:FF::1 password AS1239
+ neighbor 2001:12:39:FF::1 update-source Loopback0
+ neighbor 2001:12:39:FF::2 remote-as 1239
+ neighbor 2001:12:39:FF::2 password AS1239
+ neighbor 2001:12:39:FF::2 update-source Loopback0
+ neighbor 2001:12:39:FF::3 remote-as 1239
+ neighbor 2001:12:39:FF::3 password AS1239
+ neighbor 2001:12:39:FF::3 update-source Loopback0
+ neighbor 2001:12:39:FF::4 remote-as 1239
+ neighbor 2001:12:39:FF::4 password AS1239
+ neighbor 2001:12:39:FF::4 update-source Loopback0
+ neighbor 33.56.5.5 remote-as 3356
+ neighbor 33.56.5.5 ebgp-multihop 255
+ neighbor 33.56.5.5 password interas
+ neighbor 33.56.5.5 update-source Loopback0
+ !
+ address-family ipv4
+  neighbor 12.39.1.1 activate
+  neighbor 12.39.1.1 route-reflector-client
+  neighbor 12.39.2.2 activate
+  neighbor 12.39.2.2 route-reflector-client
+  neighbor 12.39.3.3 activate
+  neighbor 12.39.3.3 route-reflector-client
+  neighbor 12.39.4.4 activate
+  neighbor 12.39.4.4 route-reflector-client
+ exit-address-family
+ !
+ address-family vpnv4
+  neighbor 12.39.1.1 activate
+  neighbor 12.39.1.1 send-community extended
+  neighbor 12.39.1.1 route-reflector-client
+  neighbor 12.39.2.2 activate
+  neighbor 12.39.2.2 send-community extended
+  neighbor 12.39.2.2 route-reflector-client
+  neighbor 12.39.3.3 activate
+  neighbor 12.39.3.3 send-community extended
+  neighbor 12.39.3.3 route-reflector-client
+  neighbor 12.39.4.4 activate
+  neighbor 12.39.4.4 send-community extended
+  neighbor 12.39.4.4 route-reflector-client
+  neighbor 33.56.5.5 activate
+  neighbor 33.56.5.5 send-community extended
+  neighbor 33.56.5.5 next-hop-unchanged
+  neighbor 33.56.5.5 route-map interas-c in
+ exit-address-family
+ !
+ address-family ipv6
+  neighbor 2001:12:39:FF::1 activate
+  neighbor 2001:12:39:FF::1 route-reflector-client
+  neighbor 2001:12:39:FF::2 activate
+  neighbor 2001:12:39:FF::2 route-reflector-client
+  neighbor 2001:12:39:FF::3 activate
+  neighbor 2001:12:39:FF::3 route-reflector-client
+  neighbor 2001:12:39:FF::4 activate
+  neighbor 2001:12:39:FF::4 route-reflector-client
+ exit-address-family
+ !
+ address-family vpnv6
+  no bgp default route-target filter
+  neighbor 12.39.2.2 activate
+  neighbor 12.39.2.2 send-community extended
+  neighbor 12.39.2.2 route-reflector-client
+  neighbor 33.56.5.5 activate
+  neighbor 33.56.5.5 send-community extended
+  neighbor 33.56.5.5 next-hop-unchanged
+ exit-address-family
+!
+!
+virtual-service csr_mgmt
+!
+ip forward-protocol nd
+ip http server
+ip http authentication local
+ip http secure-server
+!
+ip extcommunity-list expanded rt-77 permit 77:77
+ip ssh server algorithm authentication password
+!
+!
+!
+ip prefix-list match-r7 seq 5 permit 172.16.7.71/32
+!
+!
+route-map interas-c permit 10
+ match ip address prefix-list match-r7
+ match extcommunity rt-77
+ set local-preference 170
+!
+route-map interas-c permit 20
+!
+!
+!
+control-plane
+!
+ !
+ !
+ !
+ !
+!
+!
+!
+!
+!
+line con 0
+ privilege level 15
+ password cisco
+ logging synchronous
+ stopbits 1
+line vty 0 4
+ exec-timeout 720 0
+ password cisco
+ login local
+ transport input telnet ssh
+!
+!
+!
+!
+!
+!
+end</entry>
+        </extensions>
+        <interface id="0" name="GigabitEthernet2"/>
+        <interface id="1" name="GigabitEthernet3"/>
+    </node>
+    <node name="CER7" type="SIMPLE" subtype="CSR1000v" location="1229,312" ipv4="192.168.7.7">
+        <extensions>
+            <entry key="config" type="String">!
+!
+version 16.4
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no platform punt-keepalive disable-kernel-core
+platform console serial
+!
+hostname CER7
+!
+boot-start-marker
+boot-end-marker
+!
+!
+vrf definition Mgmt-intf
+ !
+ address-family ipv4
+ exit-address-family
+ !
+ address-family ipv6
+ exit-address-family
+!
+vrf definition csc-cust
+ rd 1:1
+ !
+ address-family ipv4
+  route-target export 1:1
+  route-target import 1:1
+ exit-address-family
+!
+enable secret 4 tnhtc92DXBhelxjYk8LWJrPV36S2i4ntXrpb4RFmfqY
+!
+no aaa new-model
+!
+!
+!
+!
+!
+!
+!
+!
+!
+
+
+
+no ip domain lookup
+ip domain name virl.info
+!
+!
+!
+ipv6 general-prefix gp1 6rd Tunnel1
+ipv6 unicast-routing
+!
+!
+!
+!
+!
+!
+!
+subscriber templating
+!
+mpls ldp discovery targeted-hello accept
+mpls traffic-eng signalling interpret explicit-null verbatim
+!
+!
+multilink bundle-name authenticated
+l2vpn vfi context vpls-bgp 
+ vpn id 3434
+ autodiscovery bgp signaling bgp 
+  ve id 2
+  ve range 11
+  rd 7:7
+  route-target export 3:3
+  route-target import 3:3
+!
+!
+!
+!
+!
+username cisco privilege 15 secret 5 $1$t8aQ$bgNtZsfXbHOMR9faqcRks.
+!
+redundancy
+bridge-domain 33 
+bridge-domain 34 
+ member vfi vpls-bgp
+!
+!
+!
+!
+!
+!
+pseudowire-class l2tpv3
+ encapsulation l2tpv3
+ ip local interface Loopback2
+!
+l2 vfi hvpls manual 
+ vpn id 3367
+ bridge-domain 33
+ neighbor 172.16.7.72 encapsulation mpls
+!
+l2 vfi mpw point-to-point
+ neighbor 172.16.7.72 3232 encapsulation mpls
+ neighbor 192.168.6.6 3232 encapsulation mpls
+!
+l2 vfi p1 point-to-point
+ neighbor 192.168.6.6 6060 encapsulation mpls
+ neighbor 172.16.7.72 60 encapsulation mpls
+!
+! 
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+! 
+! 
+! 
+! 
+! 
+! 
+!
+!
+interface Loopback0
+ description Loopback
+ ip address 192.168.7.7 255.255.255.255
+ ip ospf 200 area 0
+ ipv6 address 2001:22:44:EE::7/128
+ ipv6 ospf 200 area 0
+!
+interface Loopback1
+ ip address 192.168.7.71 255.255.255.255
+!
+interface Loopback2
+ ip address 192.168.7.72 255.255.255.255
+!
+interface Loopback3
+ ip address 192.168.7.73 255.255.255.255
+!
+interface Loopback10
+ vrf forwarding csc-cust
+ ip address 17.2.2.2 255.255.255.255
+!
+interface Tunnel1
+ no ip address
+ no ip redirects
+ ipv6 enable
+ tunnel source Loopback0
+ tunnel mode ipv6ip 6rd
+ tunnel 6rd prefix 2001:B000::/32
+!
+interface Tunnel2
+ ip address 22.1.1.2 255.255.255.0
+ ip nat inside
+ ip ospf 2 area 0
+ nat64 enable
+ nat64 prefix stateless v6v4 2010:CAFE:FEED::/96
+ ipv6 enable
+ ospfv3 2 ipv6 area 0
+ tunnel source 2001:66:66:67::7
+ tunnel mode ipv6
+ tunnel destination 2001:44:66:CC::7
+ tunnel path-mtu-discovery
+!
+interface LISP0
+!
+interface GigabitEthernet1
+ description OOB Management
+ vrf forwarding Mgmt-intf
+ ip address 10.255.0.110 255.255.0.0
+ negotiation auto
+ no mop enabled
+ no mop sysid
+!
+interface GigabitEthernet2
+ description to SP2R2
+ ip address 20.40.27.7 255.255.255.0
+ negotiation auto
+ nat64 enable
+ ipv6 address FE80::7 link-local
+ ipv6 address 2001:20:40:27::7/64
+ no mop enabled
+ no mop sysid
+!
+interface GigabitEthernet2.72
+ encapsulation dot1Q 72
+ ip address 10.2.27.7 255.255.255.0
+ ip nat outside
+ mpls bgp forwarding
+!
+interface GigabitEthernet3
+ description to CER6
+ ip address 66.66.67.7 255.255.255.0
+ ip ospf network point-to-point
+ negotiation auto
+ ipv6 address FE80::7 link-local
+ ipv6 address 2001:66:66:67::7/64
+ mpls ip
+ ipv6 ospf 200 area 0
+ ipv6 ospf network point-to-point
+ no mop enabled
+ no mop sysid
+!
+interface GigabitEthernet3.30
+ encapsulation dot1Q 30
+ xconnect 172.16.7.72 3030 encapsulation mpls
+!
+interface GigabitEthernet3.31
+ encapsulation dot1Q 100 second-dot1q 31
+ xconnect 172.16.7.72 3131 encapsulation mpls
+!
+interface GigabitEthernet3.32
+ encapsulation dot1Q 32
+ ip address 10.2.67.7 255.255.255.0
+ ip nat outside
+ ip ospf 2 area 0
+ nat64 enable
+ ipv6 address 2200:200:200::1/48
+ ipv6 address gp1 2001:B000::/64 eui-64
+ mpls ip
+!
+interface GigabitEthernet3.37
+ encapsulation dot1Q 37
+ xconnect 172.16.7.72 3737 encapsulation l2tpv3 pw-class l2tpv3
+!
+interface GigabitEthernet3.41
+ encapsulation dot1Q 41
+ vrf forwarding csc-cust
+ ip address 10.2.41.1 255.255.255.0
+ ip nat inside
+!
+interface GigabitEthernet3.42
+ encapsulation dot1Q 42
+ ip address 10.42.42.1 255.255.255.0
+ nat64 enable
+ ipv6 enable
+!
+interface GigabitEthernet3.60
+ encapsulation dot1Q 60
+ xconnect 172.16.7.72 6060 encapsulation mpls
+!
+interface GigabitEthernet3.70
+ encapsulation dot1Q 70
+ xconnect 33.56.1.1 7070 encapsulation mpls
+!
+interface GigabitEthernet4
+ description to SP1R3
+ ip address 42.62.37.7 255.255.255.0
+ negotiation auto
+ ipv6 address FE80::7 link-local
+ ipv6 address 2001:42:62:37::7/64
+ no mop enabled
+ no mop sysid
+!
+interface GigabitEthernet5
+ description to SP2R1
+ ip address 20.40.17.7 255.255.255.0
+ shutdown
+ negotiation auto
+ ipv6 address FE80::7 link-local
+ ipv6 address 2001:20:40:17::7/64
+ no mop enabled
+ no mop sysid
+!
+interface BDI33
+ ip address 33.1.1.7 255.255.255.0
+ mpls ip
+ no mop enabled
+ no mop sysid
+!
+interface BDI34
+ ip address 34.1.1.2 255.255.255.0
+ no mop enabled
+ no mop sysid
+!
+!
+router eigrp 100
+ network 10.2.67.7 0.0.0.0
+ network 20.40.27.7 0.0.0.0
+ network 66.66.67.7 0.0.0.0
+ network 192.168.7.7 0.0.0.0
+!
+router lisp
+ eid-table default instance-id 0
+  database-mapping 2200:200:200::/48 20.40.27.7 priority 1 weight 10
+  map-cache 2100:100:100::10/128 40.60.27.7 priority 1 weight 60
+  exit
+ !
+ ipv6 itr map-resolver 100.1.1.1
+ ipv6 itr
+ ipv6 etr map-server 100.1.1.1 key as200
+ ipv6 etr
+ exit
+!
+router ospfv3 200
+ !
+ address-family ipv6 unicast
+  passive-interface Loopback0
+ exit-address-family
+!
+router ospfv3 2
+ !
+ address-family ipv6 unicast
+  redistribute static
+ exit-address-family
+!
+router ospf 200
+ router-id 0.0.0.7
+ passive-interface Loopback0
+ network 33.1.1.7 0.0.0.0 area 0
+ network 66.66.67.0 0.0.0.255 area 0
+ network 192.168.7.7 0.0.0.0 area 0
+!
+router ospf 2
+!
+router rip
+ version 2
+ network 22.0.0.0
+ neighbor 22.1.1.1
+ no auto-summary
+!
+router bgp 200
+ bgp router-id 192.168.7.7
+ bgp log-neighbor-changes
+ no bgp default ipv4-unicast
+ neighbor 10.2.27.2 remote-as 1239
+ neighbor 20.40.27.2 remote-as 1239
+ neighbor 20.40.27.2 password RIGHT
+ neighbor 2001:20:40:27::2 remote-as 1239
+ neighbor 2001:20:40:27::2 password RIGHT
+ neighbor 2001:22:44:EE::6 remote-as 200
+ neighbor 2001:22:44:EE::6 password AS200
+ neighbor 172.16.7.72 remote-as 100
+ neighbor 172.16.7.72 ebgp-multihop 255
+ neighbor 172.16.7.72 update-source Loopback2
+ neighbor 192.168.6.6 remote-as 200
+ neighbor 192.168.6.6 password AS200
+ neighbor 192.168.6.6 update-source Loopback0
+ !
+ address-family ipv4
+  redistribute connected route-map CONN-&gt;BGP
+  neighbor 10.2.27.2 activate
+  neighbor 10.2.27.2 prefix-list route72 out
+  neighbor 10.2.27.2 send-label
+  neighbor 20.40.27.2 activate
+  neighbor 20.40.27.2 prefix-list not-as200-lo0 in
+  neighbor 20.40.27.2 route-map not-route72 out
+  neighbor 192.168.6.6 activate
+  neighbor 192.168.6.6 next-hop-self
+  neighbor 192.168.6.6 route-map not-route72 out
+ exit-address-family
+ !
+ address-family vpnv4
+  neighbor 172.16.7.72 activate
+  neighbor 172.16.7.72 send-community extended
+ exit-address-family
+ !
+ address-family ipv6
+  redistribute connected route-map CONN-&gt;BGP
+  redistribute static
+  neighbor 2001:20:40:27::2 activate
+  neighbor 2001:22:44:EE::6 activate
+  neighbor 2001:22:44:EE::6 next-hop-self
+ exit-address-family
+ !
+ address-family l2vpn vpls
+  neighbor 172.16.7.72 activate
+  neighbor 172.16.7.72 send-community extended
+  neighbor 172.16.7.72 suppress-signaling-protocol ldp
+ exit-address-family
+ !
+ address-family ipv4 vrf csc-cust
+  redistribute connected
+  redistribute static
+ exit-address-family
+!
+!
+virtual-service csr_mgmt
+!
+ip nat inside source static 10.2.41.2 2.2.41.2 vrf csc-cust
+ip nat inside source static 10.2.41.2 11.1.1.1
+ip forward-protocol nd
+ip http server
+ip http authentication local
+ip http secure-server
+!
+ip community-list 1 permit 4718664
+ip route vrf csc-cust 2.2.41.0 255.255.255.0 Null0
+ip ssh server algorithm authentication password
+!
+!
+!
+ip prefix-list not-as200-lo0 seq 10 deny 192.168.7.7/32
+ip prefix-list not-as200-lo0 seq 20 deny 192.168.6.6/32
+ip prefix-list not-as200-lo0 seq 30 permit 0.0.0.0/0 le 32
+!
+ip prefix-list route72 seq 5 permit 192.168.7.72/32
+ip prefix-list route72 seq 10 permit 2.2.41.0/24
+ipv6 route 2001:B000::/32 Tunnel1
+!
+!
+route-map not-route72 deny 10
+ match community 1
+!
+route-map not-route72 permit 20
+!
+route-map CONN-&gt;BGP permit 10
+ match interface Loopback1
+ set origin igp
+!
+route-map CONN-&gt;BGP permit 20
+ match interface GigabitEthernet3
+ set origin igp
+!
+route-map CONN-&gt;BGP permit 30
+ match interface Loopback2
+ set community 4718664
+!
+route-map route72 permit 10
+ match community 1
+!
+!
+!
+ipv6 access-list nat64-acl
+ permit ipv6 2004::/32 any
+!
+control-plane
+!
+ !
+ !
+ !
+ !
+!
+!
+!
+!
+!
+line con 0
+ exec-timeout 0 0
+ privilege level 15
+ password cisco
+ logging synchronous
+ stopbits 1
+line vty 0 4
+ exec-timeout 720 0
+ password cisco
+ login local
+ transport input telnet ssh
+!
+nat64 prefix stateless v4v6 2007::/64
+nat64 prefix stateful 2006:BEEF::/96
+nat64 v4 pool pool1 209.165.201.1 209.165.201.254
+nat64 v6v4 list nat64-acl pool pool1 overload
+nat64 route 210.1.1.0/24 Tunnel2
+nat64 map-t domain 1
+ default-mapping-rule 2001:DA8:B001:FFFF::/64
+ basic-mapping-rule
+  ipv6-prefix 2001:1111::/48
+  ipv4-prefix 10.144.4.0/24
+  port-parameters share-ratio 1
+nat64 map-t domain 2
+ default-mapping-rule 2001:DA8:B002:FFFF::/64
+ basic-mapping-rule
+  ipv6-prefix 2001:2222::/40
+  ipv4-prefix 10.244.4.0/24
+  port-parameters share-ratio 1
+!
+!
+!
+!
+!
+end</entry>
+        </extensions>
+        <interface id="0" name="GigabitEthernet2"/>
+        <interface id="1" name="GigabitEthernet3"/>
+        <interface id="2" name="GigabitEthernet4"/>
+        <interface id="3" name="GigabitEthernet5"/>
+    </node>
+    <node name="CER6" type="SIMPLE" subtype="CSR1000v" location="1229,520" ipv4="192.168.6.6">
+        <extensions>
+            <entry key="config" type="String">!
+!
+version 16.4
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no platform punt-keepalive disable-kernel-core
+platform console serial
+!
+hostname CER6
+!
+boot-start-marker
+boot-end-marker
+!
+!
+vrf definition Mgmt-intf
+ !
+ address-family ipv4
+ exit-address-family
+ !
+ address-family ipv6
+ exit-address-family
+!
+enable secret 4 tnhtc92DXBhelxjYk8LWJrPV36S2i4ntXrpb4RFmfqY
+enable password cisco
+!
+no aaa new-model
+!
+ip vrf sitemap
+!
+ip vrf vrf-test1
+ rd 41:1
+!
+ip vrf vrf-test2
+ rd 2:2
+!
+!
+!
+!
+!
+!
+!
+!
+!
+
+
+
+no ip domain lookup
+ip domain name virl.info
+!
+!
+!
+ipv6 unicast-routing
+!
+!
+!
+!
+!
+!
+!
+subscriber templating
+!
+!
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+username cisco privilege 15 secret 5 $1$gLov$PV8qJPNS0YEio4kFqprMQ1
+!
+redundancy
+!
+!
+!
+!
+!
+!
+! 
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+! 
+! 
+! 
+! 
+! 
+! 
+!
+!
+interface Loopback0
+ description Loopback
+ ip address 192.168.6.6 255.255.255.255
+ ip ospf 200 area 0
+ ipv6 address 2001:22:44:EE::6/128
+ ipv6 ospf 200 area 0
+!
+interface Loopback1
+ ip address 192.168.6.61 255.255.255.255
+!
+interface Loopback6
+ ip vrf forwarding vrf-test2
+ ip address 10.4.42.4 255.255.255.255
+!
+interface GigabitEthernet1
+ description OOB Management
+ ip address 10.255.0.109 255.255.0.0
+ negotiation auto
+ no mop enabled
+ no mop sysid
+!
+interface GigabitEthernet2
+ description to SP2R1
+ no ip address
+ negotiation auto
+ no mop enabled
+ no mop sysid
+ service instance 31 ethernet
+  encapsulation dot1q 31
+  snmp ifindex persist
+  bridge-domain 31
+ !
+ service instance 60 ethernet
+  encapsulation dot1q 60
+  rewrite ingress tag push dot1q 200 symmetric
+  snmp ifindex persist
+  xconnect 192.168.7.7 6060 encapsulation mpls
+ !
+ service instance 132 ethernet
+  encapsulation dot1q 101
+  rewrite ingress tag push dot1q 132 symmetric
+  snmp ifindex persist
+  xconnect 192.168.7.7 3232 encapsulation mpls
+ !
+!
+interface GigabitEthernet3
+ description to CER7
+ ip vrf sitemap soo
+ no ip address
+ ip ospf network point-to-point
+ negotiation auto
+ mpls ip
+ ipv6 ospf network point-to-point
+ no mop enabled
+ no mop sysid
+ service instance 31 ethernet
+  encapsulation dot1q 100 second-dot1q 31
+  rewrite ingress tag pop 1 symmetric
+  snmp ifindex persist
+  bridge-domain 31
+ !
+!
+interface GigabitEthernet3.30
+ encapsulation dot1Q 30
+ ip address 30.1.1.6 255.255.255.0
+!
+interface GigabitEthernet3.32
+ encapsulation dot1Q 32
+ ip address 10.2.67.6 255.255.255.0
+ ipv6 address 2200:200:200::20/48
+ mpls ip
+!
+interface GigabitEthernet3.37
+ encapsulation dot1Q 37
+ ip address 37.1.1.2 255.255.255.0
+!
+interface GigabitEthernet3.41
+ encapsulation dot1Q 41
+ ip vrf forwarding vrf-test1
+ ip address 10.2.41.2 255.255.255.0
+!
+interface GigabitEthernet3.42
+ encapsulation dot1Q 42
+ ip vrf forwarding vrf-test2
+ ip address 10.42.42.4 255.255.255.0
+!
+interface GigabitEthernet3.60
+ encapsulation dot1Q 60
+ ip address 60.1.1.2 255.255.255.0
+!
+interface GigabitEthernet4
+ description to SP1R4
+ ip address 41.61.46.6 255.255.255.0
+ negotiation auto
+ ipv6 address FE80::6 link-local
+ ipv6 address 2001:41:61:46::6/64
+ no mop enabled
+ no mop sysid
+!
+interface GigabitEthernet5
+ description to SP2R2
+ ip address 21.41.26.6 255.255.255.0
+ negotiation auto
+ ipv6 address FE80::6 link-local
+ ipv6 address 2001:21:41:26::6/64
+ no mop enabled
+ no mop sysid
+!
+!
+router eigrp 100
+ network 0.0.0.0
+!
+router ospfv3 200
+ !
+ address-family ipv6 unicast
+  passive-interface Loopback0
+ exit-address-family
+!
+router ospf 200
+ passive-interface Loopback0
+ network 66.66.67.0 0.0.0.255 area 0
+!
+router bgp 200
+ bgp router-id 192.168.6.6
+ bgp log-neighbor-changes
+ neighbor 21.41.16.1 remote-as 1239
+ neighbor 21.41.16.1 password RIGHT
+ neighbor 2001:21:41:16::1 remote-as 1239
+ neighbor 2001:21:41:16::1 password RIGHT
+ neighbor 2001:22:44:EE::7 remote-as 200
+ neighbor 2001:22:44:EE::7 password AS200
+ neighbor 2001:22:44:EE::7 update-source Loopback0
+ neighbor 192.168.7.7 remote-as 200
+ neighbor 192.168.7.7 password AS200
+ neighbor 192.168.7.7 update-source Loopback0
+ !
+ address-family ipv4
+  redistribute connected route-map CONN-&gt;BGP
+  neighbor 21.41.16.1 activate
+  no neighbor 2001:21:41:16::1 activate
+  no neighbor 2001:22:44:EE::7 activate
+  neighbor 192.168.7.7 activate
+  neighbor 192.168.7.7 next-hop-self
+ exit-address-family
+ !
+ address-family ipv6
+  redistribute connected route-map CONN-&gt;BGP
+  neighbor 2001:22:44:EE::7 activate
+  neighbor 2001:22:44:EE::7 next-hop-self
+ exit-address-family
+!
+!
+virtual-service csr_mgmt
+!
+ip forward-protocol nd
+ip http server
+ip http authentication local
+ip http secure-server
+!
+ip route 11.1.1.1 255.255.255.255 10.2.67.7
+ip route 209.165.201.0 255.255.255.0 10.2.67.7
+ip route 210.1.1.0 255.255.255.0 10.2.67.7
+ip route vrf vrf-test1 0.0.0.0 0.0.0.0 10.2.41.1
+ip route vrf vrf-test2 0.0.0.0 0.0.0.0 10.42.42.1
+ip ssh server algorithm authentication password
+!
+!
+ipv6 route ::/0 2200:200:200::1
+!
+!
+route-map CONN-&gt;BGP permit 10
+ match interface Loopback1
+ set origin igp
+!
+route-map CONN-&gt;BGP permit 20
+ match interface GigabitEthernet3
+ set origin igp
+!
+route-map soo permit 10
+ set extcommunity soo 2:2
+!
+!
+!
+control-plane
+!
+ !
+ !
+ !
+ !
+!
+!
+!
+!
+!
+line con 0
+ exec-timeout 0 0
+ privilege level 15
+ password cisco
+ logging synchronous
+ stopbits 1
+line vty 0 4
+ exec-timeout 720 0
+ password cisco
+ login local
+ transport input telnet ssh
+!
+!
+!
+!
+!
+!
+end</entry>
+        </extensions>
+        <interface id="0" name="GigabitEthernet2"/>
+        <interface id="1" name="GigabitEthernet3"/>
+        <interface id="2" name="GigabitEthernet4"/>
+        <interface id="3" name="GigabitEthernet5"/>
+    </node>
+    <node name="SP1R2" type="SIMPLE" subtype="IOS XRv" location="285,233" ipv4="33.56.2.2">
+        <extensions>
+            <entry key="config" type="String">!! IOS XR Configuration 6.1.2
+!! Last configuration change at Thu May 25 18:44:07 2017 by cisco
+!
+!  IOS-XR Config generated on 2017-02-25 23:17
+! by autonetkit_0.23.5
+hostname SP1R2
+service timestamps log datetime msec
+service timestamps debug datetime msec
+telnet vrf default ipv4 server max-servers 10
+telnet vrf Mgmt-intf ipv4 server max-servers 10
+domain name virl.info
+domain lookup disable
+vrf csc
+ address-family ipv4 unicast
+  import route-target
+   72:72
+  !
+  export route-target
+   72:72
+  !
+ !
+!
+vrf lisp
+ address-family ipv4 unicast
+  import route-target
+   1:100
+  !
+  export route-target
+   1:100
+  !
+ !
+!
+vrf cust1
+ address-family ipv4 unicast
+  import route-target
+   1:100
+   2:2
+   3:3
+   4:4
+  !
+  export route-target
+   1:100
+   77:77
+  !
+ !
+ address-family ipv6 unicast
+  import route-target
+   1:100
+  !
+  export route-target
+   1:100
+  !
+ !
+!
+vrf shared
+ address-family ipv4 unicast
+  import route-target
+   1:100
+   2:2
+   3:3
+   4:4
+  !
+  export route-target
+   1:100
+   2:2
+   3:3
+   4:4
+  !
+ !
+!
+vrf Mgmt-intf
+ address-family ipv4 unicast
+ !
+ address-family ipv6 unicast
+ !
+!
+line template vty
+ timestamp
+ exec-timeout 720 0
+!
+line console
+ exec-timeout 0 0
+!
+line default
+ exec-timeout 720 0
+!
+vty-pool default 0 50
+control-plane
+ management-plane
+  inband
+   interface all
+    allow all
+   !
+  !
+ !
+!
+interface Loopback0
+ description Loopback
+ ipv4 address 33.56.2.2 255.255.255.255
+ ipv6 address 2001:33:56:aa::2/128
+!
+interface Loopback1
+ vrf shared
+ ipv4 address 172.16.2.21 255.255.255.255
+!
+interface Loopback3
+ vrf cust1
+ ipv4 address 192.168.2.21 255.255.255.255
+!
+interface Loopback20
+ vrf cust1
+ ipv4 address 20.1.1.1 255.255.255.255
+!
+interface Loopback100
+ vrf lisp
+ ipv4 address 100.1.1.1 255.255.255.255
+ shutdown
+!
+interface MgmtEth0/0/CPU0/0
+ description OOB Management
+ ! Configured on launch
+ vrf Mgmt-intf
+ ipv4 address 10.255.0.122 255.255.0.0
+!
+interface GigabitEthernet0/0/0/0
+ description to SP1R3
+ ipv4 address 33.56.23.2 255.255.255.0
+ ipv6 address fe80::2 link-local
+ ipv6 address 2001:33:56:23::2/64
+!
+interface GigabitEthernet0/0/0/0.41 l2transport
+ encapsulation dot1q 41
+ rewrite ingress tag pop 1 symmetric
+!
+interface GigabitEthernet0/0/0/1
+ description to CEL7
+ vrf cust1
+ ipv4 address 40.60.27.2 255.255.255.0
+ ipv6 address fe80::2 link-local
+ ipv6 address 2001:40:60:27::2/64
+!
+interface GigabitEthernet0/0/0/1.40 l2transport
+ encapsulation dot1q 40
+!
+interface GigabitEthernet0/0/0/1.72
+ vrf csc
+ ipv4 address 10.1.27.2 255.255.255.0
+ encapsulation dot1q 72
+!
+interface GigabitEthernet0/0/0/2
+ description to SP1R1
+ ipv4 address 33.56.12.2 255.255.255.0
+ ipv6 address fe80::2 link-local
+ ipv6 address 2001:33:56:12::2/64
+!
+interface GigabitEthernet0/0/0/3
+ description to CEL6
+ ipv4 address 41.61.26.2 255.255.255.0
+ ipv6 address fe80::2 link-local
+ ipv6 address 2001:41:61:26::2/64
+ shutdown
+!
+interface GigabitEthernet0/0/0/4
+ description to SP1R4
+ ipv4 address 33.56.24.2 255.255.255.0
+ ipv6 address fe80::2 link-local
+ ipv6 address 2001:33:56:24::2/64
+!
+prefix-set sham-filter
+  192.168.1.11/32,
+  192.168.2.21/32
+end-set
+!
+route-policy PASS
+  pass
+end-policy
+!
+route-policy RED-BGP
+  if destination in (33.56.0.0/16 le 24) then
+    pass
+  elseif destination in (2001:33:56::/48 le 64) then
+    pass
+  else
+    drop
+  endif
+end-policy
+!
+route-policy sham-filter
+  if destination in sham-filter then
+    drop
+  else
+    pass
+  endif
+end-policy
+!
+router static
+ vrf csc
+  address-family ipv4 unicast
+   10.1.27.7/32 GigabitEthernet0/0/0/1.72
+  !
+ !
+!
+router ospf 1
+ vrf cust1
+  router-id 33.56.2.2
+  domain-id type 0005 value 000000640200
+  redistribute bgp 3356 route-policy sham-filter
+  area 0
+   sham-link 192.168.2.21 192.168.1.11
+   !
+  !
+  area 1
+   virtual-link 172.16.7.7
+   !
+   interface GigabitEthernet0/0/0/1
+    network point-to-point
+   !
+  !
+ !
+!
+router ospf AS3356
+ mpls ldp sync
+ mpls ldp auto-config
+ address-family ipv4 unicast
+ area 0
+  interface Loopback0
+   passive enable
+  !
+  interface GigabitEthernet0/0/0/0
+   network point-to-point
+  !
+  interface GigabitEthernet0/0/0/2
+   network point-to-point
+  !
+  interface GigabitEthernet0/0/0/4
+   network point-to-point
+  !
+ !
+!
+router ospfv3 AS3356
+ area 0
+  interface Loopback0
+   passive
+  !
+  interface GigabitEthernet0/0/0/0
+   network point-to-point
+  !
+  interface GigabitEthernet0/0/0/2
+   network point-to-point
+  !
+  interface GigabitEthernet0/0/0/4
+   network point-to-point
+  !
+ !
+!
+router bgp 3356
+ bgp router-id 33.56.2.2
+ address-family ipv4 unicast
+  aggregate-address 33.56.0.0/16 summary-only
+  redistribute connected route-policy RED-BGP
+ !
+ address-family vpnv4 unicast
+ !
+ address-family ipv6 unicast
+  aggregate-address 2001:33:56::/48 summary-only
+  redistribute connected route-policy RED-BGP
+  allocate-label all
+ !
+ address-family vpnv6 unicast
+ !
+ address-family l2vpn vpls-vpws
+ !
+ address-family l2vpn evpn
+ !
+ neighbor 33.56.1.1
+  remote-as 3356
+  update-source Loopback0
+  address-family l2vpn evpn
+  !
+ !
+ neighbor 33.56.5.5
+  remote-as 3356
+  password encrypted 12383644415E5A
+  update-source Loopback0
+  address-family ipv4 unicast
+   next-hop-self
+  !
+  address-family vpnv4 unicast
+  !
+  address-family ipv6 labeled-unicast
+   next-hop-self
+  !
+  address-family vpnv6 unicast
+  !
+  address-family l2vpn vpls-vpws
+  !
+  address-family l2vpn evpn
+   next-hop-self
+   soft-reconfiguration inbound always
+  !
+ !
+ neighbor 40.60.27.7
+  remote-as 100
+  password encrypted 0028362030
+  address-family ipv4 unicast
+   route-policy PASS in
+   route-policy PASS out
+  !
+ !
+ neighbor 2001:33:56:aa::5
+  remote-as 3356
+  password encrypted 047A38555C741A
+  update-source Loopback0
+  address-family ipv6 unicast
+   next-hop-self
+  !
+ !
+ neighbor 2001:40:60:27::7
+  remote-as 100
+  password encrypted 0028362030
+  address-family ipv6 unicast
+   route-policy PASS in
+   route-policy PASS out
+  !
+ !
+ vrf csc
+  rd 72:72
+  address-family ipv4 unicast
+   allocate-label all
+  !
+  neighbor 10.1.27.7
+   remote-as 100
+   address-family ipv4 labeled-unicast
+    route-policy PASS in
+    route-policy PASS out
+   !
+  !
+ !
+ vrf lisp
+  rd 1:100
+  address-family ipv4 unicast
+   redistribute connected
+  !
+ !
+ vrf cust1
+  rd 112:100
+  address-family ipv4 unicast
+   redistribute connected
+   redistribute ospf 1
+  !
+  address-family ipv6 unicast
+  !
+  neighbor 40.60.27.7
+   remote-as 100
+   password encrypted 0028362030
+   address-family ipv4 unicast
+    route-policy PASS in
+    route-policy PASS out
+    as-override
+   !
+  !
+  neighbor 2001:40:60:27::7
+   remote-as 100
+   password encrypted 0028362030
+   address-family ipv6 unicast
+    route-policy PASS in
+    route-policy PASS out
+   !
+  !
+ !
+ vrf shared
+  rd 111:100
+  address-family ipv4 unicast
+   redistribute connected
+  !
+ !
+!
+router lisp
+ address-family ipv6 unicast
+  map-resolver
+  map-server
+ !
+ site as200
+  eid-prefix 2200:200::/32 accept-more-specifics
+  allowed-locator 20.40.27.7
+  authentication-key encrypted 00050054540B
+ !
+ site as-100
+  eid-prefix 5000::/16 accept-more-specifics
+  authentication-key encrypted 050A155E711C
+ !
+ locator-table lisp
+!
+l2vpn
+ pbb
+  backbone-source-mac 0002.0002.0002
+ !
+ bridge group bdc
+  bridge-domain bdc
+   pbb core
+    evi 100
+    !
+   !
+  !
+ !
+ bridge group bde
+  bridge-domain bde
+   interface GigabitEthernet0/0/0/0.41
+   !
+   pbb edge i-sid 4141 core-bridge bdc
+   !
+  !
+ !
+ bridge group bg1
+  bridge-domain bd1
+   interface GigabitEthernet0/0/0/1.40
+   !
+   vfi vf1
+    vpn-id 100
+    autodiscovery bgp
+     rd 4:4
+     route-target 40:40
+     signaling-protocol bgp
+      ve-id 2
+     !
+    !
+   !
+  !
+ !
+!
+mpls oam
+!
+mpls ldp
+ igp sync delay on-session-up 10
+ address-family ipv4
+  label
+   local
+    allocate for host-routes
+    advertise
+     explicit-null
+    !
+   !
+  !
+ !
+!
+mpls label range table 0 102000 102999
+ssh server v2
+ssh server vrf Mgmt-intf
+end</entry>
+        </extensions>
+        <interface id="0" name="GigabitEthernet0/0/0/0"/>
+        <interface id="1" name="GigabitEthernet0/0/0/1"/>
+        <interface id="2" name="GigabitEthernet0/0/0/2"/>
+        <interface id="3" name="GigabitEthernet0/0/0/3"/>
+        <interface id="4" name="GigabitEthernet0/0/0/4"/>
+    </node>
+    <node name="SP1R3" type="SIMPLE" subtype="IOS XRv" location="502,233" ipv4="33.56.3.3">
+        <extensions>
+            <entry key="config" type="String">!! IOS XR Configuration 6.1.2
+!! Last configuration change at Thu May 25 18:21:10 2017 by CVAC
+!
+!  IOS-XR Config generated on 2017-02-25 23:17
+! by autonetkit_0.23.5
+hostname SP1R3
+service timestamps log datetime msec
+service timestamps debug datetime msec
+telnet vrf default ipv4 server max-servers 10
+telnet vrf Mgmt-intf ipv4 server max-servers 10
+domain name virl.info
+domain lookup disable
+vrf siteb
+ address-family ipv4 unicast
+  import route-target
+   1:100
+   3:3
+  !
+  export route-target
+   3:3
+  !
+ !
+ address-family ipv6 unicast
+  import route-target
+   1:100
+  !
+  export route-target
+   1:100
+  !
+ !
+!
+vrf Mgmt-intf
+ address-family ipv4 unicast
+ !
+ address-family ipv6 unicast
+ !
+!
+vrf inter-cust1
+ address-family ipv4 unicast
+  import route-target
+   1:100
+  !
+  export route-target
+   1:100
+  !
+ !
+!
+line template vty
+ timestamp
+ exec-timeout 720 0
+!
+line console
+ exec-timeout 0 0
+!
+line default
+ exec-timeout 720 0
+!
+vty-pool default 0 50
+control-plane
+ management-plane
+  inband
+   interface all
+    allow all
+   !
+  !
+ !
+!
+interface Loopback0
+ description Loopback
+ ipv4 address 33.56.3.3 255.255.255.255
+ ipv6 address 2001:33:56:aa::3/128
+!
+interface Loopback1
+ vrf siteb
+ ipv4 address 172.16.3.31 255.255.255.255
+ ipv6 address 2001:33:56::3:31/128
+!
+interface MgmtEth0/0/CPU0/0
+ description OOB Management
+ ! Configured on launch
+ vrf Mgmt-intf
+ ipv4 address 10.255.0.113 255.255.0.0
+!
+interface GigabitEthernet0/0/0/0
+ description to SP1R2
+ ipv4 address 33.56.23.3 255.255.255.0
+ ipv6 address fe80::3 link-local
+ ipv6 address 2001:33:56:23::3/64
+!
+interface GigabitEthernet0/0/0/0.41 l2transport
+ encapsulation dot1q 41
+ rewrite ingress tag pop 1 symmetric
+!
+interface GigabitEthernet0/0/0/1
+ description to SP2R3
+ ipv4 address 22.22.33.1 255.255.255.0
+ ipv6 address fe80::1 link-local
+ ipv6 address 2001:22:22:33::1/64
+!
+interface GigabitEthernet0/0/0/1.34
+ vrf inter-cust1
+ ipv4 address 22.22.34.1 255.255.255.0
+ encapsulation dot1q 34
+!
+interface GigabitEthernet0/0/0/1.40 l2transport
+ encapsulation dot1q 40
+!
+interface GigabitEthernet0/0/0/2
+ description to SP1R4
+ ipv4 address 33.56.34.3 255.255.255.0
+ ipv6 address fe80::3 link-local
+ ipv6 address 2001:33:56:34::3/64
+!
+interface GigabitEthernet0/0/0/3
+ description to SP1R5
+ ipv4 address 33.56.35.3 255.255.255.0
+ ipv6 address fe80::3 link-local
+ ipv6 address 2001:33:56:35::3/64
+!
+interface GigabitEthernet0/0/0/4
+ description to L2-SW-INTERNET
+ ipv4 address 10.0.128.1 255.255.255.248
+!
+interface GigabitEthernet0/0/0/5
+ description to CE7
+ ipv4 address 22.42.37.3 255.255.255.0
+ ipv6 address fe80::3 link-local
+ ipv6 address 2001:42:62:37::3/64
+!
+interface GigabitEthernet0/0/0/6
+ description to SP1R1
+ ipv4 address 33.56.13.3 255.255.255.0
+ ipv6 address fe80::3 link-local
+ ipv6 address 2001:33:56:13::3/64
+!
+route-policy PASS
+  pass
+end-policy
+!
+route-policy RED-BGP
+  if destination in (33.56.0.0/16 le 24) then
+    pass
+  elseif destination in (2001:33:56::/48 le 64) then
+    pass
+  else
+    drop
+  endif
+end-policy
+!
+route-policy match-r7
+  if destination in (33.56.2.2/32) then
+    pass
+  else
+    drop
+  endif
+end-policy
+!
+router static
+ address-family ipv4 unicast
+  22.22.33.254/32 GigabitEthernet0/0/0/1
+ !
+!
+router ospf AS3356
+ mpls ldp sync
+ mpls ldp auto-config
+ redistribute bgp 3356 tag 77
+ address-family ipv4 unicast
+ area 0
+  interface Loopback0
+   passive enable
+  !
+  interface GigabitEthernet0/0/0/0
+   network point-to-point
+  !
+  interface GigabitEthernet0/0/0/2
+   network point-to-point
+  !
+  interface GigabitEthernet0/0/0/3
+   network point-to-point
+  !
+  interface GigabitEthernet0/0/0/6
+   network point-to-point
+  !
+ !
+!
+router ospfv3 AS3356
+ area 0
+  interface Loopback0
+   passive
+  !
+  interface GigabitEthernet0/0/0/0
+   network point-to-point
+  !
+  interface GigabitEthernet0/0/0/2
+   network point-to-point
+  !
+  interface GigabitEthernet0/0/0/3
+   network point-to-point
+  !
+  interface GigabitEthernet0/0/0/6
+   network point-to-point
+  !
+ !
+!
+router bgp 3356
+ bgp router-id 33.56.3.3
+ address-family ipv4 unicast
+  redistribute connected route-policy RED-BGP
+  redistribute ospf AS3356 route-policy match-r7
+  allocate-label route-policy match-r7
+ !
+ address-family vpnv4 unicast
+ !
+ address-family ipv6 unicast
+  aggregate-address 2001:33:56::/48 summary-only
+  redistribute connected route-policy RED-BGP
+  allocate-label all
+ !
+ address-family vpnv6 unicast
+ !
+ address-family l2vpn vpls-vpws
+ !
+ address-family l2vpn evpn
+ !
+ neighbor 33.56.5.5
+  remote-as 3356
+  password encrypted 00252055570E5D
+  update-source Loopback0
+  address-family ipv4 unicast
+   next-hop-self
+  !
+  address-family vpnv4 unicast
+  !
+  address-family ipv6 labeled-unicast
+   next-hop-self
+  !
+  address-family vpnv6 unicast
+  !
+  address-family l2vpn vpls-vpws
+  !
+  address-family l2vpn evpn
+   next-hop-self
+  !
+ !
+ neighbor 22.22.33.254
+  remote-as 1239
+  password encrypted 03277E25322A13
+  address-family ipv4 labeled-unicast
+   route-policy PASS in
+   route-policy PASS out
+  !
+ !
+ neighbor 2001:33:56:aa::5
+  remote-as 3356
+  password encrypted 03256858555A77
+  update-source Loopback0
+  address-family ipv6 unicast
+   next-hop-self
+  !
+ !
+ neighbor 2001:22:22:33::254
+  remote-as 1239
+  password encrypted 096F6B272D2025
+  address-family ipv6 unicast
+   route-policy PASS in
+   route-policy PASS out
+  !
+ !
+ vrf siteb
+  rd 3:3
+  address-family ipv4 unicast
+   redistribute connected
+  !
+  address-family ipv6 unicast
+   redistribute connected
+  !
+ !
+ vrf inter-cust1
+  rd 1:100
+  address-family ipv4 unicast
+  !
+  neighbor 22.22.34.254
+   remote-as 1239
+   address-family ipv4 unicast
+    route-policy PASS in
+    route-policy PASS out
+   !
+  !
+ !
+!
+l2vpn
+ pbb
+  backbone-source-mac 0003.0003.0003
+ !
+ bridge group bdc
+  bridge-domain bdc
+   pbb core
+    evi 100
+    !
+   !
+  !
+ !
+ bridge group bde
+  bridge-domain bde
+   interface GigabitEthernet0/0/0/0.41
+   !
+   pbb edge i-sid 4141 core-bridge bdc
+   !
+  !
+ !
+ bridge group bg1
+  bridge-domain bd1
+   interface GigabitEthernet0/0/0/1.40
+   !
+   vfi vf1
+    vpn-id 100
+    autodiscovery bgp
+     rd 4:4
+     route-target 40:40
+     signaling-protocol bgp
+      ve-id 3
+     !
+    !
+   !
+  !
+ !
+!
+mpls ldp
+ address-family ipv4
+  label
+   local
+    allocate for host-routes
+    advertise
+     explicit-null
+    !
+   !
+  !
+ !
+!
+mpls label range table 0 103000 103999
+ssh server v2
+ssh server vrf Mgmt-intf
+end</entry>
+        </extensions>
+        <interface id="0" name="GigabitEthernet0/0/0/0"/>
+        <interface id="1" name="GigabitEthernet0/0/0/1"/>
+        <interface id="2" name="GigabitEthernet0/0/0/2"/>
+        <interface id="3" name="GigabitEthernet0/0/0/3"/>
+        <interface id="4" name="GigabitEthernet0/0/0/4"/>
+        <interface id="5" name="GigabitEthernet0/0/0/5"/>
+        <interface id="6" name="GigabitEthernet0/0/0/6"/>
+    </node>
+    <node name="SP1R1" type="SIMPLE" subtype="IOS XRv" location="285,441" ipv4="33.56.1.1">
+        <extensions>
+            <entry key="config" type="String">!! IOS XR Configuration 6.1.2
+!! Last configuration change at Thu May 25 18:19:45 2017 by CVAC
+!
+!  IOS-XR Config generated on 2017-02-25 23:17
+! by autonetkit_0.23.5
+hostname SP1R1
+service timestamps log datetime msec
+service timestamps debug datetime msec
+telnet vrf default ipv4 server max-servers 10
+telnet vrf Mgmt-intf ipv4 server max-servers 10
+domain name virl.info
+domain lookup disable
+vrf cust1
+ address-family ipv4 unicast
+  import route-target
+   1:100
+   3:3
+   4:4
+  !
+  export route-target
+   1:100
+  !
+ !
+ address-family ipv6 unicast
+  import route-target
+   1:100
+  !
+  export route-target
+   1:100
+  !
+ !
+!
+vrf Mgmt-intf
+ address-family ipv4 unicast
+ !
+ address-family ipv6 unicast
+ !
+!
+line template vty
+ timestamp
+ exec-timeout 720 0
+!
+line console
+ exec-timeout 0 0
+!
+line default
+ exec-timeout 720 0
+!
+vty-pool default 0 50
+control-plane
+ management-plane
+  inband
+   interface all
+    allow all
+   !
+  !
+ !
+!
+interface Loopback0
+ description Loopback
+ ipv4 address 33.56.1.1 255.255.255.255
+ ipv6 address 2001:33:56:aa::1/128
+!
+interface Loopback3
+ vrf cust1
+ ipv4 address 192.168.1.11 255.255.255.255
+!
+interface MgmtEth0/0/CPU0/0
+ description OOB Management
+ ! Configured on launch
+ vrf Mgmt-intf
+ ipv4 address 10.255.0.111 255.255.0.0
+!
+interface GigabitEthernet0/0/0/0
+ description to SP1R4
+ ipv4 address 33.56.14.1 255.255.255.0
+ ipv6 address fe80::1 link-local
+ ipv6 address 2001:33:56:14::1/64
+!
+interface GigabitEthernet0/0/0/0.41 l2transport
+ encapsulation dot1q 41
+ rewrite ingress tag pop 1 symmetric
+!
+interface GigabitEthernet0/0/0/1
+ description to CEL6
+ vrf cust1
+ ipv4 address 41.61.16.1 255.255.255.0
+ ipv6 address fe80::1 link-local
+ ipv6 address 2001:41:61:16::1/64
+!
+interface GigabitEthernet0/0/0/1.31
+ ipv4 address 31.1.1.1 255.255.255.0
+ encapsulation dot1q 31
+!
+interface GigabitEthernet0/0/0/1.33
+ ipv4 address 33.1.1.1 255.255.255.0
+ encapsulation dot1q 33
+!
+interface GigabitEthernet0/0/0/1.34
+ ipv4 address 34.1.1.10 255.255.255.0
+ encapsulation dot1q 34
+!
+interface GigabitEthernet0/0/0/1.35
+ ipv4 address 35.1.1.1 255.255.255.0
+ encapsulation dot1q 35
+!
+interface GigabitEthernet0/0/0/1.40 l2transport
+ encapsulation dot1q 40
+!
+interface GigabitEthernet0/0/0/1.60
+ ipv4 address 60.1.1.1 255.255.255.0
+ encapsulation dot1q 61
+!
+interface GigabitEthernet0/0/0/1.102
+ ipv4 address 101.1.1.1 255.255.255.0
+ encapsulation dot1q 102
+!
+interface GigabitEthernet0/0/0/2
+ description to SP1R2
+ ipv4 address 33.56.12.1 255.255.255.0
+ ipv6 address fe80::1 link-local
+ ipv6 address 2001:33:56:12::1/64
+!
+interface GigabitEthernet0/0/0/2.70 l2transport
+ encapsulation dot1q 70
+ rewrite ingress tag pop 1 symmetric
+!
+interface GigabitEthernet0/0/0/3
+ description to SP1R5
+ ipv4 address 33.56.15.1 255.255.255.0
+ ipv6 address fe80::1 link-local
+ ipv6 address 2001:33:56:15::1/64
+!
+interface GigabitEthernet0/0/0/4
+ description to CEL7
+ ipv4 address 40.60.17.1 255.255.255.0
+ ipv6 address fe80::1 link-local
+ ipv6 address 2001:40:60:17::1/64
+ shutdown
+!
+interface GigabitEthernet0/0/0/5
+ description to SP1R3
+ ipv4 address 33.56.13.1 255.255.255.0
+ ipv6 address fe80::1 link-local
+ ipv6 address 2001:33:56:13::1/64
+!
+prefix-set sham-filter
+  192.168.1.11/32,
+  192.168.2.21/32
+end-set
+!
+route-policy PASS
+  pass
+end-policy
+!
+route-policy RED-BGP
+  if destination in (33.56.0.0/16 le 24) then
+    pass
+  elseif destination in (2001:33:56::/48 le 64) then
+    pass
+  else
+    drop
+  endif
+end-policy
+!
+route-policy sham-filter
+  if destination in sham-filter then
+    drop
+  else
+    pass
+  endif
+end-policy
+!
+router ospf 1
+ vrf cust1
+  redistribute bgp 3356 route-policy sham-filter
+  area 0
+   sham-link 192.168.1.11 192.168.2.21
+   !
+  !
+  area 1
+  !
+  area 2
+   virtual-link 172.16.6.6
+   !
+   interface GigabitEthernet0/0/0/1
+   !
+  !
+ !
+!
+router ospf 200
+ router-id 0.0.0.1
+ mpls ldp sync
+ mpls ldp auto-config
+ address-family ipv4 unicast
+ area 0
+  interface Loopback0
+  !
+  interface GigabitEthernet0/0/0/1.33
+  !
+ !
+!
+router ospf AS3356
+ mpls ldp auto-config
+ address-family ipv4 unicast
+ area 0
+  interface Loopback0
+   passive enable
+  !
+  interface GigabitEthernet0/0/0/0
+   network point-to-point
+  !
+  interface GigabitEthernet0/0/0/1.60
+  !
+  interface GigabitEthernet0/0/0/2
+   network point-to-point
+  !
+  interface GigabitEthernet0/0/0/3
+   network point-to-point
+  !
+  interface GigabitEthernet0/0/0/5
+   network point-to-point
+  !
+ !
+ area 1
+  nssa
+  interface GigabitEthernet0/0/0/1.102
+  !
+ !
+!
+router ospfv3 AS3356
+ mpls ldp sync
+ area 0
+  interface Loopback0
+   passive
+  !
+  interface GigabitEthernet0/0/0/0
+   network point-to-point
+  !
+  interface GigabitEthernet0/0/0/2
+   network point-to-point
+  !
+  interface GigabitEthernet0/0/0/3
+   network point-to-point
+  !
+  interface GigabitEthernet0/0/0/5
+   network point-to-point
+  !
+ !
+!
+router bgp 3356
+ bgp router-id 33.56.1.1
+ address-family ipv4 unicast
+  aggregate-address 33.56.0.0/16 summary-only
+  redistribute connected route-policy RED-BGP
+ !
+ address-family vpnv4 unicast
+ !
+ address-family ipv6 unicast
+  aggregate-address 2001:33:56::/48 summary-only
+  redistribute connected route-policy RED-BGP
+  allocate-label all
+ !
+ address-family vpnv6 unicast
+ !
+ address-family l2vpn vpls-vpws
+ !
+ address-family l2vpn evpn
+ !
+ neighbor 33.56.2.2
+  remote-as 3356
+  update-source Loopback0
+  address-family l2vpn evpn
+  !
+ !
+ neighbor 33.56.5.5
+  remote-as 3356
+  password encrypted 13242441585952
+  update-source Loopback0
+  address-family ipv4 unicast
+   next-hop-self
+  !
+  address-family vpnv4 unicast
+  !
+  address-family ipv6 labeled-unicast
+   next-hop-self
+  !
+  address-family vpnv6 unicast
+  !
+  address-family l2vpn vpls-vpws
+  !
+  address-family l2vpn evpn
+   next-hop-self
+  !
+ !
+ neighbor 41.61.16.6
+  remote-as 100
+  password encrypted 132932343F
+  address-family ipv4 unicast
+   route-policy PASS in
+   route-policy PASS out
+  !
+ !
+ neighbor 2001:33:56:aa::5
+  remote-as 3356
+  password encrypted 02273708585359
+  update-source Loopback0
+  address-family ipv6 unicast
+   next-hop-self
+  !
+ !
+ neighbor 2001:41:61:16::6
+  remote-as 100
+  password encrypted 1235203126
+  address-family ipv6 unicast
+   route-policy PASS in
+   route-policy PASS out
+  !
+ !
+ vrf cust1
+  rd 111:100
+  address-family ipv4 unicast
+   label mode per-vrf
+   redistribute connected
+   redistribute ospf 1
+  !
+  address-family ipv6 unicast
+  !
+  neighbor 41.61.16.6
+   remote-as 100
+   password encrypted 132932343F
+   address-family ipv4 unicast
+    route-policy PASS in
+    route-policy PASS out
+    as-override
+   !
+  !
+  neighbor 2001:41:61:16::6
+   remote-as 100
+   password encrypted 1235203126
+   address-family ipv6 unicast
+    route-policy PASS in
+    route-policy PASS out
+   !
+  !
+ !
+!
+l2vpn
+ pbb
+  backbone-source-mac 0001.0001.0001
+ !
+ xconnect group as200
+  p2p 7070
+   interface GigabitEthernet0/0/0/2.70
+   neighbor ipv4 192.168.7.7 pw-id 7070
+   !
+  !
+ !
+ bridge group bdc
+  bridge-domain bdc
+   pbb core
+    evi 100
+    !
+   !
+  !
+ !
+ bridge group bde
+  bridge-domain bde
+   interface GigabitEthernet0/0/0/0.41
+   !
+   pbb edge i-sid 4141 core-bridge bdc
+   !
+  !
+ !
+ bridge group bg1
+  bridge-domain bd1
+   interface GigabitEthernet0/0/0/1.40
+   !
+   vfi vf1
+    vpn-id 100
+    autodiscovery bgp
+     rd 4:4
+     route-target 40:40
+     signaling-protocol bgp
+      ve-id 1
+     !
+    !
+   !
+  !
+ !
+!
+mpls ldp
+ address-family ipv4
+  label
+   local
+    allocate for host-routes
+   !
+  !
+ !
+!
+mpls label range table 0 101000 101999
+ssh server v2
+ssh server vrf Mgmt-intf
+end</entry>
+        </extensions>
+        <interface id="0" name="GigabitEthernet0/0/0/0"/>
+        <interface id="1" name="GigabitEthernet0/0/0/1"/>
+        <interface id="2" name="GigabitEthernet0/0/0/2"/>
+        <interface id="3" name="GigabitEthernet0/0/0/3"/>
+        <interface id="4" name="GigabitEthernet0/0/0/4"/>
+        <interface id="5" name="GigabitEthernet0/0/0/5"/>
+    </node>
+    <node name="SP1R4" type="SIMPLE" subtype="IOS XRv" location="502,441" ipv4="33.56.4.4">
+        <extensions>
+            <entry key="config" type="String">!! IOS XR Configuration 6.1.2
+!! Last configuration change at Thu May 25 18:21:17 2017 by CVAC
+!
+!  IOS-XR Config generated on 2017-02-25 23:17
+! by autonetkit_0.23.5
+hostname SP1R4
+service timestamps log datetime msec
+service timestamps debug datetime msec
+telnet vrf default ipv4 server max-servers 10
+telnet vrf Mgmt-intf ipv4 server max-servers 10
+domain name virl.info
+domain lookup disable
+vrf lisp
+ address-family ipv4 unicast
+  import route-target
+   1:100
+  !
+  export route-target
+   1:100
+  !
+ !
+!
+vrf sitec
+ address-family ipv4 unicast
+  import route-target
+   1:100
+   4:4
+  !
+  export route-target
+   4:4
+  !
+ !
+ address-family ipv6 unicast
+  import route-target
+   1:100
+  !
+  export route-target
+   1:100
+  !
+ !
+!
+vrf Mgmt-intf
+ address-family ipv4 unicast
+ !
+ address-family ipv6 unicast
+ !
+!
+line template vty
+ timestamp
+ exec-timeout 720 0
+!
+line console
+ exec-timeout 0 0
+!
+line default
+ exec-timeout 720 0
+!
+vty-pool default 0 50
+control-plane
+ management-plane
+  inband
+   interface all
+    allow all
+   !
+  !
+ !
+!
+interface Loopback0
+ description Loopback
+ ipv4 address 33.56.4.4 255.255.255.255
+ ipv6 address 2001:33:56:aa::4/128
+!
+interface Loopback1
+ vrf sitec
+ ipv4 address 172.16.4.41 255.255.255.255
+ ipv6 address 2001:33:56::4:41/128
+!
+interface Loopback3
+ vrf sitec
+ ipv4 address 172.16.4.43 255.255.255.255
+!
+interface Loopback100
+ vrf lisp
+ ipv4 address 100.1.1.1 255.255.255.255
+!
+interface MgmtEth0/0/CPU0/0
+ description OOB Management
+ ! Configured on launch
+ vrf Mgmt-intf
+ ipv4 address 10.255.0.114 255.255.0.0
+!
+interface GigabitEthernet0/0/0/0
+ description to SP1R1
+ ipv4 address 33.56.14.4 255.255.255.0
+ ipv6 address fe80::4 link-local
+ ipv6 address 2001:33:56:14::4/64
+!
+interface GigabitEthernet0/0/0/0.41 l2transport
+ encapsulation dot1q 41
+ rewrite ingress tag pop 1 symmetric
+!
+interface GigabitEthernet0/0/0/1
+ description to SP2R4
+ ipv4 address 11.11.11.1 255.255.255.0
+ ipv6 address fe80::1 link-local
+ ipv6 address 2001:11:11:11::1/64
+!
+interface GigabitEthernet0/0/0/1.40 l2transport
+ encapsulation dot1q 40
+!
+interface GigabitEthernet0/0/0/2
+ description to SP1R3
+ ipv4 address 33.56.34.4 255.255.255.0
+ ipv6 address fe80::4 link-local
+ ipv6 address 2001:33:56:34::4/64
+!
+interface GigabitEthernet0/0/0/3
+ description to L2-SW-INTERNET
+ ipv4 address 10.0.128.2 255.255.255.248
+!
+interface GigabitEthernet0/0/0/4
+ description to CER6
+ ipv4 address 41.61.46.4 255.255.255.0
+ ipv6 address fe80::4 link-local
+ ipv6 address 2001:41:61:64::4/64
+!
+interface GigabitEthernet0/0/0/5
+ description to SP1R2
+ ipv4 address 33.56.24.4 255.255.255.0
+ ipv6 address fe80::4 link-local
+ ipv6 address 2001:33:56:24::4/64
+!
+route-policy PASS
+  pass
+end-policy
+!
+route-policy RED-BGP
+  if destination in (33.56.0.0/16 le 24) then
+    pass
+  elseif destination in (2001:33:56::/48 le 64) then
+    pass
+  else
+    drop
+  endif
+end-policy
+!
+route-policy rewrite-cust1
+  if rd in (200:1, 200:2, 200:3) then
+    set extcommunity rt (1:100)
+    set local-preference 150
+  else
+    pass
+  endif
+end-policy
+!
+router static
+ address-family ipv4 unicast
+  11.11.11.254/32 GigabitEthernet0/0/0/1
+ !
+!
+router ospf AS3356
+ mpls ldp sync
+ mpls ldp auto-config
+ address-family ipv4 unicast
+ area 0
+  interface Loopback0
+   passive enable
+  !
+  interface GigabitEthernet0/0/0/0
+   network point-to-point
+  !
+  interface GigabitEthernet0/0/0/2
+   network point-to-point
+  !
+  interface GigabitEthernet0/0/0/5
+   network point-to-point
+  !
+ !
+!
+router ospfv3 AS3356
+ area 0
+  interface Loopback0
+   passive
+  !
+  interface GigabitEthernet0/0/0/0
+   network point-to-point
+  !
+  interface GigabitEthernet0/0/0/2
+   network point-to-point
+  !
+  interface GigabitEthernet0/0/0/5
+   network point-to-point
+  !
+ !
+!
+router bgp 3356
+ bgp router-id 33.56.4.4
+ address-family ipv4 unicast
+  aggregate-address 33.56.0.0/16 summary-only
+  redistribute connected route-policy RED-BGP
+ !
+ address-family vpnv4 unicast
+  retain route-target all
+ !
+ address-family ipv6 unicast
+  aggregate-address 2001:33:56::/48 summary-only
+  redistribute connected route-policy RED-BGP
+  allocate-label all
+ !
+ address-family vpnv6 unicast
+ !
+ address-family l2vpn vpls-vpws
+ !
+ address-family l2vpn evpn
+ !
+ neighbor 33.56.5.5
+  remote-as 3356
+  password encrypted 072E121F1D5C4F
+  update-source Loopback0
+  address-family ipv4 unicast
+   next-hop-self
+  !
+  address-family vpnv4 unicast
+   next-hop-self
+  !
+  address-family ipv6 labeled-unicast
+   next-hop-self
+  !
+  address-family vpnv6 unicast
+  !
+  address-family l2vpn vpls-vpws
+  !
+  address-family l2vpn evpn
+   next-hop-self
+  !
+ !
+ neighbor 11.11.11.254
+  remote-as 1239
+  password encrypted 096F6B272D2025
+  address-family ipv4 unicast
+   route-policy PASS in
+   route-policy PASS out
+  !
+  address-family vpnv4 unicast
+   route-policy rewrite-cust1 in
+   route-policy PASS out
+  !
+ !
+ neighbor 2001:33:56:aa::5
+  remote-as 3356
+  password encrypted 047A38555C741A
+  update-source Loopback0
+  address-family ipv6 unicast
+   next-hop-self
+  !
+ !
+ neighbor 2001:11:11:11::254
+  remote-as 1239
+  password encrypted 03277E25322A13
+  address-family ipv6 unicast
+   route-policy PASS in
+   route-policy PASS out
+  !
+ !
+ vrf lisp
+  rd 1:100
+  address-family ipv4 unicast
+   redistribute connected
+  !
+ !
+ vrf sitec
+  rd 4:4
+  address-family ipv4 unicast
+   redistribute connected
+  !
+  address-family ipv6 unicast
+   redistribute connected
+  !
+ !
+!
+router lisp
+ address-family ipv6 unicast
+  map-resolver
+  map-server
+ !
+ site as200
+  eid-prefix 2200:200::/32 accept-more-specifics
+  allowed-locator 20.40.27.7
+  authentication-key encrypted 00050054540B
+ !
+ site as-100
+  eid-prefix 2100:100::/32 accept-more-specifics
+  eid-prefix 5000::/16 accept-more-specifics
+  allowed-locator 40.60.27.7
+  authentication-key encrypted 050A155E711C
+ !
+ locator-table lisp
+!
+l2vpn
+ pbb
+  backbone-source-mac 0004.0004.0004
+ !
+ bridge group bdc
+  bridge-domain bdc
+   pbb core
+    evi 100
+    !
+   !
+  !
+ !
+ bridge group bde
+  bridge-domain bde
+   interface GigabitEthernet0/0/0/0.41
+   !
+   pbb edge i-sid 4141 core-bridge bdc
+   !
+  !
+ !
+ bridge group bg1
+  bridge-domain bd1
+   interface GigabitEthernet0/0/0/1.40
+   !
+   vfi vf1
+    vpn-id 100
+    autodiscovery bgp
+     rd 4:4
+     route-target 40:40
+     signaling-protocol bgp
+      ve-id 4
+     !
+    !
+   !
+  !
+ !
+!
+mpls ldp
+ address-family ipv4
+  label
+   local
+    allocate for host-routes
+    advertise
+     explicit-null
+    !
+   !
+  !
+ !
+!
+mpls label range table 0 104000 104999
+router eigrp 1
+ vrf sitec
+  address-family ipv4
+   autonomous-system 200
+   interface Loopback3
+   !
+  !
+ !
+!
+ssh server v2
+ssh server vrf Mgmt-intf
+end</entry>
+        </extensions>
+        <interface id="0" name="GigabitEthernet0/0/0/0"/>
+        <interface id="1" name="GigabitEthernet0/0/0/1"/>
+        <interface id="2" name="GigabitEthernet0/0/0/2"/>
+        <interface id="3" name="GigabitEthernet0/0/0/3"/>
+        <interface id="4" name="GigabitEthernet0/0/0/4"/>
+        <interface id="5" name="GigabitEthernet0/0/0/5"/>
+    </node>
+    <node name="SP2R3" type="SIMPLE" subtype="IOS XRv" location="821,233" ipv4="12.39.3.3">
+        <extensions>
+            <entry key="config" type="String">!! IOS XR Configuration 6.1.2
+!! Last configuration change at Thu May 25 18:21:27 2017 by CVAC
+!
+!  IOS-XR Config generated on 2017-02-25 23:17
+! by autonetkit_0.23.5
+hostname SP2R3
+service timestamps log datetime msec
+service timestamps debug datetime msec
+telnet vrf default ipv4 server max-servers 10
+telnet vrf Mgmt-intf ipv4 server max-servers 10
+domain name virl.info
+domain lookup disable
+vrf sitee
+ address-family ipv4 unicast
+  import route-target
+   2:2
+   3:3
+  !
+  export route-target
+   2:2
+   3:3
+  !
+ !
+!
+vrf Mgmt-intf
+ address-family ipv4 unicast
+ !
+ address-family ipv6 unicast
+ !
+!
+vrf inter-cust1
+ address-family ipv4 unicast
+  import route-target
+   2:2
+  !
+  export route-target
+   2:2
+  !
+ !
+!
+line template vty
+ timestamp
+ exec-timeout 720 0
+!
+line console
+ exec-timeout 0 0
+!
+line default
+ exec-timeout 720 0
+!
+vty-pool default 0 50
+control-plane
+ management-plane
+  inband
+   interface all
+    allow all
+   !
+  !
+ !
+!
+interface Loopback0
+ description Loopback
+ ipv4 address 12.39.3.3 255.255.255.255
+ ipv6 address 2001:12:39:ff::3/128
+!
+interface Loopback1
+ vrf sitee
+ ipv4 address 192.168.3.31 255.255.255.255
+!
+interface Loopback3
+ vrf sitee
+ ipv4 address 192.168.3.33 255.255.255.255
+!
+interface MgmtEth0/0/CPU0/0
+ description OOB Management
+ ! Configured on launch
+ vrf Mgmt-intf
+ ipv4 address 10.255.0.118 255.255.0.0
+!
+interface GigabitEthernet0/0/0/0
+ description to SP2R2
+ ipv4 address 12.39.23.3 255.255.255.0
+ ipv6 address fe80::3 link-local
+ ipv6 address 2001:12:39:23::3/64
+!
+interface GigabitEthernet0/0/0/1
+ description to SP1R3
+ ipv4 address 22.22.33.254 255.255.255.0
+ ipv6 address fe80::254 link-local
+ ipv6 address 2001:22:22:33::254/64
+!
+interface GigabitEthernet0/0/0/1.34
+ vrf inter-cust1
+ ipv4 address 22.22.34.254 255.255.255.0
+ encapsulation dot1q 34
+!
+interface GigabitEthernet0/0/0/2
+ description to SP2R4
+ ipv4 address 12.39.34.3 255.255.255.0
+ ipv6 address fe80::3 link-local
+ ipv6 address 2001:12:39:12::3/64
+!
+interface GigabitEthernet0/0/0/3
+ description to SP2R5
+ ipv4 address 12.39.35.3 255.255.255.0
+ ipv6 address fe80::3 link-local
+ ipv6 address 2001:12:39:35::3/64
+!
+interface GigabitEthernet0/0/0/4
+ description to L2-SW-INTERNET
+ ipv4 address 10.0.128.3 255.255.255.248
+!
+interface GigabitEthernet0/0/0/5
+ description to CEL7
+ ipv4 address 22.42.37.3 255.255.255.0
+ ipv6 address fe80::3 link-local
+ ipv6 address 2001:22:42:37::3/64
+!
+interface GigabitEthernet0/0/0/6
+ description to SP2R1
+ ipv4 address 12.39.13.3 255.255.255.0
+ ipv6 address fe80::3 link-local
+ ipv6 address 2001:12:39:13::3/64
+!
+route-policy PASS
+  pass
+end-policy
+!
+route-policy RED-BGP
+  if destination in (12.39.0.0/16 le 24) then
+    pass
+  elseif destination in (2001:12:39::/48 le 64) then
+    pass
+  else
+    drop
+  endif
+end-policy
+!
+route-policy match-r7
+  if destination in (12.39.2.2/32) then
+    pass
+  else
+    drop
+  endif
+end-policy
+!
+router static
+ address-family ipv4 unicast
+  22.22.33.1/32 GigabitEthernet0/0/0/1
+ !
+!
+router isis AS1239
+ is-type level-2-only
+ net 1239.0000.0000.0003.00
+ address-family ipv4 unicast
+  metric-style wide
+  redistribute bgp 1239
+  mpls ldp auto-config
+ !
+ address-family ipv6 unicast
+  metric-style wide
+ !
+ interface Loopback0
+  address-family ipv4 unicast
+  !
+  address-family ipv6 unicast
+  !
+ !
+ interface GigabitEthernet0/0/0/0
+  point-to-point
+  address-family ipv4 unicast
+  !
+  address-family ipv6 unicast
+  !
+ !
+ interface GigabitEthernet0/0/0/2
+  point-to-point
+  address-family ipv4 unicast
+  !
+  address-family ipv6 unicast
+  !
+ !
+ interface GigabitEthernet0/0/0/3
+  point-to-point
+  address-family ipv4 unicast
+  !
+  address-family ipv6 unicast
+  !
+ !
+ interface GigabitEthernet0/0/0/6
+  point-to-point
+  address-family ipv4 unicast
+  !
+  address-family ipv6 unicast
+  !
+ !
+!
+router ospf 1
+ vrf sitee
+  domain-id type 0005 value 000000650200
+  redistribute bgp 1239
+  area 0
+   sham-link 192.168.3.31 192.168.2.21
+   !
+   interface Loopback3
+   !
+  !
+ !
+!
+router bgp 1239
+ bgp router-id 12.39.3.3
+ address-family ipv4 unicast
+  redistribute connected route-policy RED-BGP
+  redistribute isis AS1239 route-policy match-r7
+  allocate-label route-policy match-r7
+ !
+ address-family vpnv4 unicast
+ !
+ address-family ipv6 unicast
+  aggregate-address 2001:12:39::/48 summary-only
+  redistribute connected route-policy RED-BGP
+ !
+ neighbor 12.39.5.5
+  remote-as 1239
+  password encrypted 1436215A5E5773
+  update-source Loopback0
+  address-family ipv4 unicast
+   next-hop-self
+  !
+  address-family vpnv4 unicast
+  !
+ !
+ neighbor 22.22.33.1
+  remote-as 3356
+  password encrypted 14343725382118
+  address-family ipv4 labeled-unicast
+   route-policy PASS in
+   route-policy PASS out
+  !
+ !
+ neighbor 2001:12:39:ff::5
+  remote-as 1239
+  password encrypted 096D7D584B564E
+  update-source Loopback0
+  address-family ipv6 unicast
+   next-hop-self
+  !
+ !
+ neighbor 2001:22:22:33::1
+  remote-as 3356
+  password encrypted 03277E25322A13
+  address-family ipv6 unicast
+   route-policy PASS in
+   route-policy PASS out
+  !
+ !
+ vrf sitee
+  rd 200:3
+  address-family ipv4 unicast
+   redistribute connected
+   redistribute ospf 1
+  !
+ !
+ vrf inter-cust1
+  rd 200:3356
+  address-family ipv4 unicast
+  !
+  neighbor 22.22.34.1
+   remote-as 3356
+   address-family ipv4 unicast
+    route-policy PASS in
+    route-policy PASS out
+   !
+  !
+ !
+!
+mpls ldp
+ address-family ipv4
+  label
+   local
+    allocate for host-routes
+    advertise
+     explicit-null
+    !
+   !
+  !
+ !
+!
+mpls label range table 0 123300 123399
+ssh server v2
+ssh server vrf Mgmt-intf
+end</entry>
+        </extensions>
+        <interface id="0" name="GigabitEthernet0/0/0/0"/>
+        <interface id="1" name="GigabitEthernet0/0/0/1"/>
+        <interface id="2" name="GigabitEthernet0/0/0/2"/>
+        <interface id="3" name="GigabitEthernet0/0/0/3"/>
+        <interface id="4" name="GigabitEthernet0/0/0/4"/>
+        <interface id="5" name="GigabitEthernet0/0/0/5"/>
+        <interface id="6" name="GigabitEthernet0/0/0/6"/>
+    </node>
+    <node name="SP2R2" type="SIMPLE" subtype="IOS XRv" location="1039,233" ipv4="12.39.2.2">
+        <extensions>
+            <entry key="config" type="String">!! IOS XR Configuration 6.1.2
+!! Last configuration change at Thu May 25 18:21:26 2017 by CVAC
+!
+!  IOS-XR Config generated on 2017-02-25 23:17
+! by autonetkit_0.23.5
+hostname SP2R2
+service timestamps log datetime msec
+service timestamps debug datetime msec
+telnet vrf default ipv4 server max-servers 10
+telnet vrf Mgmt-intf ipv4 server max-servers 10
+domain name virl.info
+domain lookup disable
+vrf csc
+ address-family ipv4 unicast
+  import route-target
+   72:72
+  !
+  export route-target
+   72:72
+  !
+ !
+!
+vrf cust1
+ address-family ipv4 unicast
+  import route-target
+   1:100
+   2:2
+  !
+  export route-target
+   2:2
+   77:77
+  !
+ !
+ address-family ipv6 unicast
+  import route-target
+   1:100
+  !
+  export route-target
+   1:100
+  !
+ !
+!
+vrf Mgmt-intf
+ address-family ipv4 unicast
+ !
+ address-family ipv6 unicast
+ !
+!
+line template vty
+ timestamp
+ exec-timeout 720 0
+!
+line console
+ exec-timeout 0 0
+!
+line default
+ exec-timeout 720 0
+!
+vty-pool default 0 50
+control-plane
+ management-plane
+  inband
+   interface all
+    allow all
+   !
+  !
+ !
+!
+interface Loopback0
+ description Loopback
+ ipv4 address 12.39.2.2 255.255.255.255
+ ipv6 address 2001:12:39:ff::2/128
+!
+interface MgmtEth0/0/CPU0/0
+ description OOB Management
+ ! Configured on launch
+ vrf Mgmt-intf
+ ipv4 address 10.255.0.117 255.255.0.0
+!
+interface GigabitEthernet0/0/0/0
+ description to SP2R3
+ ipv4 address 12.39.23.2 255.255.255.0
+ ipv6 address fe80::2 link-local
+ ipv6 address 2001:12:39:23::2/64
+!
+interface GigabitEthernet0/0/0/1
+ description to CER7
+ vrf cust1
+ ipv4 address 20.40.27.2 255.255.255.0
+ ipv6 address fe80::2 link-local
+ ipv6 address 2001:20:40:27::2/64
+!
+interface GigabitEthernet0/0/0/1.72
+ vrf csc
+ ipv4 address 10.2.27.2 255.255.255.0
+ encapsulation dot1q 72
+!
+interface GigabitEthernet0/0/0/2
+ description to SP2R1
+ ipv4 address 12.39.12.2 255.255.255.0
+ ipv6 address fe80::2 link-local
+ ipv6 address 2001:12:39:12::2/64
+!
+interface GigabitEthernet0/0/0/3
+ description to SP2R4
+ ipv4 address 12.39.24.2 255.255.255.0
+ ipv6 address fe80::2 link-local
+ ipv6 address 2001:12:39:24::2/64
+!
+interface GigabitEthernet0/0/0/4
+ description to CER6
+ ipv4 address 21.41.26.2 255.255.255.0
+ ipv6 address fe80::2 link-local
+ ipv6 address 2001:21:41:26::2/64
+!
+route-policy PASS
+  pass
+end-policy
+!
+route-policy RED-BGP
+  if destination in (12.39.0.0/16 le 24) then
+    pass
+  elseif destination in (2001:12:39::/48 le 64) then
+    pass
+  else
+    drop
+  endif
+end-policy
+!
+route-policy eigrp-metric
+  set eigrp-metric 1000000 1 255 1 1500
+end-policy
+!
+router static
+ vrf csc
+  address-family ipv4 unicast
+   10.2.27.7/32 GigabitEthernet0/0/0/1.72
+  !
+ !
+!
+router isis AS1239
+ is-type level-2-only
+ net 1239.0000.0000.002.00
+ address-family ipv4 unicast
+  metric-style wide
+  mpls ldp auto-config
+ !
+ address-family ipv6 unicast
+  metric-style wide
+ !
+ interface Loopback0
+  address-family ipv4 unicast
+  !
+  address-family ipv6 unicast
+  !
+ !
+ interface GigabitEthernet0/0/0/0
+  point-to-point
+  address-family ipv4 unicast
+  !
+  address-family ipv6 unicast
+  !
+ !
+ interface GigabitEthernet0/0/0/2
+  point-to-point
+  address-family ipv4 unicast
+  !
+  address-family ipv6 unicast
+  !
+ !
+ interface GigabitEthernet0/0/0/3
+  point-to-point
+  address-family ipv4 unicast
+  !
+  address-family ipv6 unicast
+  !
+ !
+!
+router ospf AS3356
+ area 0
+  interface GigabitEthernet0/0/0/2
+  !
+ !
+!
+router bgp 1239
+ bgp router-id 12.39.2.2
+ address-family ipv4 unicast
+  aggregate-address 12.39.0.0/16 summary-only
+  redistribute connected route-policy RED-BGP
+ !
+ address-family vpnv4 unicast
+ !
+ address-family ipv6 unicast
+  aggregate-address 2001:12:39::/48 summary-only
+  redistribute connected route-policy RED-BGP
+ !
+ address-family vpnv6 unicast
+ !
+ neighbor 12.39.5.5
+  remote-as 1239
+  password encrypted 072E121D1C5A40
+  update-source Loopback0
+  address-family ipv4 unicast
+   next-hop-self
+  !
+  address-family vpnv4 unicast
+  !
+  address-family vpnv6 unicast
+  !
+ !
+ neighbor 20.40.27.7
+  remote-as 200
+  password encrypted 02342D7C2332
+  address-family ipv4 unicast
+   route-policy PASS in
+   route-policy PASS out
+  !
+ !
+ neighbor 2001:12:39:ff::5
+  remote-as 1239
+  password encrypted 096D7D584B564E
+  update-source Loopback0
+  address-family ipv6 unicast
+   next-hop-self
+  !
+ !
+ neighbor 2001:20:40:27::7
+  remote-as 200
+  password encrypted 0336722C2E3B
+  address-family ipv6 unicast
+   route-policy PASS in
+   route-policy PASS out
+  !
+ !
+ vrf csc
+  rd 72:72
+  address-family ipv4 unicast
+   allocate-label all
+  !
+  neighbor 10.2.27.7
+   remote-as 200
+   address-family ipv4 labeled-unicast
+    route-policy PASS in
+    route-policy PASS out
+   !
+  !
+ !
+ vrf cust1
+  rd 200:1
+  address-family ipv4 unicast
+   redistribute eigrp 100
+  !
+  address-family ipv6 unicast
+  !
+  neighbor 20.40.27.7
+   remote-as 200
+   password encrypted 02342D7C2332
+   address-family ipv4 unicast
+    route-policy PASS in
+    route-policy PASS out
+   !
+  !
+  neighbor 2001:20:40:27::7
+   remote-as 200
+   password encrypted 05392F280978
+   address-family ipv6 unicast
+    route-policy PASS in
+    route-policy PASS out
+   !
+  !
+ !
+!
+mpls ldp
+ address-family ipv4
+  label
+   local
+    allocate for host-routes
+    advertise
+     explicit-null
+    !
+   !
+  !
+ !
+!
+mpls label range table 0 123200 123299
+router eigrp 1
+ vrf cust1
+  address-family ipv4
+   autonomous-system 100
+   redistribute bgp 1239 route-policy eigrp-metric
+   interface GigabitEthernet0/0/0/1
+    site-of-origin 2:2
+   !
+  !
+ !
+!
+ssh server v2
+ssh server vrf Mgmt-intf
+end</entry>
+        </extensions>
+        <interface id="0" name="GigabitEthernet0/0/0/0"/>
+        <interface id="1" name="GigabitEthernet0/0/0/1"/>
+        <interface id="2" name="GigabitEthernet0/0/0/2"/>
+        <interface id="3" name="GigabitEthernet0/0/0/3"/>
+        <interface id="4" name="GigabitEthernet0/0/0/4"/>
+    </node>
+    <node name="SP2R4" type="SIMPLE" subtype="IOS XRv" location="821,441" ipv4="12.39.4.4">
+        <extensions>
+            <entry key="config" type="String">!! IOS XR Configuration 6.1.2
+!! Last configuration change at Thu May 25 18:21:28 2017 by CVAC
+!
+!  IOS-XR Config generated on 2017-02-25 23:17
+! by autonetkit_0.23.5
+hostname SP2R4
+service timestamps log datetime msec
+service timestamps debug datetime msec
+telnet vrf default ipv4 server max-servers 10
+telnet vrf Mgmt-intf ipv4 server max-servers 10
+domain name virl.info
+domain lookup disable
+vrf Mgmt-intf
+ address-family ipv4 unicast
+ !
+ address-family ipv6 unicast
+ !
+!
+line template vty
+ timestamp
+ exec-timeout 720 0
+!
+line console
+ exec-timeout 0 0
+!
+line default
+ exec-timeout 720 0
+!
+vty-pool default 0 50
+control-plane
+ management-plane
+  inband
+   interface all
+    allow all
+   !
+  !
+ !
+!
+interface Loopback0
+ description Loopback
+ ipv4 address 12.39.4.4 255.255.255.255
+ ipv6 address 2001:12:39:ff::4/128
+!
+interface MgmtEth0/0/CPU0/0
+ description OOB Management
+ ! Configured on launch
+ vrf Mgmt-intf
+ ipv4 address 10.255.0.119 255.255.0.0
+!
+interface GigabitEthernet0/0/0/0
+ description to SP2R1
+ ipv4 address 12.39.14.4 255.255.255.0
+ ipv6 address fe80::4 link-local
+ ipv6 address 2001:12:39:14::4/64
+!
+interface GigabitEthernet0/0/0/1
+ description to SP1R4
+ ipv4 address 11.11.11.254 255.255.255.0
+ ipv6 address fe80::254 link-local
+ ipv6 address 2001:11:11:11::254/64
+!
+interface GigabitEthernet0/0/0/2
+ description to SP2R3
+ ipv4 address 12.39.34.4 255.255.255.0
+ ipv6 address fe80::4 link-local
+ ipv6 address 2001:12:39:12::4/64
+!
+interface GigabitEthernet0/0/0/3
+ description to L2-SW-INTERNET
+ ipv4 address 10.0.128.4 255.255.255.248
+!
+interface GigabitEthernet0/0/0/4
+ description to CEL6
+ ipv4 address 21.41.46.4 255.255.255.0
+ ipv6 address fe80::4 link-local
+ ipv6 address 2001:21:41:46::4/64
+!
+interface GigabitEthernet0/0/0/5
+ description to SP2R2
+ ipv4 address 12.39.24.4 255.255.255.0
+ ipv6 address fe80::4 link-local
+ ipv6 address 2001:12:39:24::4/64
+!
+route-policy PASS
+  pass
+end-policy
+!
+route-policy RED-BGP
+  if destination in (12.39.0.0/16 le 24) then
+    pass
+  elseif destination in (2001:12:39::/48 le 64) then
+    pass
+  else
+    drop
+  endif
+end-policy
+!
+route-policy rewrite-cust1
+  if rd in (3:3, 4:4, 111:100, 112:100) then
+    set extcommunity rt (2:2)
+    set local-preference 150
+  else
+    pass
+  endif
+end-policy
+!
+router static
+ address-family ipv4 unicast
+  11.11.11.1/32 GigabitEthernet0/0/0/1
+ !
+!
+router isis AS1239
+ is-type level-2-only
+ net 1239.0000.0000.0004.00
+ address-family ipv4 unicast
+  metric-style wide
+  mpls ldp auto-config
+ !
+ address-family ipv6 unicast
+  metric-style wide
+ !
+ interface Loopback0
+  address-family ipv4 unicast
+  !
+  address-family ipv6 unicast
+  !
+ !
+ interface GigabitEthernet0/0/0/0
+  point-to-point
+  address-family ipv4 unicast
+  !
+  address-family ipv6 unicast
+  !
+ !
+ interface GigabitEthernet0/0/0/2
+  point-to-point
+  address-family ipv4 unicast
+  !
+  address-family ipv6 unicast
+  !
+ !
+ interface GigabitEthernet0/0/0/5
+  point-to-point
+  address-family ipv4 unicast
+  !
+  address-family ipv6 unicast
+  !
+ !
+!
+router bgp 1239
+ bgp router-id 12.39.4.4
+ address-family ipv4 unicast
+  aggregate-address 12.39.0.0/16 summary-only
+  redistribute connected route-policy RED-BGP
+ !
+ address-family vpnv4 unicast
+  retain route-target all
+ !
+ address-family ipv6 unicast
+  aggregate-address 2001:12:39::/48 summary-only
+  redistribute connected route-policy RED-BGP
+ !
+ neighbor 12.39.5.5
+  remote-as 1239
+  password encrypted 052A355E731F17
+  update-source Loopback0
+  address-family ipv4 unicast
+   next-hop-self
+  !
+  address-family vpnv4 unicast
+   next-hop-self
+  !
+ !
+ neighbor 11.11.11.1
+  remote-as 3356
+  password encrypted 096F6B272D2025
+  address-family ipv4 unicast
+   route-policy PASS in
+   route-policy PASS out
+  !
+  address-family vpnv4 unicast
+   route-policy rewrite-cust1 in
+   route-policy PASS out
+  !
+ !
+ neighbor 2001:11:11:11::1
+  remote-as 3356
+  password encrypted 00273628307E39
+  address-family ipv6 unicast
+   route-policy PASS in
+   route-policy PASS out
+  !
+ !
+ neighbor 2001:12:39:ff::5
+  remote-as 1239
+  password encrypted 13242443595F5D
+  update-source Loopback0
+  address-family ipv6 unicast
+   next-hop-self
+  !
+ !
+!
+mpls ldp
+ address-family ipv4
+  label
+   local
+    allocate for host-routes
+    advertise
+     explicit-null
+    !
+   !
+  !
+ !
+!
+mpls label range table 0 123300 123399
+ssh server v2
+ssh server vrf Mgmt-intf
+end</entry>
+        </extensions>
+        <interface id="0" name="GigabitEthernet0/0/0/0"/>
+        <interface id="1" name="GigabitEthernet0/0/0/1"/>
+        <interface id="2" name="GigabitEthernet0/0/0/2"/>
+        <interface id="3" name="GigabitEthernet0/0/0/3"/>
+        <interface id="4" name="GigabitEthernet0/0/0/4"/>
+        <interface id="5" name="GigabitEthernet0/0/0/5"/>
+    </node>
+    <node name="SP2R1" type="SIMPLE" subtype="IOS XRv" location="1039,441" ipv4="12.39.1.1">
+        <extensions>
+            <entry key="config" type="String">!! IOS XR Configuration 6.1.2
+!! Last configuration change at Thu May 25 18:21:27 2017 by CVAC
+!
+!  IOS-XR Config generated on 2017-02-25 23:17
+! by autonetkit_0.23.5
+hostname SP2R1
+service timestamps log datetime msec
+service timestamps debug datetime msec
+telnet vrf default ipv4 server max-servers 10
+telnet vrf Mgmt-intf ipv4 server max-servers 10
+domain name virl.info
+domain lookup disable
+vrf cust1
+ address-family ipv4 unicast
+  import route-target
+   2:2
+  !
+  export route-target
+   2:2
+  !
+ !
+!
+vrf Mgmt-intf
+ address-family ipv4 unicast
+ !
+ address-family ipv6 unicast
+ !
+!
+line template vty
+ timestamp
+ exec-timeout 720 0
+!
+line console
+ exec-timeout 0 0
+!
+line default
+ exec-timeout 720 0
+!
+vty-pool default 0 50
+control-plane
+ management-plane
+  inband
+   interface all
+    allow all
+   !
+  !
+ !
+!
+interface Loopback0
+ description Loopback
+ ipv4 address 12.39.1.1 255.255.255.255
+ ipv6 address 2001:12:39:ff::1/128
+!
+interface MgmtEth0/0/CPU0/0
+ description OOB Management
+ ! Configured on launch
+ vrf Mgmt-intf
+ ipv4 address 10.255.0.116 255.255.0.0
+!
+interface GigabitEthernet0/0/0/0
+ description to SP2R4
+ ipv4 address 12.39.14.1 255.255.255.0
+ ipv6 address fe80::1 link-local
+ ipv6 address 2001:12:39:14::1/64
+!
+interface GigabitEthernet0/0/0/1
+ description to CER6
+ vrf cust1
+ ipv4 address 21.41.16.1 255.255.255.0
+ ipv6 address fe80::1 link-local
+ ipv6 address 2001:21:41:16::1/64
+!
+interface GigabitEthernet0/0/0/1.31
+ ipv4 address 31.1.1.6 255.255.255.0
+ encapsulation dot1q 31
+!
+interface GigabitEthernet0/0/0/1.60
+ ipv4 address 60.1.1.2 255.255.255.0
+ encapsulation dot1q 60
+!
+interface GigabitEthernet0/0/0/1.101
+ ipv4 address 101.1.1.2 255.255.255.0
+ encapsulation dot1q 101
+!
+interface GigabitEthernet0/0/0/2
+ description to SP2R2
+ ipv4 address 12.39.12.1 255.255.255.0
+ ipv6 address fe80::1 link-local
+ ipv6 address 2001:12:39:12::1/64
+!
+interface GigabitEthernet0/0/0/3
+ description to SP2R5
+ ipv4 address 12.39.15.1 255.255.255.0
+ ipv6 address fe80::1 link-local
+ ipv6 address 2001:12:39:15::1/64
+!
+interface GigabitEthernet0/0/0/4
+ description to SP2R3
+ ipv4 address 12.39.13.1 255.255.255.0
+ ipv6 address fe80::1 link-local
+ ipv6 address 2001:12:39:13::1/64
+!
+interface GigabitEthernet0/0/0/5
+ description to CER7
+ ipv4 address 20.40.17.1 255.255.255.0
+ ipv6 address fe80::1 link-local
+ ipv6 address 2001:20:40:17::1/64
+!
+route-policy PASS
+  pass
+end-policy
+!
+route-policy RED-BGP
+  if destination in (12.39.0.0/16 le 24) then
+    pass
+  elseif destination in (2001:12:39::/48 le 64) then
+    pass
+  else
+    drop
+  endif
+end-policy
+!
+route-policy match-tag($tag)
+  if tag is $tag then
+    drop
+  else
+    pass
+  endif
+end-policy
+!
+router isis AS1239
+ is-type level-2-only
+ net 1239.0000.0000.0001.00
+ address-family ipv4 unicast
+  metric-style wide
+  mpls ldp auto-config
+ !
+ address-family ipv6 unicast
+  metric-style wide
+ !
+ interface Loopback0
+  address-family ipv4 unicast
+  !
+  address-family ipv6 unicast
+  !
+ !
+ interface GigabitEthernet0/0/0/0
+  point-to-point
+  address-family ipv4 unicast
+  !
+  address-family ipv6 unicast
+  !
+ !
+ interface GigabitEthernet0/0/0/2
+  point-to-point
+  address-family ipv4 unicast
+  !
+  address-family ipv6 unicast
+  !
+ !
+ interface GigabitEthernet0/0/0/3
+  point-to-point
+  address-family ipv4 unicast
+  !
+  address-family ipv6 unicast
+  !
+ !
+ interface GigabitEthernet0/0/0/4
+  point-to-point
+  address-family ipv4 unicast
+  !
+  address-family ipv6 unicast
+  !
+ !
+!
+router ospf AS1239
+ area 1
+  nssa
+  interface GigabitEthernet0/0/0/1.101
+  !
+ !
+!
+router bgp 1239
+ bgp router-id 12.39.1.1
+ address-family ipv4 unicast
+  aggregate-address 12.39.0.0/16 summary-only
+  redistribute connected route-policy RED-BGP
+ !
+ address-family vpnv4 unicast
+ !
+ address-family ipv6 unicast
+  aggregate-address 2001:12:39::/48 summary-only
+  redistribute connected route-policy RED-BGP
+ !
+ neighbor 12.39.5.5
+  remote-as 1239
+  password encrypted 072E121D1C5A40
+  update-source Loopback0
+  address-family ipv4 unicast
+   next-hop-self
+  !
+  address-family vpnv4 unicast
+  !
+ !
+ neighbor 21.41.16.6
+  remote-as 200
+  password encrypted 13373E352338
+  address-family ipv4 unicast
+   route-policy PASS in
+   route-policy PASS out
+  !
+ !
+ neighbor 2001:12:39:ff::5
+  remote-as 1239
+  password encrypted 096D7D584B564E
+  update-source Loopback0
+  address-family ipv6 unicast
+   next-hop-self
+  !
+ !
+ neighbor 2001:21:41:16::6
+  remote-as 200
+  password encrypted 107C203E2D23
+  address-family ipv6 unicast
+   route-policy PASS in
+   route-policy PASS out
+  !
+ !
+ vrf cust1
+  rd 200:2
+  address-family ipv4 unicast
+   redistribute eigrp 100 metric 1 route-policy match-tag(3356)
+  !
+  neighbor 21.41.16.6
+   remote-as 200
+   password encrypted 13373E352338
+   address-family ipv4 unicast
+    route-policy PASS in
+    route-policy PASS out
+   !
+  !
+ !
+!
+mpls ldp
+ address-family ipv4
+  label
+   local
+    allocate for host-routes
+    advertise
+     explicit-null
+    !
+   !
+  !
+ !
+ interface GigabitEthernet0/0/0/1.101
+ !
+!
+mpls label range table 0 123100 123199
+router eigrp 1
+ vrf cust1
+  address-family ipv4
+   autonomous-system 100
+   redistribute bgp 1239
+   interface GigabitEthernet0/0/0/1
+    site-of-origin 2:2
+   !
+  !
+ !
+!
+ssh server v2
+ssh server vrf Mgmt-intf
+end</entry>
+        </extensions>
+        <interface id="0" name="GigabitEthernet0/0/0/0"/>
+        <interface id="1" name="GigabitEthernet0/0/0/1"/>
+        <interface id="2" name="GigabitEthernet0/0/0/2"/>
+        <interface id="3" name="GigabitEthernet0/0/0/3"/>
+        <interface id="4" name="GigabitEthernet0/0/0/4"/>
+        <interface id="5" name="GigabitEthernet0/0/0/5"/>
+    </node>
+    <node name="INTERNET" type="SIMPLE" subtype="lxc-routem" location="662,102">
+        <extensions>
+            <entry key="config" type="String">#cloud-config
+bootcmd:
+- ln -s -t /etc/rc.d /etc/rc.local
+hostname: INTERNET
+manage_etc_hosts: true
+runcmd:
+- systemctl start rc-local
+- sed -i '/^\s*PasswordAuthentication\s\+no/d' /etc/ssh/sshd_config
+- echo "UseDNS no" &gt;&gt; /etc/ssh/sshd_config
+- service ssh restart
+- service sshd restart
+users:
+- default
+- gecos: User configured by VIRL Configuration Engine 0.23.9
+  lock-passwd: false
+  name: cisco
+  plain-text-passwd: cisco
+  shell: /bin/bash
+  ssh-authorized-keys:
+  - VIRL-USER-SSH-PUBLIC-KEY
+  sudo: ALL=(ALL) ALL
+write_files:
+- path: /etc/systemd/system/dhclient@.service
+  content: |
+    [Unit]
+    Description=Run dhclient on %i interface
+    After=network.target
+    [Service]
+    Type=oneshot
+    ExecStart=/sbin/dhclient %i -pf /var/run/dhclient.%i.pid -lf /var/lib/dhclient/dhclient.%i.lease
+    RemainAfterExit=yes
+  owner: root:root
+  permissions: '0644'
+- path: /etc/rc.local
+  owner: root:root
+  permissions: '0755'
+  content: |-
+    #!/bin/sh
+    ifconfig eth2 down
+    ifconfig eth3 down
+    ifconfig eth4 down
+    ifconfig eth1 up
+    ifconfig eth1:1 up 33.12.0.1 netmask 255.255.255.0
+    ifconfig eth1:2 up 44.12.0.1 netmask 255.255.255.0
+    ifconfig eth1:3 up 33.56.0.1 netmask 255.255.255.0
+    ifconfig eth1:4 up 44.56.0.1 netmask 255.255.255.0
+    exit 0
+</entry>
+        </extensions>
+        <interface id="0" name="eth1" ipv4="10.0.128.5" netPrefixLenV4="29"/>
+        <interface id="1" name="eth2"/>
+        <interface id="2" name="eth3"/>
+        <interface id="3" name="eth4"/>
+    </node>
+    <node name="L2-SW-INTERNET" type="SIMPLE" subtype="Unmanaged Switch" location="661,343">
+        <extensions>
+            <entry key="AutoNetkit.ibgp_role" type="String">Disabled</entry>
+        </extensions>
+        <interface id="0" name="link1"/>
+        <interface id="1" name="link2"/>
+        <interface id="2" name="link3"/>
+        <interface id="3" name="link4"/>
+        <interface id="4" name="link5"/>
+    </node>
+    <annotations>
+        <rect x="257" y="67" radius="10" width="300" height="436" fill="6ED7DC" stroke-opacity="0.5" stroke-pattern="dot"/>
+        <text x="344" y="514" font-size="18">AS3356</text>
+        <rect x="789" y="68" radius="10" width="300" height="440" fill="A7E083" stroke-opacity="0.5" stroke-pattern="dot"/>
+        <text x="884" y="516" font-size="18">AS1239</text>
+    </annotations>
+    <connection dst="/virl:topology/virl:node[8]/virl:interface[1]" src="/virl:topology/virl:node[7]/virl:interface[1]"/>
+    <connection dst="/virl:topology/virl:node[10]/virl:interface[1]" src="/virl:topology/virl:node[9]/virl:interface[1]"/>
+    <connection dst="/virl:topology/virl:node[12]/virl:interface[1]" src="/virl:topology/virl:node[11]/virl:interface[1]"/>
+    <connection dst="/virl:topology/virl:node[14]/virl:interface[1]" src="/virl:topology/virl:node[13]/virl:interface[1]"/>
+    <connection dst="/virl:topology/virl:node[7]/virl:interface[2]" src="/virl:topology/virl:node[1]/virl:interface[1]"/>
+    <connection dst="/virl:topology/virl:node[9]/virl:interface[2]" src="/virl:topology/virl:node[2]/virl:interface[1]"/>
+    <connection dst="/virl:topology/virl:node[5]/virl:interface[1]" src="/virl:topology/virl:node[12]/virl:interface[2]"/>
+    <connection dst="/virl:topology/virl:node[6]/virl:interface[1]" src="/virl:topology/virl:node[14]/virl:interface[2]"/>
+    <connection dst="/virl:topology/virl:node[11]/virl:interface[2]" src="/virl:topology/virl:node[8]/virl:interface[2]"/>
+    <connection dst="/virl:topology/virl:node[13]/virl:interface[2]" src="/virl:topology/virl:node[10]/virl:interface[2]"/>
+    <connection dst="/virl:topology/virl:node[9]/virl:interface[3]" src="/virl:topology/virl:node[7]/virl:interface[3]"/>
+    <connection dst="/virl:topology/virl:node[10]/virl:interface[3]" src="/virl:topology/virl:node[8]/virl:interface[3]"/>
+    <connection dst="/virl:topology/virl:node[13]/virl:interface[3]" src="/virl:topology/virl:node[11]/virl:interface[3]"/>
+    <connection dst="/virl:topology/virl:node[14]/virl:interface[3]" src="/virl:topology/virl:node[12]/virl:interface[3]"/>
+    <connection dst="/virl:topology/virl:node[2]/virl:interface[2]" src="/virl:topology/virl:node[1]/virl:interface[2]"/>
+    <connection dst="/virl:topology/virl:node[6]/virl:interface[2]" src="/virl:topology/virl:node[5]/virl:interface[2]"/>
+    <connection dst="/virl:topology/virl:node[11]/virl:interface[4]" src="/virl:topology/virl:node[4]/virl:interface[1]"/>
+    <connection dst="/virl:topology/virl:node[14]/virl:interface[4]" src="/virl:topology/virl:node[4]/virl:interface[2]"/>
+    <connection dst="/virl:topology/virl:node[8]/virl:interface[4]" src="/virl:topology/virl:node[3]/virl:interface[1]"/>
+    <connection dst="/virl:topology/virl:node[9]/virl:interface[4]" src="/virl:topology/virl:node[3]/virl:interface[2]"/>
+    <connection dst="/virl:topology/virl:node[16]/virl:interface[1]" src="/virl:topology/virl:node[8]/virl:interface[5]"/>
+    <connection dst="/virl:topology/virl:node[16]/virl:interface[2]" src="/virl:topology/virl:node[10]/virl:interface[4]"/>
+    <connection dst="/virl:topology/virl:node[16]/virl:interface[3]" src="/virl:topology/virl:node[13]/virl:interface[4]"/>
+    <connection dst="/virl:topology/virl:node[16]/virl:interface[4]" src="/virl:topology/virl:node[11]/virl:interface[5]"/>
+    <connection dst="/virl:topology/virl:node[15]/virl:interface[1]" src="/virl:topology/virl:node[16]/virl:interface[5]"/>
+    <connection dst="/virl:topology/virl:node[11]/virl:interface[6]" src="/virl:topology/virl:node[1]/virl:interface[3]"/>
+    <connection dst="/virl:topology/virl:node[13]/virl:interface[5]" src="/virl:topology/virl:node[2]/virl:interface[3]"/>
+    <connection dst="/virl:topology/virl:node[8]/virl:interface[6]" src="/virl:topology/virl:node[5]/virl:interface[3]"/>
+    <connection dst="/virl:topology/virl:node[10]/virl:interface[5]" src="/virl:topology/virl:node[6]/virl:interface[3]"/>
+    <connection dst="/virl:topology/virl:node[9]/virl:interface[5]" src="/virl:topology/virl:node[1]/virl:interface[4]"/>
+    <connection dst="/virl:topology/virl:node[7]/virl:interface[4]" src="/virl:topology/virl:node[2]/virl:interface[4]"/>
+    <connection dst="/virl:topology/virl:node[10]/virl:interface[6]" src="/virl:topology/virl:node[7]/virl:interface[5]"/>
+    <connection dst="/virl:topology/virl:node[8]/virl:interface[7]" src="/virl:topology/virl:node[9]/virl:interface[6]"/>
+    <connection dst="/virl:topology/virl:node[14]/virl:interface[5]" src="/virl:topology/virl:node[11]/virl:interface[7]"/>
+    <connection dst="/virl:topology/virl:node[12]/virl:interface[4]" src="/virl:topology/virl:node[13]/virl:interface[6]"/>
+    <connection dst="/virl:topology/virl:node[14]/virl:interface[6]" src="/virl:topology/virl:node[5]/virl:interface[4]"/>
+    <connection dst="/virl:topology/virl:node[12]/virl:interface[5]" src="/virl:topology/virl:node[6]/virl:interface[4]"/>
+</topology>
