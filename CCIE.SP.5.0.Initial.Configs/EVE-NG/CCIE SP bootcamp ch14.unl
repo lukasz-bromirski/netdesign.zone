@@ -6,30 +6,30 @@
 Segment Routing</description>
   <topology>
     <nodes>
-      <node id="1" name="CE-L6" type="qemu" template="csr1000vng" image="csr1000vng-universalk9.16.06.03" console="telnet" cpu="1" cpulimit="0" ram="4096" ethernet="5" uuid="fe03a0e9-17cf-4ccd-bc7c-48de29e4424a" qemu_options="-machine type=pc,accel=kvm -cpu host -serial mon:stdio -nographic -no-user-config -nodefaults -rtc base=utc" qemu_version="4.1.0" qemu_arch="x86_64" qemu_nic="vmxnet3" delay="0" icon="CSRv1000.png" config="1" left="126" top="388">
+      <node id="1" name="CE-L6" type="qemu" template="csr1000vng" image="csr1000vng-universalk9.16.06.05" console="telnet" cpu="1" cpulimit="0" ram="4096" ethernet="5" uuid="fe03a0e9-17cf-4ccd-bc7c-48de29e4424a" qemu_options="-machine type=pc,accel=kvm -cpu host -serial mon:stdio -nographic -no-user-config -nodefaults -rtc base=utc" qemu_version="4.1.0" qemu_arch="x86_64" qemu_nic="vmxnet3" delay="0" icon="CSRv1000.png" config="1" left="126" top="388">
         <interface id="1" name="Gi2" type="ethernet" network_id="4"/>
         <interface id="2" name="Gi3" type="ethernet" network_id="3"/>
         <interface id="4" name="Gi5" type="ethernet" network_id="5"/>
       </node>
-      <node id="2" name="CE-L7" type="qemu" template="csr1000vng" image="csr1000vng-universalk9.16.06.03" console="telnet" cpu="1" cpulimit="0" ram="4096" ethernet="5" uuid="8dfb121a-a285-4ac3-a85a-b0f3446b9536" qemu_options="-machine type=pc,accel=kvm -cpu host -serial mon:stdio -nographic -no-user-config -nodefaults -rtc base=utc" qemu_version="4.1.0" qemu_arch="x86_64" qemu_nic="vmxnet3" delay="0" icon="CSRv1000.png" config="1" left="126" top="192">
+      <node id="2" name="CE-L7" type="qemu" template="csr1000vng" image="csr1000vng-universalk9.16.06.05" console="telnet" cpu="1" cpulimit="0" ram="4096" ethernet="5" uuid="8dfb121a-a285-4ac3-a85a-b0f3446b9536" qemu_options="-machine type=pc,accel=kvm -cpu host -serial mon:stdio -nographic -no-user-config -nodefaults -rtc base=utc" qemu_version="4.1.0" qemu_arch="x86_64" qemu_nic="vmxnet3" delay="0" icon="CSRv1000.png" config="1" left="126" top="192">
         <interface id="1" name="Gi2" type="ethernet" network_id="1"/>
         <interface id="2" name="Gi3" type="ethernet" network_id="3"/>
         <interface id="4" name="Gi5" type="ethernet" network_id="2"/>
       </node>
-      <node id="3" name="SP1R5" type="qemu" template="csr1000vng" image="csr1000vng-universalk9.16.06.03" console="telnet" cpu="1" cpulimit="0" ram="4096" ethernet="5" uuid="e53e496c-dd98-45f9-85c4-63615dd7cdef" qemu_options="-machine type=pc,accel=kvm -cpu host -serial mon:stdio -nographic -no-user-config -nodefaults -rtc base=utc" qemu_version="4.1.0" qemu_arch="x86_64" qemu_nic="vmxnet3" delay="0" icon="CSRv1000.png" config="1" left="414" top="21">
+      <node id="3" name="SP1R5" type="qemu" template="csr1000vng" image="csr1000vng-universalk9.16.06.05" console="telnet" cpu="1" cpulimit="0" ram="4096" ethernet="5" uuid="e53e496c-dd98-45f9-85c4-63615dd7cdef" qemu_options="-machine type=pc,accel=kvm -cpu host -serial mon:stdio -nographic -no-user-config -nodefaults -rtc base=utc" qemu_version="4.1.0" qemu_arch="x86_64" qemu_nic="vmxnet3" delay="0" icon="CSRv1000.png" config="1" left="414" top="21">
         <interface id="1" name="Gi2" type="ethernet" network_id="13"/>
         <interface id="2" name="Gi3" type="ethernet" network_id="14"/>
       </node>
-      <node id="4" name="SP2R5" type="qemu" template="csr1000vng" image="csr1000vng-universalk9.16.06.03" console="telnet" cpu="1" cpulimit="0" ram="4096" ethernet="5" uuid="22aa1671-0447-439e-98de-cf7a4709c9f1" qemu_options="-machine type=pc,accel=kvm -cpu host -serial mon:stdio -nographic -no-user-config -nodefaults -rtc base=utc" qemu_version="4.1.0" qemu_arch="x86_64" qemu_nic="vmxnet3" delay="0" icon="CSRv1000.png" config="1" left="789" top="21">
+      <node id="4" name="SP2R5" type="qemu" template="csr1000vng" image="csr1000vng-universalk9.16.06.05" console="telnet" cpu="1" cpulimit="0" ram="4096" ethernet="5" uuid="22aa1671-0447-439e-98de-cf7a4709c9f1" qemu_options="-machine type=pc,accel=kvm -cpu host -serial mon:stdio -nographic -no-user-config -nodefaults -rtc base=utc" qemu_version="4.1.0" qemu_arch="x86_64" qemu_nic="vmxnet3" delay="0" icon="CSRv1000.png" config="1" left="789" top="21">
         <interface id="1" name="Gi2" type="ethernet" network_id="19"/>
         <interface id="2" name="Gi3" type="ethernet" network_id="20"/>
       </node>
-      <node id="5" name="CE-R7" type="qemu" template="csr1000vng" image="csr1000vng-universalk9.16.06.03" console="telnet" cpu="1" cpulimit="0" ram="4096" ethernet="5" uuid="966adb7f-c48b-442c-8be9-0e7125fe4462" qemu_options="-machine type=pc,accel=kvm -cpu host -serial mon:stdio -nographic -no-user-config -nodefaults -rtc base=utc" qemu_version="4.1.0" qemu_arch="x86_64" qemu_nic="vmxnet3" delay="0" icon="CSRv1000.png" config="1" left="1071" top="192">
+      <node id="5" name="CE-R7" type="qemu" template="csr1000vng" image="csr1000vng-universalk9.16.06.05" console="telnet" cpu="1" cpulimit="0" ram="4096" ethernet="5" uuid="966adb7f-c48b-442c-8be9-0e7125fe4462" qemu_options="-machine type=pc,accel=kvm -cpu host -serial mon:stdio -nographic -no-user-config -nodefaults -rtc base=utc" qemu_version="4.1.0" qemu_arch="x86_64" qemu_nic="vmxnet3" delay="0" icon="CSRv1000.png" config="1" left="1071" top="192">
         <interface id="1" name="Gi2" type="ethernet" network_id="21"/>
         <interface id="2" name="Gi3" type="ethernet" network_id="22"/>
         <interface id="4" name="Gi5" type="ethernet" network_id="25"/>
       </node>
-      <node id="6" name="CE-R6" type="qemu" template="csr1000vng" image="csr1000vng-universalk9.16.06.03" console="telnet" cpu="1" cpulimit="0" ram="4096" ethernet="5" uuid="8b0277a9-c873-4fd1-a847-44f1e0833ed7" qemu_options="-machine type=pc,accel=kvm -cpu host -serial mon:stdio -nographic -no-user-config -nodefaults -rtc base=utc" qemu_version="4.1.0" qemu_arch="x86_64" qemu_nic="vmxnet3" delay="0" icon="CSRv1000.png" config="1" left="1071" top="388">
+      <node id="6" name="CE-R6" type="qemu" template="csr1000vng" image="csr1000vng-universalk9.16.06.05" console="telnet" cpu="1" cpulimit="0" ram="4096" ethernet="5" uuid="8b0277a9-c873-4fd1-a847-44f1e0833ed7" qemu_options="-machine type=pc,accel=kvm -cpu host -serial mon:stdio -nographic -no-user-config -nodefaults -rtc base=utc" qemu_version="4.1.0" qemu_arch="x86_64" qemu_nic="vmxnet3" delay="0" icon="CSRv1000.png" config="1" left="1071" top="388">
         <interface id="1" name="Gi2" type="ethernet" network_id="23"/>
         <interface id="2" name="Gi3" type="ethernet" network_id="22"/>
         <interface id="4" name="Gi5" type="ethernet" network_id="24"/>

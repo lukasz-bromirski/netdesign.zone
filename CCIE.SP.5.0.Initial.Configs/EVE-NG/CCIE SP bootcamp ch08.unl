@@ -6,35 +6,35 @@
 MPLS Intra-AS L3VPN</description>
   <topology>
     <nodes>
-      <node id="1" name="CE-L6" type="qemu" template="csr1000vng" image="csr1000vng-universalk9.16.06.03" console="telnet" cpu="1" cpulimit="0" ram="4096" ethernet="5" uuid="fe03a0e9-17cf-4ccd-bc7c-48de29e4424a" delay="0" icon="CSRv1000.png" config="1" left="126" top="384">
+      <node id="1" name="CE-L6" type="qemu" template="csr1000vng" image="csr1000vng-universalk9.16.06.05" console="telnet" cpu="1" cpulimit="0" ram="4096" ethernet="5" uuid="fe03a0e9-17cf-4ccd-bc7c-48de29e4424a" delay="0" icon="CSRv1000.png" config="1" left="126" top="384">
         <interface id="1" name="Gi2" type="ethernet" network_id="4"/>
         <interface id="2" name="Gi3" type="ethernet" network_id="3"/>
         <interface id="4" name="Gi5" type="ethernet" network_id="5"/>
       </node>
-      <node id="2" name="CE-L7" type="qemu" template="csr1000vng" image="csr1000vng-universalk9.16.06.03" console="telnet" cpu="1" cpulimit="0" ram="4096" ethernet="5" uuid="8dfb121a-a285-4ac3-a85a-b0f3446b9536" delay="0" icon="CSRv1000.png" config="1" left="126" top="192">
+      <node id="2" name="CE-L7" type="qemu" template="csr1000vng" image="csr1000vng-universalk9.16.06.05" console="telnet" cpu="1" cpulimit="0" ram="4096" ethernet="5" uuid="8dfb121a-a285-4ac3-a85a-b0f3446b9536" delay="0" icon="CSRv1000.png" config="1" left="126" top="192">
         <interface id="1" name="Gi2" type="ethernet" network_id="1"/>
         <interface id="2" name="Gi3" type="ethernet" network_id="3"/>
         <interface id="4" name="Gi5" type="ethernet" network_id="2"/>
       </node>
-      <node id="3" name="SP1R5" type="qemu" template="csr1000vng" image="csr1000vng-universalk9.16.06.03" console="telnet" cpu="1" cpulimit="0" ram="4096" ethernet="5" uuid="e53e496c-dd98-45f9-85c4-63615dd7cdef" qemu_nic="virtio-net-pci" delay="0" icon="CSRv1000.png" config="1" left="414" top="21">
+      <node id="3" name="SP1R5" type="qemu" template="csr1000vng" image="csr1000vng-universalk9.16.06.05" console="telnet" cpu="1" cpulimit="0" ram="4096" ethernet="5" uuid="e53e496c-dd98-45f9-85c4-63615dd7cdef" qemu_nic="virtio-net-pci" delay="0" icon="CSRv1000.png" config="1" left="414" top="21">
         <interface id="1" name="Gi2" type="ethernet" network_id="13"/>
         <interface id="2" name="Gi3" type="ethernet" network_id="14"/>
       </node>
-      <node id="4" name="SP2R5" type="qemu" template="csr1000vng" image="csr1000vng-universalk9.16.06.03" console="telnet" cpu="1" cpulimit="0" ram="4096" ethernet="5" uuid="22aa1671-0447-439e-98de-cf7a4709c9f1" qemu_nic="virtio-net-pci" delay="0" icon="CSRv1000.png" config="1" left="789" top="21">
+      <node id="4" name="SP2R5" type="qemu" template="csr1000vng" image="csr1000vng-universalk9.16.06.05" console="telnet" cpu="1" cpulimit="0" ram="4096" ethernet="5" uuid="22aa1671-0447-439e-98de-cf7a4709c9f1" qemu_nic="virtio-net-pci" delay="0" icon="CSRv1000.png" config="1" left="789" top="21">
         <interface id="1" name="Gi2" type="ethernet" network_id="19"/>
         <interface id="2" name="Gi3" type="ethernet" network_id="20"/>
       </node>
-      <node id="5" name="CE-R7" type="qemu" template="csr1000vng" image="csr1000vng-universalk9.16.06.03" console="telnet" cpu="1" cpulimit="0" ram="4096" ethernet="5" uuid="966adb7f-c48b-442c-8be9-0e7125fe4462" qemu_nic="virtio-net-pci" delay="0" icon="CSRv1000.png" config="1" left="1071" top="192">
+      <node id="5" name="CE-R7" type="qemu" template="csr1000vng" image="csr1000vng-universalk9.16.06.05" console="telnet" cpu="1" cpulimit="0" ram="4096" ethernet="5" uuid="966adb7f-c48b-442c-8be9-0e7125fe4462" qemu_nic="virtio-net-pci" delay="0" icon="CSRv1000.png" config="1" left="1071" top="192">
         <interface id="1" name="Gi2" type="ethernet" network_id="21"/>
         <interface id="2" name="Gi3" type="ethernet" network_id="22"/>
         <interface id="4" name="Gi5" type="ethernet" network_id="25"/>
       </node>
-      <node id="6" name="CE-R6" type="qemu" template="csr1000vng" image="csr1000vng-universalk9.16.06.03" console="telnet" cpu="1" cpulimit="0" ram="4096" ethernet="5" uuid="8b0277a9-c873-4fd1-a847-44f1e0833ed7" qemu_nic="virtio-net-pci" delay="0" icon="CSRv1000.png" config="1" left="1071" top="388">
+      <node id="6" name="CE-R6" type="qemu" template="csr1000vng" image="csr1000vng-universalk9.16.06.05" console="telnet" cpu="1" cpulimit="0" ram="4096" ethernet="5" uuid="8b0277a9-c873-4fd1-a847-44f1e0833ed7" qemu_nic="virtio-net-pci" delay="0" icon="CSRv1000.png" config="1" left="1071" top="388">
         <interface id="1" name="Gi2" type="ethernet" network_id="23"/>
         <interface id="2" name="Gi3" type="ethernet" network_id="22"/>
         <interface id="4" name="Gi5" type="ethernet" network_id="24"/>
       </node>
-      <node id="7" name="SP1R1" type="qemu" template="xrv" image="xrv-k9-6.1.3" console="telnet" cpu="1" cpulimit="0" ram="3072" ethernet="7" uuid="53fbb047-c9be-47d5-926c-d28be44b1c45" delay="0" icon="XR.png" config="1" left="321" top="387">
+      <node id="7" name="SP1R1" type="qemu" template="xrv" image="xrv-k9-6.5.3" console="telnet" cpu="1" cpulimit="0" ram="3072" ethernet="7" uuid="53fbb047-c9be-47d5-926c-d28be44b1c45" delay="0" icon="XR.png" config="1" left="321" top="387">
         <interface id="1" name="Gi0/0/0/0" type="ethernet" network_id="8"/>
         <interface id="2" name="Gi0/0/0/1" type="ethernet" network_id="4"/>
         <interface id="3" name="Gi0/0/0/2" type="ethernet" network_id="6"/>
@@ -42,47 +42,47 @@ MPLS Intra-AS L3VPN</description>
         <interface id="5" name="Gi0/0/0/4" type="ethernet" network_id="2"/>
         <interface id="6" name="Gi0/0/0/5" type="ethernet" network_id="26"/>
       </node>
-      <node id="8" name="SP1R2" type="qemu" template="xrv" image="xrv-k9-6.1.3" console="telnet" cpu="1" cpulimit="0" ram="3072" ethernet="7" uuid="552d8ec1-1858-4f01-8e06-50cb2d3f949f" delay="0" icon="XR.png" config="1" left="318" top="192">
+      <node id="8" name="SP1R2" type="qemu" template="xrv" image="xrv-k9-6.5.3" console="telnet" cpu="1" cpulimit="0" ram="3072" ethernet="7" uuid="552d8ec1-1858-4f01-8e06-50cb2d3f949f" delay="0" icon="XR.png" config="1" left="318" top="192">
         <interface id="1" name="Gi0/0/0/0" type="ethernet" network_id="7"/>
         <interface id="2" name="Gi0/0/0/1" type="ethernet" network_id="1"/>
         <interface id="3" name="Gi0/0/0/2" type="ethernet" network_id="6"/>
         <interface id="4" name="Gi0/0/0/3" type="ethernet" network_id="5"/>
         <interface id="5" name="Gi0/0/0/4" type="ethernet" network_id="9"/>
       </node>
-      <node id="9" name="SP1R3" type="qemu" template="xrv" image="xrv-k9-6.1.3" console="telnet" cpu="1" cpulimit="0" ram="3072" ethernet="8" uuid="13202578-1a0a-4753-9b4a-aebc4d617704" delay="0" icon="XR.png" config="1" left="513" top="192">
+      <node id="9" name="SP1R3" type="qemu" template="xrv" image="xrv-k9-6.5.3" console="telnet" cpu="1" cpulimit="0" ram="3072" ethernet="8" uuid="13202578-1a0a-4753-9b4a-aebc4d617704" delay="0" icon="XR.png" config="1" left="513" top="192">
         <interface id="1" name="Gi0/0/0/0" type="ethernet" network_id="7"/>
         <interface id="2" name="Gi0/0/0/1" type="ethernet" network_id="10"/>
         <interface id="3" name="Gi0/0/0/2" type="ethernet" network_id="11"/>
         <interface id="4" name="Gi0/0/0/3" type="ethernet" network_id="13"/>
         <interface id="7" name="Gi0/0/0/6" type="ethernet" network_id="26"/>
       </node>
-      <node id="10" name="SP1R4" type="qemu" template="xrv" image="xrv-k9-6.1.3" console="telnet" cpu="1" cpulimit="0" ram="3072" ethernet="7" uuid="638f226f-fb42-4934-8448-8cf9b63be559" delay="0" icon="XR.png" config="1" left="513" top="387">
+      <node id="10" name="SP1R4" type="qemu" template="xrv" image="xrv-k9-6.5.3" console="telnet" cpu="1" cpulimit="0" ram="3072" ethernet="7" uuid="638f226f-fb42-4934-8448-8cf9b63be559" delay="0" icon="XR.png" config="1" left="513" top="387">
         <interface id="1" name="Gi0/0/0/0" type="ethernet" network_id="8"/>
         <interface id="2" name="Gi0/0/0/1" type="ethernet" network_id="12"/>
         <interface id="3" name="Gi0/0/0/2" type="ethernet" network_id="11"/>
         <interface id="6" name="Gi0/0/0/5" type="ethernet" network_id="9"/>
       </node>
-      <node id="11" name="SP2R4" type="qemu" template="xrv" image="xrv-k9-6.1.3" console="telnet" cpu="1" cpulimit="0" ram="3072" ethernet="7" uuid="39f850e0-c753-4e63-af39-36af01d88da9" delay="0" icon="XR.png" config="1" left="696" top="387">
+      <node id="11" name="SP2R4" type="qemu" template="xrv" image="xrv-k9-6.5.3" console="telnet" cpu="1" cpulimit="0" ram="3072" ethernet="7" uuid="39f850e0-c753-4e63-af39-36af01d88da9" delay="0" icon="XR.png" config="1" left="696" top="387">
         <interface id="1" name="Gi0/0/0/0" type="ethernet" network_id="16"/>
         <interface id="2" name="Gi0/0/0/1" type="ethernet" network_id="12"/>
         <interface id="3" name="Gi0/0/0/2" type="ethernet" network_id="17"/>
         <interface id="6" name="Gi0/0/0/5" type="ethernet" network_id="28"/>
       </node>
-      <node id="12" name="SP2R3" type="qemu" template="xrv" image="xrv-k9-6.1.3" console="telnet" cpu="1" cpulimit="0" ram="3072" ethernet="8" uuid="ecf0c189-6c27-4edb-bf33-26d4546a6fcb" delay="0" icon="XR.png" config="1" left="696" top="192">
+      <node id="12" name="SP2R3" type="qemu" template="xrv" image="xrv-k9-6.5.3" console="telnet" cpu="1" cpulimit="0" ram="3072" ethernet="8" uuid="ecf0c189-6c27-4edb-bf33-26d4546a6fcb" delay="0" icon="XR.png" config="1" left="696" top="192">
         <interface id="1" name="Gi0/0/0/0" type="ethernet" network_id="15"/>
         <interface id="2" name="Gi0/0/0/1" type="ethernet" network_id="10"/>
         <interface id="3" name="Gi0/0/0/2" type="ethernet" network_id="17"/>
         <interface id="4" name="Gi0/0/0/3" type="ethernet" network_id="19"/>
         <interface id="7" name="Gi0/0/0/6" type="ethernet" network_id="27"/>
       </node>
-      <node id="13" name="SP2R2" type="qemu" template="xrv" image="xrv-k9-6.1.3" console="telnet" cpu="1" cpulimit="0" ram="3072" ethernet="7" uuid="a5984332-e79a-4add-ad86-b3316095f1df" delay="0" icon="XR.png" config="1" left="876" top="192">
+      <node id="13" name="SP2R2" type="qemu" template="xrv" image="xrv-k9-6.5.3" console="telnet" cpu="1" cpulimit="0" ram="3072" ethernet="7" uuid="a5984332-e79a-4add-ad86-b3316095f1df" delay="0" icon="XR.png" config="1" left="876" top="192">
         <interface id="1" name="Gi0/0/0/0" type="ethernet" network_id="15"/>
         <interface id="2" name="Gi0/0/0/1" type="ethernet" network_id="21"/>
         <interface id="3" name="Gi0/0/0/2" type="ethernet" network_id="18"/>
         <interface id="4" name="Gi0/0/0/3" type="ethernet" network_id="28"/>
         <interface id="5" name="Gi0/0/0/4" type="ethernet" network_id="24"/>
       </node>
-      <node id="14" name="SP2R1" type="qemu" template="xrv" image="xrv-k9-6.1.3" console="telnet" cpu="1" cpulimit="0" ram="3072" ethernet="7" uuid="f2080388-977a-4978-a057-1818f3e46895" delay="0" icon="XR.png" config="1" left="876" top="387">
+      <node id="14" name="SP2R1" type="qemu" template="xrv" image="xrv-k9-6.5.3" console="telnet" cpu="1" cpulimit="0" ram="3072" ethernet="7" uuid="f2080388-977a-4978-a057-1818f3e46895" delay="0" icon="XR.png" config="1" left="876" top="387">
         <interface id="1" name="Gi0/0/0/0" type="ethernet" network_id="16"/>
         <interface id="2" name="Gi0/0/0/1" type="ethernet" network_id="23"/>
         <interface id="3" name="Gi0/0/0/2" type="ethernet" network_id="18"/>
