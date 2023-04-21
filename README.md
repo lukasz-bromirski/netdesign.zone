@@ -6,7 +6,7 @@ at http://netbrain.zone portal.
 As time permits and our development continues, we'll publish more open source stuff
 here.
 
-(C) 2015-2021, Piotr Jabłoński & Łukasz Bromirski
+(C) 2015-2023, Piotr Jabłoński & Łukasz Bromirski
 
 ## CCIE SP bootcamp additional materials
 
