@@ -14,7 +14,9 @@ You may find additional CCIE SP related materials in this repository.
 
 Included are:
 
-* **CCIE.SP.1.0.Initial.Configs** - initial configuration (VIRL 1, VIRL 2 and EVE-NG) for CCIE SP topologies we're using in our CCIE SP online class; more information about this specific class can be [found here](https://netbrain.zone/)
+* **CCIE.SP.5.0.Initial.Configs** - initial configurations (VIRL 1, VIRL 2 and EVE-NG) for CCIE SP topologies we're using in our CCIE SP v5.0 online class; more information about this specific class can be [found here](https://netbrain.zone/)
+
+* **CCIE.SP.1.0.Initial.Configs** - *old* initial configurations (VIRL 1, VIRL 2 and EVE-NG) for CCIE SP topologies we're using in our CCIE SP online class
 
 * **CCIE.SP.Scenario1** - folder with basic CCIE SP configuration and troubleshooting scenario, with both starting and final configuration as well as sample workbook
 
