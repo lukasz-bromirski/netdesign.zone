@@ -1,0 +1,19 @@
+---
+
+- name: "XE routers connection"
+  hosts: xe
+  gather_facts: no
+
+  tasks:
+    - name: Backup XE routers configuration
+      ios_config:
+        backup: yes
+
+- name: "XR routers connection"
+  hosts: xr
+  gather_facts: no
+
+  tasks:
+    - name: Backup XR routers configuration
+      iosxr_config:
+        backup: yes

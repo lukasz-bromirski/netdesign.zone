@@ -1,0 +1,23 @@
+[xe:vars]
+ansible_network_os=ios
+ansible_user=cisco
+ansible_password=cisco          
+ansible_connection=network_cli
+
+[xr:vars]
+ansible_network_os=iosxr
+ansible_user=cisco
+ansible_password=cisco          
+ansible_connection=network_cli
+
+[xe]
+PE13 ansible_host=172.16.0.13
+PE14 ansible_host=172.16.0.14
+
+[xr]
+PE11 ansible_host=172.16.0.11
+P12 ansible_host=172.16.0.12
+P17 ansible_host=172.16.0.17
+P18 ansible_host=172.16.0.18
+P15 ansible_host=172.16.0.15
+PE16 ansible_host=172.16.0.16
