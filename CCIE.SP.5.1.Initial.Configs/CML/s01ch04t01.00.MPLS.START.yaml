@@ -56,7 +56,6 @@ nodes:
            session-timeout 0
           !
           icmp ipv4 rate-limit unreachable disable
-          ipv4 unnumbered mpls traffic-eng Loopback0
           call-home
            contact smart-licensing
            profile CiscoTAC-1
@@ -5397,11 +5396,19 @@ links:
     conditioning: {}
     label: PE13-GigabitEthernet6<->BLUE-82-GigabitEthernet0/0
 lab:
-  description: MPLS start - IGP & BGP done
+  description: |-
+    # CCIE SP v5.1 lab topology
+    (c) 2023-2024 Lukasz Bromirski / lukasz@bromirski.net
+
+    Features configured:
+       * IGP IPv4 & IPv6 - IS-IS for AS1239, OSPFv2/OSPFv3 for AS3356
+       * BGP IPv4 & IPv6 - AS109, AS1239, AS3356, AS144
   notes: |-
     # CCIE SP v5.1 lab topology
-    ## IGP IPv4 & IPv6 - IS-IS for AS1239, OSPFv2/OSPFv3 for AS3356
-    ## AS109, AS1239, AS3356, AS144
-    ## MPLS LDP autoconfig for IS-IS and OSPFv2
+    (c) 2023-2024 Lukasz Bromirski / lukasz@bromirski.net
+
+    Features configured:
+       * IGP IPv4 & IPv6 - IS-IS for AS1239, OSPFv2/OSPFv3 for AS3356
+       * BGP IPv4 & IPv6 - AS109, AS1239, AS3356, AS144
   title: s01ch04t01.00.MPLS.START
   version: 0.2.2
