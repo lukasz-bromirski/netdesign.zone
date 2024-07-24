@@ -14,13 +14,15 @@ You may find additional CCIE SP related materials in this repository.
 
 This repository contains:
 
-* **CCIE.SP.5.0.Initial.Configs** - initial configurations (VIRL 1, VIRL 2 and EVE-NG) for CCIE SP topologies we're using in our CCIE SP v5.0 online class; more information about this specific class can be [found here](https://netbrain.zone/)
-
-* **CCIE.SP.1.0.Initial.Configs** - *old* initial configurations (VIRL 1, VIRL 2 and EVE-NG) for CCIE SP topologies we're using in our CCIE SP online class
+* **CCIE.SP.4.1.Initial.Configs** - *old* initial configurations (VIRL 1, VIRL 2 and EVE-NG) for CCIE SP topologies we've been using back when we were young and pretty
 
 * **CCIE.SP.Scenario1** - folder with basic CCIE SP configuration and troubleshooting scenario, with both starting and final configuration as well as sample workbook
 
-* **CCIE.SP.5.0.Automation** - scripts, templates and playbooks for Ansible and NSO, for use in our [CCIE SP v5.0 bootcamp](https://netbrain.zone/) or with [CCIE SP v5.0 workbook](https://netbrain.zone/)
+* **CCIE.SP.5.0.Automation** - scripts, templates and playbooks for Ansible and NSO, for use with [CCIE SP v5.0 workbook](https://leanpub.com/cciespv50)
+
+* **CCIE.SP.5.0.Initial.Configs** - initial configurations (VIRL 1, VIRL 2 and EVE-NG) for CCIE SP topologies we're using in our CCIE SP v5.0 online class
 
 * **CCIE.SP.5.1.Automation** - scripts, templates and playbooks for Ansible and NSO, for with CCIE SP v5.1 bootcamp
+
+* **CCIE.SP.5.1.Initial.Configs** - initial configuration for latest version of CCIE SP v5.1 bootcamp 
 
