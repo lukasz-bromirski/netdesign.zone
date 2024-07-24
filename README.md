@@ -1,10 +1,8 @@
 # netdesign.zone
 
-This repository contains GPL'ed (v3) files that are related to our joint collaboration
-at http://netbrain.zone portal.
+This repository contains GPL'ed (v3) files for training and bootcamps.
 
-As time permits and our development continues, we'll publish more open source stuff
-here.
+As time permits and our development continues, we'll publish more open source stuff here
 
 (C) 2015-2024, Piotr Jabłoński & Łukasz Bromirski
 
