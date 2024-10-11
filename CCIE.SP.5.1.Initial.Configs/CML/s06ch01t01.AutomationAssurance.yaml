@@ -124,6 +124,7 @@ nodes:
            ipv4 address 12.39.12.11 255.255.255.0
            ipv6 address fe80::11 link-local
            ipv6 address 2001:12:39:12::11/64
+           no shutdown
           !
           interface Loopback0
            ipv4 address 12.39.255.11 255.255.255.255
@@ -132,32 +133,38 @@ nodes:
           interface MgmtEth0/RP0/CPU0/0
            vrf MGMNT
            ipv4 address 172.16.0.11 255.255.255.0
+           no shutdown
           !
           interface GigabitEthernet0/0/0/0
            bundle id 1112 mode active
            load-interval 30
+           no shutdown
           !
           interface GigabitEthernet0/0/0/1
            bundle id 1112 mode active
            load-interval 30
+           no shutdown
           !
           interface GigabitEthernet0/0/0/2
            ipv4 address 12.39.14.11 255.255.255.0
            ipv6 address fe80::11 link-local
            ipv6 address 2001:12:39:14::11/64
            load-interval 30
+           no shutdown
           !
           interface GigabitEthernet0/0/0/3
            ipv4 address 12.39.17.11 255.255.255.0
            ipv6 address fe80::11 link-local
            ipv6 address 2001:12:39:17::11/64
            load-interval 30
+           no shutdown
           !
           interface GigabitEthernet0/0/0/4
            ipv4 address 12.39.191.11 255.255.255.0
            ipv6 address fe80::11 link-local
            ipv6 address 2001:12:39:191::11/64
            load-interval 30
+           no shutdown
           !
           interface GigabitEthernet0/0/0/4.101 l2transport
            encapsulation dot1q 101
@@ -173,6 +180,7 @@ nodes:
            ipv6 address fe80::1 link-local
            ipv6 address 2001:12:39:171::11/64
            load-interval 30
+           no shutdown
           !
           interface GigabitEthernet0/0/0/5.71 l2transport
            encapsulation dot1q 71
@@ -183,6 +191,7 @@ nodes:
            ipv6 address fe80::11 link-local
            ipv6 address 2001:12:39:181::11/64
            load-interval 30
+           no shutdown
           !
           interface GigabitEthernet0/0/0/7
            shutdown
@@ -532,6 +541,8 @@ nodes:
            ipv4 address 12.39.12.12 255.255.255.0
            ipv6 address fe80::12 link-local
            ipv6 address 2001:12:39:12::12/64
+           load-interval 30
+           no shutdown
           !
           interface Loopback0
            ipv4 address 12.39.255.12 255.255.255.255
@@ -543,24 +554,34 @@ nodes:
           !
           interface GigabitEthernet0/0/0/0
            bundle id 1112 mode active
+           load-interval 30
+           no shutdown
           !
           interface GigabitEthernet0/0/0/1
            bundle id 1112 mode active
+           load-interval 30
+           no shutdown
           !
           interface GigabitEthernet0/0/0/2
            ipv4 address 12.39.23.12 255.255.255.0
            ipv6 address fe80::12 link-local
            ipv6 address 2001:12:39:23::12/64
+           load-interval 30
+           no shutdown
           !
           interface GigabitEthernet0/0/0/3
            ipv4 address 12.39.25.12 255.255.255.0
            ipv6 address fe80::12 link-local
            ipv6 address 2001:12:39:25::12/64
+           load-interval 30
+           no shutdown
           !
           interface GigabitEthernet0/0/0/4
            ipv4 address 12.39.27.12 255.255.255.0
            ipv6 address fe80::12 link-local
            ipv6 address 2001:12:39:27::12/64
+           load-interval 30
+           no shutdown
           !
           route-policy DROP
             drop
@@ -792,26 +813,36 @@ nodes:
            ipv4 address 12.39.171.17 255.255.255.0
            ipv6 address fe80::17 link-local
            ipv6 address 2001:12:39:171::17/64
+           load-interval 30
+           no shutdown
           !
           interface GigabitEthernet0/0/0/1
            ipv4 address 12.39.178.17 255.255.255.0
            ipv6 address fe80::17 link-local
            ipv6 address 2001:12:39:178::17/64
+           load-interval 30
+           no shutdown
           !
           interface GigabitEthernet0/0/0/2
            ipv4 address 12.39.17.17 255.255.255.0
            ipv6 address fe80::17 link-local
            ipv6 address 2001:12:39:17::17/64
+           load-interval 30
+           no shutdown
           !
           interface GigabitEthernet0/0/0/3
            ipv4 address 12.39.47.17 255.255.255.0
            ipv6 address fe80::17 link-local
            ipv6 address 2001:12:39:47::17/64
+           load-interval 30
+           no shutdown
           !
           interface GigabitEthernet0/0/0/4
            ipv4 address 12.39.27.17 255.255.255.0
            ipv6 address fe80::17 link-local
            ipv6 address 2001:12:39:27::17/64
+           load-interval 30
+           no shutdown
           !
           route-policy DROP
             drop
@@ -1150,26 +1181,36 @@ nodes:
            ipv4 address 12.39.171.18 255.255.255.0
            ipv6 address fe80::18 link-local
            ipv6 address 2001:12:39:171::18/64
+           load-interval 30
+           no shutdown
           !
           interface GigabitEthernet0/0/0/1
            ipv4 address 12.39.178.18 255.255.255.0
            ipv6 address fe80::18 link-local
            ipv6 address 2001:12:39:178::18/64
+           load-interval 30
+           no shutdown
           !
           interface GigabitEthernet0/0/0/2
            ipv4 address 12.39.68.18 255.255.255.0
            ipv6 address fe80::18 link-local
            ipv6 address 2001:12:39:68::18/64
+           load-interval 30
+           no shutdown
           !
           interface GigabitEthernet0/0/0/3
            ipv4 address 12.39.38.18 255.255.255.0
            ipv6 address fe80::18 link-local
            ipv6 address 2001:12:39:38::18/64
+           load-interval 30
+           no shutdown
           !
           interface GigabitEthernet0/0/0/4
            ipv4 address 12.39.58.18 255.255.255.0
            ipv6 address fe80::18 link-local
            ipv6 address 2001:12:39:58::18/64
+           load-interval 30
+           no shutdown
           !
           route-policy DROP
             drop
@@ -1412,6 +1453,8 @@ nodes:
            ipv4 address 12.39.56.15 255.255.255.0
            ipv6 address fe80::15 link-local
            ipv6 address 2001:12:39:56::15/64
+           load-interval 30
+           no shutdown
           !
           interface Loopback0
            ipv4 address 12.39.255.15 255.255.255.255
@@ -1423,24 +1466,34 @@ nodes:
           !
           interface GigabitEthernet0/0/0/0
            bundle id 1516 mode active
+           load-interval 30
+           no shutdown
           !
           interface GigabitEthernet0/0/0/1
            bundle id 1516 mode active
+           load-interval 30
+           no shutdown
           !
           interface GigabitEthernet0/0/0/2
            ipv4 address 12.39.45.15 255.255.255.0
            ipv6 address fe80::15 link-local
            ipv6 address 2001:12:39:45::15/64
+           load-interval 30
+           no shutdown
           !
           interface GigabitEthernet0/0/0/3
            ipv4 address 12.39.25.15 255.255.255.0
            ipv6 address fe80::15 link-local
            ipv6 address 2001:12:39:25::16/64
+           load-interval 30
+           no shutdown
           !
           interface GigabitEthernet0/0/0/4
            ipv4 address 12.39.58.15 255.255.255.0
            ipv6 address fe80::15 link-local
            ipv6 address 2001:12:39:58::15/64
+           load-interval 30
+           no shutdown
           !
           route-policy DROP
             drop
@@ -1682,6 +1735,8 @@ nodes:
            ipv4 address 12.39.56.16 255.255.255.0
            ipv6 address fe80::16 link-local
            ipv6 address 2001:12:39:56::16/64
+           load-interval 30
+           no shutdown
           !
           interface Loopback0
            ipv4 address 12.39.255.16 255.255.255.255
@@ -1693,29 +1748,41 @@ nodes:
           !
           interface GigabitEthernet0/0/0/0
            bundle id 1516 mode active
+           load-interval 30
+           no shutdown
           !
           interface GigabitEthernet0/0/0/1
            bundle id 1516 mode active
+           load-interval 30
+           no shutdown
           !
           interface GigabitEthernet0/0/0/2
            ipv4 address 12.39.36.16 255.255.255.0
            ipv6 address fe80::16 link-local
            ipv6 address 2001:12:39:36::16/64
+           load-interval 30
+           no shutdown
           !
           interface GigabitEthernet0/0/0/3
            ipv4 address 12.39.68.16 255.255.255.0
            ipv6 address fe80::16 link-local
            ipv6 address 2001:12:39:68::16/64
+           load-interval 30
+           no shutdown
           !
           interface GigabitEthernet0/0/0/4
            ipv4 address 12.39.162.16 255.255.255.0
            ipv6 address fe80::16 link-local
            ipv6 address 2001:12:39:162::16/64
+           load-interval 30
+           no shutdown
           !
           interface GigabitEthernet0/0/0/5
            ipv4 address 33.56.162.16 255.255.255.0
            ipv6 address fe80::16 link-local
            ipv6 address 2001:33:56:162::16/64
+           load-interval 30
+           no shutdown
           !
           interface GigabitEthernet0/0/0/6
            vrf RED
@@ -1723,6 +1790,7 @@ nodes:
            ipv6 address fe80::16 link-local
            ipv6 address 2001:12:39:167::16/64
            load-interval 30
+           no shutdown
           !
           interface GigabitEthernet0/0/0/6.71 l2transport
            encapsulation dot1q 71
@@ -2125,38 +2193,44 @@ nodes:
            ipv4 address 33.56.12.21 255.255.255.0
            ipv6 address fe80::21 link-local
            ipv6 address 2001:33:56:12::21/64
-           shutdown
+           load-interval 30
+           no shutdown
           !
           interface GigabitEthernet0/0/0/1
            ipv4 address 33.56.13.21 255.255.255.0
            ipv6 address fe80::21 link-local
            ipv6 address 2001:33:56:13::21/64
-           shutdown
+           load-interval 30
+           no shutdown
           !
           interface GigabitEthernet0/0/0/2
            ipv4 address 33.56.15.21 255.255.255.0
            ipv6 address fe80::21 link-local
            ipv6 address 2001:33:56:15::21/64
-           shutdown
+           load-interval 30
+           no shutdown
           !
           interface GigabitEthernet0/0/0/3
            vrf RED
            ipv4 address 33.56.217.21 255.255.255.0
            ipv6 address fe80::21 link-local
            ipv6 address 2001:33:56:217::21/64
-           shutdown
+           load-interval 30
+           no shutdown
           !
           interface GigabitEthernet0/0/0/4
            ipv4 address 12.39.132.21 255.255.255.0
            ipv6 address fe80::21 link-local
            ipv6 address 2001:12:39:132::21/64
-           shutdown
+           load-interval 30
+           no shutdown
           !
           interface GigabitEthernet0/0/0/5
            ipv4 address 33.56.162.21 255.255.255.0
            ipv6 address fe80::21 link-local
            ipv6 address 2001:33:56:162::21/64
-           shutdown
+           load-interval 30
+           no shutdown
           !
           route-policy DROP
             drop
@@ -2452,37 +2526,43 @@ nodes:
            ipv4 address 33.56.34.24 255.255.255.0
            ipv6 address fe80::24 link-local
            ipv6 address 2001:33:56:34::24/64
-           shutdown
+           load-interval 30
+           no shutdown
           !
           interface GigabitEthernet0/0/0/1
            ipv4 address 33.56.24.24 255.255.255.0
            ipv6 address fe80::24 link-local
            ipv6 address 2001:33:56:24::24/64
-           shutdown
+           load-interval 30
+           no shutdown
           !
           interface GigabitEthernet0/0/0/2
            ipv4 address 33.56.45.24 255.255.255.0
            ipv6 address fe80::24 link-local
            ipv6 address 2001:33:56:45::24/64
-           shutdown
+           load-interval 30
+           no shutdown
           !
           interface GigabitEthernet0/0/0/3
            ipv4 address 33.56.247.24 255.255.255.0
            ipv6 address fe80::24 link-local
            ipv6 address 2001:33:56:247::24/64
-           shutdown
+           load-interval 30
+           no shutdown
           !
           interface GigabitEthernet0/0/0/4
            ipv4 address 33.56.248.24 255.255.255.0
            ipv6 address fe80::24 link-local
            ipv6 address 2001:33:56:248::24/64
-           shutdown
+           load-interval 30
+           no shutdown
           !
           interface GigabitEthernet0/0/0/5
            ipv4 address 33.56.249.24 255.255.255.0
            ipv6 address fe80::24 link-local
            ipv6 address 2001:33:56:249::24/64
-           shutdown
+           load-interval 30
+           no shutdown
           !
           route-policy DROP
             drop
@@ -2735,25 +2815,25 @@ nodes:
           \ isis AS1239\n!\ninterface GigabitEthernet1\n ip address 12.39.23.13 255.255.255.0\n\
           \ ip router isis AS1239\n load-interval 30\n negotiation auto\n ipv6 address\
           \ FE80::13 link-local\n ipv6 address 2001:12:39:23::13/64\n ipv6 router\
-          \ isis AS1239\n mpls ip\n no mop enabled\n no mop sysid\n isis network point-to-point\n\
+          \ isis AS1239\n mpls ip\n no shutdown\n no mop sysid\n isis network point-to-point\n\
           \ no isis advertise prefix\n!\ninterface GigabitEthernet2\n ip address 12.39.36.13\
           \ 255.255.255.0\n ip router isis AS1239\n load-interval 30\n negotiation\
           \ auto\n ipv6 address FE80::13 link-local\n ipv6 address 2001:12:39:36::13/64\n\
-          \ ipv6 router isis AS1239\n mpls ip\n no mop enabled\n no mop sysid\n isis\
+          \ ipv6 router isis AS1239\n mpls ip\n no shutdown\n no mop sysid\n isis\
           \ network point-to-point\n no isis advertise prefix\n!\ninterface GigabitEthernet3\n\
           \ ip address 12.39.38.13 255.255.255.0\n ip router isis AS1239\n load-interval\
           \ 30\n negotiation auto\n ipv6 address FE80::13 link-local\n ipv6 address\
-          \ 2001:12:39:38::13/64\n ipv6 router isis AS1239\n mpls ip\n no mop enabled\n\
+          \ 2001:12:39:38::13/64\n ipv6 router isis AS1239\n mpls ip\n no shutdown\n\
           \ no mop sysid\n isis network point-to-point\n no isis advertise prefix\n\
           !\ninterface GigabitEthernet4\n ip address 12.39.132.13 255.255.255.0\n\
           \ load-interval 30\n negotiation auto\n ipv6 address FE80::13 link-local\n\
-          \ ipv6 address 2001:12:39:132::13/64\n no mop enabled\n no mop sysid\n!\n\
+          \ ipv6 address 2001:12:39:132::13/64\n no shutdown\n no mop sysid\n!\n\
           interface GigabitEthernet5\n ip address 33.56.132.13 255.255.255.0\n ip\
           \ router isis AS1239\n load-interval 30\n negotiation auto\n ipv6 address\
           \ FE80::13 link-local\n ipv6 address 2001:33:56:132::13/64\n ipv6 router\
-          \ isis AS1239\n no mop enabled\n no mop sysid\n isis network point-to-point\n\
+          \ isis AS1239\n no shutdown\n no mop sysid\n isis network point-to-point\n\
           \ no isis advertise prefix\n!\ninterface GigabitEthernet6\n no ip address\n\
-          \ load-interval 30\n shutdown\n negotiation auto\n no mop enabled\n no mop\
+          \ load-interval 30\n shutdown\n negotiation auto\n no shutdown\n no mop\
           \ sysid\n service instance 100 ethernet\n  encapsulation dot1q 100\n !\n\
           \ service instance 102 ethernet\n  encapsulation dot1q 102\n  rewrite ingress\
           \ tag pop 1 symmetric\n !\n service instance 103 ethernet\n  encapsulation\
@@ -2762,12 +2842,12 @@ nodes:
           \ 12.39.255.16 8272 encapsulation mpls\n!\ninterface GigabitEthernet6.92\n\
           \ encapsulation dot1Q 92\n xconnect 12.39.255.14 8292 encapsulation mpls\n\
           !\ninterface GigabitEthernet7\n no ip address\n shutdown\n negotiation auto\n\
-          \ no mop enabled\n no mop sysid\n!\ninterface GigabitEthernet8\n no ip address\n\
-          \ shutdown\n negotiation auto\n no mop enabled\n no mop sysid\n!\ninterface\
+          \ no shutdown\n no mop sysid\n!\ninterface GigabitEthernet8\n no ip address\n\
+          \ shutdown\n negotiation auto\n no shutdown\n no mop sysid\n!\ninterface\
           \ GigabitEthernet9\n vrf forwarding MGMNT\n ip address 172.16.0.13 255.255.255.0\n\
-          \ negotiation auto\n no mop enabled\n no mop sysid\n!\ninterface BDI100\n\
+          \ negotiation auto\n no shutdown\n no mop sysid\n!\ninterface BDI100\n\
           \ mac-address 0011.0011.0011\n ip address 100.100.100.1 255.255.255.0\n\
-          \ encapsulation dot1Q 100\n no mop enabled\n no mop sysid\n!\nrouter isis\
+          \ encapsulation dot1Q 100\n no shutdown\n no mop sysid\n!\nrouter isis\
           \ AS1239\n net 49.1239.0000.0000.0013.00\n is-type level-2-only\n router-id\
           \ Loopback0\n metric-style wide\n !\n address-family ipv6\n  multi-topology\n\
           \ exit-address-family\n mpls ldp autoconfig\n!\nrouter bgp 1239\n template\
@@ -2939,32 +3019,32 @@ nodes:
           \ ipv6 router isis AS1239\n!\ninterface GigabitEthernet1\n ip address 12.39.45.14\
           \ 255.255.255.0\n ip router isis AS1239\n load-interval 30\n negotiation\
           \ auto\n ipv6 address FE80::14 link-local\n ipv6 address 2001:12:39:45::14/64\n\
-          \ ipv6 router isis AS1239\n no mop enabled\n no mop sysid\n isis network\
+          \ ipv6 router isis AS1239\n no shutdown\n no mop sysid\n isis network\
           \ point-to-point\n no isis advertise prefix\n!\ninterface GigabitEthernet2\n\
           \ ip address 12.39.14.14 255.255.255.0\n ip router isis AS1239\n load-interval\
           \ 30\n negotiation auto\n ipv6 address FE80::14 link-local\n ipv6 address\
-          \ 2001:12:39:14::14/64\n ipv6 router isis AS1239\n no mop enabled\n no mop\
+          \ 2001:12:39:14::14/64\n ipv6 router isis AS1239\n no shutdown\n no mop\
           \ sysid\n isis network point-to-point\n no isis advertise prefix\n!\ninterface\
           \ GigabitEthernet3\n ip address 12.39.47.14 255.255.255.0\n ip router isis\
           \ AS1239\n load-interval 30\n negotiation auto\n ipv6 address FE80::14 link-local\n\
-          \ ipv6 address 2001:12:39:47::14/64\n ipv6 router isis AS1239\n no mop enabled\n\
+          \ ipv6 address 2001:12:39:47::14/64\n ipv6 router isis AS1239\n no shutdown\n\
           \ no mop sysid\n isis network point-to-point\n no isis advertise prefix\n\
           !\ninterface GigabitEthernet4\n no ip address\n shutdown\n negotiation auto\n\
-          \ no mop enabled\n no mop sysid\n service instance 100 ethernet\n  encapsulation\
+          \ no shutdown\n no mop sysid\n service instance 100 ethernet\n  encapsulation\
           \ dot1q 100\n !\n service instance 105 ethernet\n  encapsulation dot1q 105\n\
           \ !\n!\ninterface GigabitEthernet5\n no ip address\n shutdown\n negotiation\
-          \ auto\n no mop enabled\n no mop sysid\n service instance 100 ethernet\n\
+          \ auto\n no shutdown\n no mop sysid\n service instance 100 ethernet\n\
           \  encapsulation dot1q 100\n !\n!\ninterface GigabitEthernet6\n no ip address\n\
-          \ shutdown\n negotiation auto\n no mop enabled\n no mop sysid\n service\
+          \ shutdown\n negotiation auto\n no shutdown\n no mop sysid\n service\
           \ instance 100 ethernet\n  encapsulation dot1q 100\n !\n service instance\
           \ 103 ethernet\n  encapsulation dot1q 103\n !\n service instance 105 ethernet\n\
           \  encapsulation dot1q 105\n !\n!\ninterface GigabitEthernet6.92\n encapsulation\
           \ dot1Q 92\n xconnect 12.39.255.13 8292 encapsulation mpls\n!\ninterface\
-          \ GigabitEthernet7\n no ip address\n shutdown\n negotiation auto\n no mop\
-          \ enabled\n no mop sysid\n!\ninterface GigabitEthernet8\n no ip address\n\
-          \ shutdown\n negotiation auto\n no mop enabled\n no mop sysid\n!\ninterface\
+          \ GigabitEthernet7\n no ip address\n shutdown\n negotiation auto\n no shutdown\
+          \ \n no mop sysid\n!\ninterface GigabitEthernet8\n no ip address\n\
+          \ shutdown\n negotiation auto\n no shutdown\n no mop sysid\n!\ninterface\
           \ GigabitEthernet9\n vrf forwarding MGMNT\n ip address 172.16.0.14 255.255.255.0\n\
-          \ negotiation auto\n no mop enabled\n no mop sysid\n!\nrouter ospfv3 71\n\
+          \ negotiation auto\n no shutdown\n no mop sysid\n!\nrouter ospfv3 71\n\
           \ router-id 12.39.147.14\n !\n address-family ipv6 unicast vrf RED\n  redistribute\
           \ bgp 1239 metric 10\n exit-address-family\n!\nrouter ospf 71 vrf RED\n\
           \ router-id 12.39.147.14\n redistribute bgp 1239 metric 10\n!\nrouter isis\
@@ -3122,32 +3202,32 @@ nodes:
           \ ip ospf prefix-suppression\n ip ospf 3356 area 0\n shutdown\n negotiation\
           \ auto\n ipv6 address FE80::22 link-local\n ipv6 address 2001:33:56:12::22/64\n\
           \ ospfv3 network point-to-point\n ospfv3 prefix-suppression\n ospfv3 3356\
-          \ ipv6 area 0\n no mop enabled\n no mop sysid\n!\ninterface GigabitEthernet2\n\
+          \ ipv6 area 0\n no shutdown\n no mop sysid\n!\ninterface GigabitEthernet2\n\
           \ ip address 33.56.24.22 255.255.255.0\n ip ospf network point-to-point\n\
           \ ip ospf prefix-suppression\n ip ospf 3356 area 0\n shutdown\n negotiation\
           \ auto\n ipv6 address FE80::22 link-local\n ipv6 address 2001:33:56:24::22/64\n\
           \ ospfv3 network point-to-point\n ospfv3 prefix-suppression\n ospfv3 3356\
-          \ ipv6 area 0\n no mop enabled\n no mop sysid\n!\ninterface GigabitEthernet3\n\
+          \ ipv6 area 0\n no shutdown\n no mop sysid\n!\ninterface GigabitEthernet3\n\
           \ ip address 33.56.25.22 255.255.255.0\n ip ospf network point-to-point\n\
           \ ip ospf prefix-suppression\n ip ospf 3356 area 0\n shutdown\n negotiation\
           \ auto\n ipv6 address FE80::22 link-local\n ipv6 address 2001:33:56:25::22/64\n\
           \ ospfv3 network point-to-point\n ospfv3 prefix-suppression\n ospfv3 3356\
-          \ ipv6 area 0\n no mop enabled\n no mop sysid\n!\ninterface GigabitEthernet4\n\
+          \ ipv6 area 0\n no shutdown\n no mop sysid\n!\ninterface GigabitEthernet4\n\
           \ ip address 33.56.229.22 255.255.255.0\n shutdown\n negotiation auto\n\
           \ ipv6 address FE80::22 link-local\n ipv6 address 2001:33:56:229::22/64\n\
-          \ no mop enabled\n no mop sysid\n!\ninterface GigabitEthernet5\n vrf forwarding\
+          \ no shutdown\n no mop sysid\n!\ninterface GigabitEthernet5\n vrf forwarding\
           \ RED\n ip address 33.56.227.22 255.255.255.0\n ip ospf network point-to-point\n\
           \ ip ospf 74 area 0\n shutdown\n negotiation auto\n ipv6 address FE80::22\
           \ link-local\n ipv6 address 2001:33:56:227::22/64\n ospfv3 network point-to-point\n\
-          \ ospfv3 74 ipv6 area 0\n no mop enabled\n no mop sysid\n!\ninterface GigabitEthernet6\n\
+          \ ospfv3 74 ipv6 area 0\n no shutdown\n no mop sysid\n!\ninterface GigabitEthernet6\n\
           \ ip address 33.56.228.22 255.255.255.0\n shutdown\n negotiation auto\n\
           \ ipv6 address FE80::22 link-local\n ipv6 address 2001:33:56:228::22/64\n\
-          \ no mop enabled\n no mop sysid\n!\ninterface GigabitEthernet7\n no ip address\n\
-          \ shutdown\n negotiation auto\n no mop enabled\n no mop sysid\n!\ninterface\
-          \ GigabitEthernet8\n no ip address\n shutdown\n negotiation auto\n no mop\
-          \ enabled\n no mop sysid\n!\ninterface GigabitEthernet9\n vrf forwarding\
-          \ MGMNT\n ip address 172.16.0.22 255.255.255.0\n negotiation auto\n no mop\
-          \ enabled\n no mop sysid\n!\nrouter ospfv3 3356\n auto-cost reference-bandwidth\
+          \ no shutdown\n no mop sysid\n!\ninterface GigabitEthernet7\n no ip address\n\
+          \ shutdown\n negotiation auto\n no shutdown\n no mop sysid\n!\ninterface\
+          \ GigabitEthernet8\n no ip address\n shutdown\n negotiation auto\n no \
+          \ shutdown\n no mop sysid\n!\ninterface GigabitEthernet9\n vrf forwarding\
+          \ MGMNT\n ip address 172.16.0.22 255.255.255.0\n negotiation auto\n no \
+          \ shutdown\n no mop sysid\n!\nrouter ospfv3 3356\n auto-cost reference-bandwidth\
           \ 100000\n !\n address-family ipv6 unicast\n  area 2224 virtual-link 33.56.255.24\n\
           \ exit-address-family\n!\nrouter ospfv3 74\n router-id 33.56.227.22\n !\n\
           \ address-family ipv6 unicast vrf RED\n  redistribute bgp 3356 metric 10\n\
@@ -3292,30 +3372,30 @@ nodes:
           \ ip ospf network point-to-point\n ip ospf prefix-suppression\n ip ospf\
           \ 3356 area 0\n shutdown\n negotiation auto\n ipv6 address FE80::25 link-local\n\
           \ ipv6 address 2001:33:56:15::25/64\n ospfv3 network point-to-point\n ospfv3\
-          \ prefix-suppression\n ospfv3 3356 ipv6 area 0\n no mop enabled\n no mop\
+          \ prefix-suppression\n ospfv3 3356 ipv6 area 0\n no shutdown\n no mop\
           \ sysid\n!\ninterface GigabitEthernet2\n ip address 33.56.25.25 255.255.255.0\n\
           \ ip ospf network point-to-point\n ip ospf prefix-suppression\n ip ospf\
           \ 3356 area 0\n shutdown\n negotiation auto\n ipv6 address FE80::25 link-local\n\
           \ ipv6 address 2001:33:56:25::25/64\n ospfv3 network point-to-point\n ospfv3\
-          \ prefix-suppression\n ospfv3 3356 ipv6 area 0\n no mop enabled\n no mop\
+          \ prefix-suppression\n ospfv3 3356 ipv6 area 0\n no shutdown\n no mop\
           \ sysid\n!\ninterface GigabitEthernet3\n ip address 33.56.45.25 255.255.255.0\n\
           \ ip ospf network point-to-point\n ip ospf prefix-suppression\n ip ospf\
           \ 3356 area 0\n shutdown\n negotiation auto\n ipv6 address FE80::25 link-local\n\
           \ ipv6 address 2001:33:56:45::25/64\n ospfv3 network point-to-point\n ospfv3\
-          \ prefix-suppression\n ospfv3 3356 ipv6 area 0\n no mop enabled\n no mop\
+          \ prefix-suppression\n ospfv3 3356 ipv6 area 0\n no shutdown\n no mop\
           \ sysid\n!\ninterface GigabitEthernet4\n ip address 33.56.35.25 255.255.255.0\n\
           \ ip ospf network point-to-point\n ip ospf prefix-suppression\n ip ospf\
           \ 3356 area 0\n shutdown\n negotiation auto\n ipv6 address FE80::25 link-local\n\
           \ ipv6 address 2001:33:56:35::25/64\n ospfv3 network point-to-point\n ospfv3\
-          \ prefix-suppression\n ospfv3 3356 ipv6 area 0\n no mop enabled\n no mop\
+          \ prefix-suppression\n ospfv3 3356 ipv6 area 0\n no shutdown\n no mop\
           \ sysid\n!\ninterface GigabitEthernet5\n no ip address\n shutdown\n negotiation\
-          \ auto\n no mop enabled\n no mop sysid\n!\ninterface GigabitEthernet6\n\
-          \ no ip address\n shutdown\n negotiation auto\n no mop enabled\n no mop\
+          \ auto\n no shutdown\n no mop sysid\n!\ninterface GigabitEthernet6\n\
+          \ no ip address\n shutdown\n negotiation auto\n no shutdown\n no mop\
           \ sysid\n!\ninterface GigabitEthernet7\n no ip address\n shutdown\n negotiation\
-          \ auto\n no mop enabled\n no mop sysid\n!\ninterface GigabitEthernet8\n\
-          \ no ip address\n shutdown\n negotiation auto\n no mop enabled\n no mop\
+          \ auto\n no shutdown\n no mop sysid\n!\ninterface GigabitEthernet8\n\
+          \ no ip address\n shutdown\n negotiation auto\n no shutdown\n no mop\
           \ sysid\n!\ninterface GigabitEthernet9\n vrf forwarding MGMNT\n ip address\
-          \ 172.16.0.25 255.255.255.0\n negotiation auto\n no mop enabled\n no mop\
+          \ 172.16.0.25 255.255.255.0\n negotiation auto\n no shutdown\n no mop\
           \ sysid\n!\nrouter ospfv3 3356\n router-id 33.56.255.25\n auto-cost reference-bandwidth\
           \ 100000\n !\n address-family ipv6 unicast\n exit-address-family\n!\nrouter\
           \ ospf 3356\n router-id 33.56.255.25\n auto-cost reference-bandwidth 100000\n\
@@ -3490,30 +3570,30 @@ nodes:
           \ ip ospf network point-to-point\n ip ospf prefix-suppression\n ip ospf\
           \ 3356 area 0\n shutdown\n negotiation auto\n ipv6 address FE80::23 link-local\n\
           \ ipv6 address 2001:33:56:34::23/64\n ospfv3 network point-to-point\n ospfv3\
-          \ prefix-suppression\n ospfv3 3356 ipv6 area 0\n no mop enabled\n no mop\
+          \ prefix-suppression\n ospfv3 3356 ipv6 area 0\n no shutdown\n no mop\
           \ sysid\n!\ninterface GigabitEthernet2\n ip address 33.56.13.23 255.255.255.0\n\
           \ ip ospf network point-to-point\n ip ospf prefix-suppression\n ip ospf\
           \ 3356 area 0\n shutdown\n negotiation auto\n ipv6 address FE80::23 link-local\n\
           \ ipv6 address 2001:33:56:13::23/64\n ospfv3 network point-to-point\n ospfv3\
-          \ prefix-suppression\n ospfv3 3356 ipv6 area 0\n no mop enabled\n no mop\
+          \ prefix-suppression\n ospfv3 3356 ipv6 area 0\n no shutdown\n no mop\
           \ sysid\n!\ninterface GigabitEthernet3\n ip address 33.56.35.23 255.255.255.0\n\
           \ ip ospf network point-to-point\n ip ospf prefix-suppression\n ip ospf\
           \ 3356 area 0\n shutdown\n negotiation auto\n ipv6 address FE80::23 link-local\n\
           \ ipv6 address 2001:33:56:35::23/64\n ospfv3 network point-to-point\n ospfv3\
-          \ prefix-suppression\n ospfv3 3356 ipv6 area 0\n no mop enabled\n no mop\
+          \ prefix-suppression\n ospfv3 3356 ipv6 area 0\n no shutdown\n no mop\
           \ sysid\n!\ninterface GigabitEthernet4\n ip address 12.39.162.23 255.255.255.0\n\
           \ shutdown\n negotiation auto\n ipv6 address FE80::23 link-local\n ipv6\
-          \ address 2001:12:39:162::23/64\n no mop enabled\n no mop sysid\n!\ninterface\
+          \ address 2001:12:39:162::23/64\n no shutdown\n no mop sysid\n!\ninterface\
           \ GigabitEthernet5\n ip address 33.56.132.23 255.255.255.0\n shutdown\n\
           \ negotiation auto\n ipv6 address FE80::23 link-local\n ipv6 address 2001:33:56:132::23/64\n\
-          \ no mop enabled\n no mop sysid\n!\ninterface GigabitEthernet6\n no ip address\n\
-          \ shutdown\n negotiation auto\n no mop enabled\n no mop sysid\n service\
+          \ no shutdown\n no mop sysid\n!\ninterface GigabitEthernet6\n no ip address\n\
+          \ shutdown\n negotiation auto\n no shutdown\n no mop sysid\n service\
           \ instance 100 ethernet\n  encapsulation dot1q 100\n !\n!\ninterface GigabitEthernet7\n\
-          \ no ip address\n shutdown\n negotiation auto\n no mop enabled\n no mop\
+          \ no ip address\n shutdown\n negotiation auto\n no shutdown\n no mop\
           \ sysid\n!\ninterface GigabitEthernet8\n no ip address\n shutdown\n negotiation\
-          \ auto\n no mop enabled\n no mop sysid\n!\ninterface GigabitEthernet9\n\
+          \ auto\n no shutdown\n no mop sysid\n!\ninterface GigabitEthernet9\n\
           \ vrf forwarding MGMNT\n ip address 172.16.0.23 255.255.255.0\n negotiation\
-          \ auto\n no mop enabled\n no mop sysid\n!\nrouter ospfv3 3356\n auto-cost\
+          \ auto\n no shutdown\n no mop sysid\n!\nrouter ospfv3 3356\n auto-cost\
           \ reference-bandwidth 100000\n !\n address-family ipv6 unicast\n exit-address-family\n\
           !\nrouter ospf 3356\n auto-cost reference-bandwidth 100000\n mpls ldp autoconfig\n\
           !\nrouter bgp 3356\n bgp router-id 33.56.255.23\n bgp log-neighbor-changes\n\
@@ -5427,18 +5507,18 @@ nodes:
           !\ninterface GigabitEthernet1\n ip address 12.39.171.71 255.255.255.0\n\
           \ ip ospf network point-to-point\n ip ospf 71 area 0\n shutdown\n negotiation\
           \ auto\n ipv6 address FE80::71 link-local\n ipv6 address 2001:12:39:171::71/64\n\
-          \ ipv6 ospf 71 area 0\n ipv6 ospf network point-to-point\n no mop enabled\n\
+          \ ipv6 ospf 71 area 0\n ipv6 ospf network point-to-point\n no shutdown\n\
           \ no mop sysid\n!\ninterface GigabitEthernet1.71\n encapsulation dot1Q 71\n\
           \ ip address 10.71.72.71 255.255.255.0\n ipv6 address FE80::71 link-local\n\
           !\ninterface GigabitEthernet2\n ip address 12.39.147.71 255.255.255.0\n\
           \ ip ospf network point-to-point\n ip ospf 71 area 0\n shutdown\n negotiation\
           \ auto\n ipv6 address FE80::71 link-local\n ipv6 address 2001:12:39:147::71/64\n\
-          \ ipv6 ospf 71 area 0\n no mop enabled\n no mop sysid\n!\ninterface GigabitEthernet2.100\n\
+          \ ipv6 ospf 71 area 0\n no shutdown\n no mop sysid\n!\ninterface GigabitEthernet2.100\n\
           \ encapsulation dot1Q 100\n ip address 100.100.100.71 255.255.255.0\n!\n\
           interface GigabitEthernet3\n ip address 172.16.66.1 255.255.255.0\n shutdown\n\
           \ negotiation auto\n ipv6 address FE80::1 link-local\n ipv6 address 2001:DB8:7181::71/64\n\
-          \ no mop enabled\n no mop sysid\n!\ninterface GigabitEthernet4\n no ip address\n\
-          \ shutdown\n negotiation auto\n no mop enabled\n no mop sysid\n!\nrouter\
+          \ no shutdown\n no mop sysid\n!\ninterface GigabitEthernet4\n no ip address\n\
+          \ shutdown\n negotiation auto\n no shutdown\n no mop sysid\n!\nrouter\
           \ ospfv3 71\n router-id 109.109.255.1\n !\n address-family ipv6 unicast\n\
           \ exit-address-family\n!\nrouter ospf 71\n router-id 109.109.255.1\n!\n\
           router bgp 109\n bgp router-id 109.109.255.1\n bgp log-neighbor-changes\n\
@@ -5580,17 +5660,17 @@ nodes:
           \ ipv6 address 2001:109:109:255::254/128\n!\ninterface GigabitEthernet1\n\
           \ ip address 12.39.148.81 255.255.255.0\n shutdown\n negotiation auto\n\
           \ ipv6 address FE80::81 link-local\n ipv6 address 2001:12:39:148::81/64\n\
-          \ no mop enabled\n no mop sysid\n!\ninterface GigabitEthernet1.100\n encapsulation\
+          \ no shutdown\n no mop sysid\n!\ninterface GigabitEthernet1.100\n encapsulation\
           \ dot1Q 100\n ip address 100.100.100.81 255.255.255.0\n cdp enable\n!\n\
           interface GigabitEthernet1.105\n encapsulation dot1Q 105\n ip address 105.105.105.81\
           \ 255.255.255.0\n ipv6 address FE80::81 link-local\n!\ninterface GigabitEthernet2\n\
           \ ip address 12.39.181.81 255.255.255.0\n shutdown\n negotiation auto\n\
           \ ipv6 address FE80::81 link-local\n ipv6 address 2001:12:39:181::81/64\n\
-          \ no mop enabled\n no mop sysid\n!\ninterface GigabitEthernet3\n ip address\
+          \ no shutdown\n no mop sysid\n!\ninterface GigabitEthernet3\n ip address\
           \ 172.16.66.254 255.255.255.0\n shutdown\n negotiation auto\n ipv6 address\
-          \ FE80::81 link-local\n ipv6 address 2001:DB8:7181::81/64\n no mop enabled\n\
+          \ FE80::81 link-local\n ipv6 address 2001:DB8:7181::81/64\n no shutdown\n\
           \ no mop sysid\n!\ninterface GigabitEthernet4\n no ip address\n shutdown\n\
-          \ negotiation auto\n no mop enabled\n no mop sysid\n!\nrouter bgp 109\n\
+          \ negotiation auto\n no shutdown\n no mop sysid\n!\nrouter bgp 109\n\
           \ bgp router-id 109.109.255.254\n bgp log-neighbor-changes\n no bgp default\
           \ ipv4-unicast\n neighbor 12.39.148.14 remote-as 1239\n neighbor 12.39.181.11\
           \ remote-as 1239\n neighbor 2001:12:39:148::14 remote-as 1239\n neighbor\
@@ -5734,14 +5814,14 @@ nodes:
           \ ipv6 ospf 74 area 0\n!\ninterface GigabitEthernet1\n ip address 33.56.227.74\
           \ 255.255.255.0\n ip ospf network point-to-point\n ip ospf 74 area 0\n shutdown\n\
           \ negotiation auto\n ipv6 address FE80::74 link-local\n ipv6 address 2001:33:56:227::74/64\n\
-          \ ipv6 ospf 74 area 0\n ipv6 ospf network point-to-point\n no mop enabled\n\
+          \ ipv6 ospf 74 area 0\n ipv6 ospf network point-to-point\n no shutdown\n\
           \ no mop sysid\n!\ninterface GigabitEthernet2\n ip address 33.56.247.74\
           \ 255.255.255.0\n shutdown\n negotiation auto\n ipv6 address FE80::74 link-local\n\
-          \ ipv6 address 2001:33:56:247::74/64\n no mop enabled\n no mop sysid\n!\n\
+          \ ipv6 address 2001:33:56:247::74/64\n no shutdown\n no mop sysid\n!\n\
           interface GigabitEthernet3\n ip address 172.16.99.1 255.255.255.0\n shutdown\n\
           \ negotiation auto\n ipv6 address FE80::74 link-local\n ipv6 address 2001:DB8:7484::74/64\n\
-          \ no mop enabled\n no mop sysid\n!\ninterface GigabitEthernet4\n no ip address\n\
-          \ shutdown\n negotiation auto\n no mop enabled\n no mop sysid\n!\nrouter\
+          \ no shutdown\n no mop sysid\n!\ninterface GigabitEthernet4\n no ip address\n\
+          \ shutdown\n negotiation auto\n no shutdown\n no mop sysid\n!\nrouter\
           \ ospfv3 74\n router-id 109.109.255.74\n !\n address-family ipv6 unicast\n\
           \ exit-address-family\n!\nrouter ospf 74\n router-id 109.109.255.74\n!\n\
           router bgp 144\n bgp router-id 144.144.254.1\n bgp log-neighbor-changes\n\
@@ -5883,15 +5963,15 @@ nodes:
           interface Loopback0\n ip address 144.144.255.254 255.255.255.255\n ipv6\
           \ address 2001:144:144:255::254/128\n!\ninterface GigabitEthernet1\n ip\
           \ address 33.56.248.84 255.255.255.0\n shutdown\n negotiation auto\n ipv6\
-          \ address FE80::84 link-local\n ipv6 address 2001:33:56:248::84/64\n no\
-          \ mop enabled\n no mop sysid\n!\ninterface GigabitEthernet2\n ip address\
+          \ address FE80::84 link-local\n ipv6 address 2001:33:56:248::84/64\n no shutdown\
+          \ \n no mop sysid\n!\ninterface GigabitEthernet2\n ip address\
           \ 33.56.228.84 255.255.255.0\n shutdown\n negotiation auto\n ipv6 address\
-          \ FE80::84 link-local\n ipv6 address 2001:33:56:228::84/64\n no mop enabled\n\
+          \ FE80::84 link-local\n ipv6 address 2001:33:56:228::84/64\n no shutdown\n\
           \ no mop sysid\n!\ninterface GigabitEthernet3\n ip address 172.16.99.254\
           \ 255.255.255.0\n shutdown\n negotiation auto\n ipv6 address FE80::84 link-local\n\
-          \ ipv6 address 2001:DB8:7484::84/64\n no mop enabled\n no mop sysid\n!\n\
+          \ ipv6 address 2001:DB8:7484::84/64\n no shutdown\n no mop sysid\n!\n\
           interface GigabitEthernet4\n no ip address\n shutdown\n negotiation auto\n\
-          \ no mop enabled\n no mop sysid\n!\nrouter bgp 144\n bgp router-id 144.144.255.254\n\
+          \ no shutdown\n no mop sysid\n!\nrouter bgp 144\n bgp router-id 144.144.255.254\n\
           \ bgp log-neighbor-changes\n no bgp default ipv4-unicast\n neighbor 2001:33:56:228::22\
           \ remote-as 3356\n neighbor 2001:33:56:248::24 remote-as 3356\n neighbor\
           \ 2001:DB8:7484::74 remote-as 144\n neighbor 33.56.228.22 remote-as 3356\n\
