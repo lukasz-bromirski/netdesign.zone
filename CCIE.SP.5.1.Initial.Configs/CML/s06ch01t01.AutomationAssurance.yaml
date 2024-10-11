@@ -551,6 +551,7 @@ nodes:
           interface MgmtEth0/RP0/CPU0/0
            vrf MGMNT
            ipv4 address 172.16.0.12 255.255.255.0
+           no shutdown
           !
           interface GigabitEthernet0/0/0/0
            bundle id 1112 mode active
@@ -808,6 +809,7 @@ nodes:
           interface MgmtEth0/RP0/CPU0/0
            vrf MGMNT
            ipv4 address 172.16.0.17 255.255.255.0
+           no shutdown
           !
           interface GigabitEthernet0/0/0/0
            ipv4 address 12.39.171.17 255.255.255.0
@@ -1176,6 +1178,7 @@ nodes:
           interface MgmtEth0/RP0/CPU0/0
            vrf MGMNT
            ipv4 address 172.16.0.18 255.255.255.0
+           no shutdown
           !
           interface GigabitEthernet0/0/0/0
            ipv4 address 12.39.171.18 255.255.255.0
@@ -1463,6 +1466,7 @@ nodes:
           interface MgmtEth0/RP0/CPU0/0
            vrf MGMNT
            ipv4 address 172.16.0.15 255.255.255.0
+           no shutdown
           !
           interface GigabitEthernet0/0/0/0
            bundle id 1516 mode active
@@ -1745,6 +1749,7 @@ nodes:
           interface MgmtEth0/RP0/CPU0/0
            vrf MGMNT
            ipv4 address 172.16.0.16 255.255.255.0
+           no shutdown
           !
           interface GigabitEthernet0/0/0/0
            bundle id 1516 mode active
@@ -2188,6 +2193,7 @@ nodes:
           interface MgmtEth0/RP0/CPU0/0
            vrf MGMNT
            ipv4 address 172.16.0.21 255.255.255.0
+           no shutdown
           !
           interface GigabitEthernet0/0/0/0
            ipv4 address 33.56.12.21 255.255.255.0
@@ -2521,6 +2527,7 @@ nodes:
           interface MgmtEth0/RP0/CPU0/0
            vrf MGMNT
            ipv4 address 172.16.0.24 255.255.255.0
+           no shutdown
           !
           interface GigabitEthernet0/0/0/0
            ipv4 address 33.56.34.24 255.255.255.0
