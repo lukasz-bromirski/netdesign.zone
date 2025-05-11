@@ -1,0 +1,10 @@
+---
+ip_interfaces:
+- interface: GigabitEthernet7
+  description: Test Ansible config for Gi7
+  ip: 17.17.17.1
+  cidr: "255.255.255.0"
+- interface: GigabitEthernet8
+  description: Test Ansible config for Gi8
+  ip: 18.18.18.1
+  cidr: "255.255.255.0"

@@ -1,0 +1,7 @@
+configure terminal
+{% for item in ip_interfaces %}
+  interface {{ item.interface }}
+    ipv4 address {{ item.ip }}{{ item.cidr }}
+    shutdown
+    exit
+{% endfor %}
