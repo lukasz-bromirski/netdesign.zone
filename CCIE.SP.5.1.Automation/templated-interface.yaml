@@ -3,16 +3,22 @@
 - name: "Change configuration using jinja2 templates"
   hosts: xe
   gather_facts: no
+  become: yes
+  become_method: enable
 
   vars_files:
-   - vars/xe-interface.json
+   - vars/xe-interface.yaml
 
   tasks:
-   - name: Changing interfaces on XE routers
-       template:
-         src: "{{ item.src }}"
-         dest: "{{ item.dest }}"
-         mode: 0755
-       with_items:
-         - {src: "jinja2/interfaces.j2',dest: 'interfaces.config'}
+    - name: Rendering template for XE routers
+      template:
+        src: "{{ item.src }}"
+        dest: "{{ item.dest }}"
+        mode: 0755
+      with_items:
+        - {src: 'jinja2/interfaces.j2',dest: 'new.config.with.audit.txt'}
+
+    - name: Apply configuration to device
+      ios_config:
+        src: "new.config.with.audit.txt"
 
