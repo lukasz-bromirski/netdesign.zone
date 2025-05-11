@@ -1,0 +1,18 @@
+---
+
+- name: "Change configuration using jinja2 templates"
+  hosts: xe
+  gather_facts: no
+
+  vars_files:
+   - vars/xe-interface.json
+
+  tasks:
+   - name: Changing interfaces on XE routers
+       template:
+         src: "{{ item.src }}"
+         dest: "{{ item.dest }}"
+         mode: 0755
+       with_items:
+         - {src: "jinja2/interfaces.j2',dest: 'interfaces.config'}
+
