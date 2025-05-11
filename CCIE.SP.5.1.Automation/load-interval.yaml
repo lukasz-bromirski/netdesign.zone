@@ -1,0 +1,33 @@
+---
+
+- name: "IOS XR routers configuration"
+  hosts: xr
+  gather_facts: no
+
+  tasks:
+   - name: XR load-interval change across interfaces
+     iosxr_config:
+      lines:
+       - load-interval 30
+      parents: "{{ item }}"
+     with_items:
+       - interface GigabitEthernet0/0/0/0
+       - interface GigabitEthernet0/0/0/1
+       - interface GigabitEthernet0/0/0/2
+       - interface GigabitEthernet0/0/0/3
+
+- name: "IOS XE routers configuration"
+  hosts: xe
+  gather_facts: no
+
+  tasks:
+    - name: XE load-interval change across interfaces
+      ios_config:
+       lines:
+        - load-interval 30
+       parents: "{{ item }}"
+      with_items:
+       - interface GigabitEthernet1
+       - interface GigabitEthernet2
+       - interface GigabitEthernet3
+       - interface GigabitEthernet4
