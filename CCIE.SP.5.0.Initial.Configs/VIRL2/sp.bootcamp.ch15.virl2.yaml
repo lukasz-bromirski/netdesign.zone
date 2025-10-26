@@ -4031,7 +4031,7 @@ nodes:
     configuration: |-
       !! CCIE SP Bootcamp v5.0-S15
       !!
-     hostname SP2R2
+      hostname SP2R2
       service timestamps log datetime msec
       service timestamps debug datetime msec
       telnet vrf default ipv4 server max-servers 10
