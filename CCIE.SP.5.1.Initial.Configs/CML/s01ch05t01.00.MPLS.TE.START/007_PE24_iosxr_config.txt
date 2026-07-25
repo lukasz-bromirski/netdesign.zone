@@ -1,0 +1,200 @@
+
+!! Building configuration...
+!! IOS XR Configuration 7.9.2
+!! Last configuration change at Mon Jan 1 01:00:01 2026 by cisco
+!
+hostname PE24
+logging console disable
+service timestamps log datetime msec
+service timestamps debug datetime msec
+domain name netdesign.zone
+domain lookup disable
+username cisco
+ group root-lr
+ group cisco-support
+ password 7 0822455D0A16
+!
+username admin
+ group root-lr
+ group cisco-support
+ password 7 094F471A1A0A
+!
+username lab
+ group root-lr
+ group cisco-support
+ password 7 1511021F0725
+!
+line template vty
+ timestamp disable
+ exec-timeout 0 0
+!
+line console
+ timestamp disable
+ exec-timeout 0 0
+ absolute-timeout 0
+ session-timeout 0
+!
+line default
+ timestamp disable
+ exec-timeout 0 0
+ absolute-timeout 0
+ session-timeout 0
+!
+icmp ipv4 rate-limit unreachable disable
+call-home
+ contact smart-licensing
+ profile CiscoTAC-1
+  destination transport-method email disable
+  destination transport-method http
+!
+interface Loopback0
+ ipv4 address 33.56.255.24 255.255.255.255
+ ipv6 address 2001:33:56:255::24/128
+!
+interface MgmtEth0/RP0/CPU0/0
+ shutdown
+!
+interface GigabitEthernet0/0/0/0
+ ipv4 address 33.56.34.24 255.255.255.0
+ ipv6 address fe80::24 link-local
+ ipv6 address 2001:33:56:34::24/64
+ load-interval 30
+ no shutdown
+!
+interface GigabitEthernet0/0/0/1
+ ipv4 address 33.56.24.24 255.255.255.0
+ ipv6 address fe80::24 link-local
+ ipv6 address 2001:33:56:24::24/64
+ load-interval 30
+ no shutdown
+!
+interface GigabitEthernet0/0/0/2
+ ipv4 address 33.56.45.24 255.255.255.0
+ ipv6 address fe80::24 link-local
+ ipv6 address 2001:33:56:45::24/64
+ load-interval 30
+ no shutdown
+!
+interface GigabitEthernet0/0/0/3
+ ipv4 address 33.56.247.24 255.255.255.0
+ ipv6 address fe80::24 link-local
+ ipv6 address 2001:33:56:247::24/64
+ load-interval 30
+ no shutdown
+!
+interface GigabitEthernet0/0/0/4
+ ipv4 address 33.56.248.24 255.255.255.0
+ ipv6 address fe80::24 link-local
+ ipv6 address 2001:33:56:248::24/64
+ load-interval 30
+ no shutdown
+!
+interface GigabitEthernet0/0/0/5
+ ipv4 address 33.56.249.24 255.255.255.0
+ ipv6 address fe80::24 link-local
+ ipv6 address 2001:33:56:249::24/64
+ load-interval 30
+ no shutdown
+!
+route-policy DROP
+  drop
+end-policy
+!
+route-policy PASS
+  pass
+end-policy
+!
+router ospf AS3356
+ router-id 33.56.255.24
+ mpls ldp auto-config
+ auto-cost reference-bandwidth 100000
+ address-family ipv4 unicast
+ area 0
+  interface Loopback0
+   passive enable
+  !
+  interface GigabitEthernet0/0/0/0
+   network point-to-point
+   prefix-suppression
+  !
+  interface GigabitEthernet0/0/0/1
+   network point-to-point
+   prefix-suppression
+  !
+  interface GigabitEthernet0/0/0/2
+   network point-to-point
+   prefix-suppression
+!
+router ospfv3 AS3356
+ router-id 33.56.255.24
+ auto-cost reference-bandwidth 100000
+ area 0
+  interface Loopback0
+   passive
+  !
+  interface GigabitEthernet0/0/0/0
+   network point-to-point
+   prefix-suppression
+  !
+  interface GigabitEthernet0/0/0/1
+   network point-to-point
+   prefix-suppression
+  !
+  interface GigabitEthernet0/0/0/2
+   network point-to-point
+   prefix-suppression
+ !
+ address-family ipv6 unicast
+!
+router bgp 3356
+ bgp router-id 33.56.255.24
+ address-family ipv4 unicast
+ !
+ address-family ipv6 unicast
+ !
+ neighbor 33.56.247.74
+  remote-as 144
+  address-family ipv4 unicast
+   route-policy PASS in
+   route-policy PASS out
+ !
+ neighbor 33.56.248.84
+  remote-as 144
+  address-family ipv4 unicast
+   route-policy PASS in
+   route-policy PASS out
+ !
+ neighbor 33.56.255.25
+  remote-as 3356
+  update-source Loopback0
+  address-family ipv4 unicast
+   next-hop-self
+   route-policy PASS in
+   route-policy PASS out
+ !
+ neighbor 2001:33:56:247::74
+  remote-as 144
+  address-family ipv6 unicast
+   route-policy PASS in
+   route-policy PASS out
+ !
+ neighbor 2001:33:56:248::84
+  remote-as 144
+  address-family ipv6 unicast
+   route-policy PASS in
+   route-policy PASS out
+ !
+ neighbor 2001:33:56:255::25
+  remote-as 3356
+  update-source Loopback0
+  address-family ipv6 unicast
+   next-hop-self
+   route-policy PASS in
+   route-policy PASS out
+!
+mpls ldp
+!
+mpls label range table 0 332400 332499
+telnet vrf default ipv4 server max-servers 10
+telnet vrf Mgmt-intf ipv4 server max-servers 10
+end

@@ -1,0 +1,166 @@
+Building configuration...
+
+Current configuration : 7948 bytes
+!
+! Last configuration change at Mon Jan 1 01:00:01 2026 by cisco
+!
+version 17.9
+service timestamps debug datetime msec
+service timestamps log datetime msec
+service sequence-numbers
+no service call-home
+platform qfp utilization monitor load 80
+platform punt-keepalive disable-kernel-core
+platform console serial
+!
+hostname BLUE-84
+!
+boot-start-marker
+boot-end-marker
+!
+vrf definition MGMNT
+ rd 999:999
+ !
+ address-family ipv4
+ exit-address-family
+ !
+ address-family ipv6
+ exit-address-family
+!
+no logging console
+no aaa new-model
+ip icmp rate-limit unreachable 1
+!
+no ip domain lookup
+ip domain name netdesign.zone
+!
+login on-success log
+ipv6 unicast-routing
+!
+subscriber templating
+!
+multilink bundle-name authenticated
+!
+license udi pid C8000V sn 9VJ2CUPP4AW
+license boot level network-advantage addon dna-advantage
+diagnostic bootup level minimal
+memory free low-watermark processor 63718
+!
+spanning-tree extend system-id
+!
+enable password cisco
+!
+username cisco privilege 15 password 0 cisco
+!
+redundancy
+!
+interface Loopback0
+ ip address 144.144.255.254 255.255.255.255
+ ipv6 address 2001:144:144:255::254/128
+!
+interface GigabitEthernet1
+ ip address 33.56.248.84 255.255.255.0
+ negotiation auto
+ ipv6 address FE80::84 link-local
+ ipv6 address 2001:33:56:248::84/64
+ no mop enabled
+ no mop sysid
+ no shutdown
+!
+interface GigabitEthernet2
+ ip address 33.56.228.84 255.255.255.0
+ negotiation auto
+ ipv6 address FE80::84 link-local
+ ipv6 address 2001:33:56:228::84/64
+ no mop enabled
+ no mop sysid
+ no shutdown
+!
+interface GigabitEthernet3
+ ip address 172.16.99.254 255.255.255.0
+ negotiation auto
+ ipv6 address FE80::84 link-local
+ ipv6 address 2001:DB8:7484::84/64
+ no mop enabled
+ no mop sysid
+ no shutdown
+!
+interface GigabitEthernet4
+ no ip address
+ negotiation auto
+ no mop enabled
+ no mop sysid
+!
+router bgp 144
+ bgp router-id 144.144.255.254
+ bgp log-neighbor-changes
+ no bgp default ipv4-unicast
+ neighbor 2001:33:56:228::22 remote-as 3356
+ neighbor 2001:33:56:248::24 remote-as 3356
+ neighbor 2001:DB8:7484::74 remote-as 144
+ neighbor 33.56.228.22 remote-as 3356
+ neighbor 33.56.248.24 remote-as 3356
+ neighbor 172.16.99.1 remote-as 144
+ !
+ address-family ipv4
+  network 144.144.0.0
+  network 144.144.255.254 mask 255.255.255.255
+  neighbor 33.56.228.22 activate
+  neighbor 33.56.248.24 activate
+  neighbor 172.16.99.1 activate
+ exit-address-family
+ !
+ address-family ipv6
+  network 2001:144:144::/48
+  network 2001:144:144:255::254/128
+  neighbor 2001:33:56:228::22 activate
+  neighbor 2001:33:56:248::24 activate
+  neighbor 2001:DB8:7484::74 activate
+ exit-address-family
+!
+no ip forward-protocol nd
+no ip http server
+ip http secure-server
+!
+ip route 144.144.0.0 255.255.0.0 Null0
+!
+ipv6 route 2001:144:144::/48 Null0
+!
+control-plane
+!
+mgcp behavior rsip-range tgcp-only
+mgcp behavior comedia-role none
+mgcp behavior comedia-check-media-src disable
+mgcp behavior comedia-sdp-force disable
+!
+mgcp profile default
+!
+line con 0
+ exec-timeout 0 0
+ privilege level 15
+ password cisco
+ logging synchronous
+ stopbits 1
+line aux 0
+line vty 0 2
+ exec-timeout 0 0
+ privilege level 15
+ password cisco
+ login local
+ length 0
+ transport input telnet ssh
+line vty 3 4
+ exec-timeout 0 0
+ password cisco
+ login local
+ transport input telnet ssh
+!
+call-home
+ ! If contact email address in call-home is configured as sch-smart-licensing@cisco.com
+ ! the email address configured in Cisco Smart License Portal will be used as contact email address to send SCH notifications.
+ contact-email-addr sch-smart-licensing@cisco.com
+ profile "CiscoTAC-1"
+  no active
+  destination transport-method http
+!
+end

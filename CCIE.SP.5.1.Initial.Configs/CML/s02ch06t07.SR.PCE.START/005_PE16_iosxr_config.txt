@@ -1,0 +1,375 @@
+
+Building configuration...
+!! IOS XR Configuration 7.9.2
+!! Last configuration change at Mon Jan 1 01:00:01 2026 by cisco
+!
+hostname PE16
+logging console disable
+service timestamps log datetime msec
+service timestamps debug datetime msec
+domain name netdesign.zone
+domain lookup disable
+username cisco
+ group root-lr
+ group cisco-support
+ password 7 01100F175804
+!
+username admin
+ group root-lr
+ group cisco-support
+ password 7 02050D480809
+!
+username lab
+ group root-lr
+ group cisco-support
+ password 7 02050D480809
+!
+vrf RED
+ rd 1239:100
+ address-family ipv4 unicast
+  import route-policy SET-TE-RED
+  import route-target
+   1239:100
+  !
+  export route-policy SET-TE-RED
+  export route-target
+   1239:100
+ !
+ address-family ipv6 unicast
+  import route-target
+   1239:100
+  !
+  export route-target
+   1239:100
+!
+line template vty
+ timestamp disable
+ exec-timeout 0 0
+!
+line console
+ timestamp disable
+ exec-timeout 0 0
+ absolute-timeout 0
+ session-timeout 0
+!
+line default
+ timestamp disable
+ exec-timeout 0 0
+ absolute-timeout 0
+ session-timeout 0
+!
+icmp ipv4 rate-limit unreachable disable
+call-home
+ service active
+ contact smart-licensing
+ profile CiscoTAC-1
+  no active
+  destination transport-method email disable
+  destination transport-method http
+!
+interface Bundle-Ether1516
+ ipv4 address 12.39.56.16 255.255.255.0
+ ipv6 address fe80::16 link-local
+ ipv6 address 2001:12:39:56::16/64
+ no shutdown
+!
+interface Loopback0
+ ipv4 address 12.39.255.16 255.255.255.255
+ ipv6 address 2001:12:39:255::16/128
+ ipv6 address fc00:0:1216::1/128
+!
+interface MgmtEth0/RP0/CPU0/0
+ shutdown
+!
+interface GigabitEthernet0/0/0/0
+ bundle id 1516 mode active
+ no shutdown
+!
+interface GigabitEthernet0/0/0/1
+ bundle id 1516 mode active
+ no shutdown
+!
+interface GigabitEthernet0/0/0/2
+ ipv4 address 12.39.36.16 255.255.255.0
+ ipv6 address fe80::16 link-local
+ ipv6 address 2001:12:39:36::16/64
+ no shutdown
+!
+interface GigabitEthernet0/0/0/3
+ ipv4 address 12.39.68.16 255.255.255.0
+ ipv6 address fe80::16 link-local
+ ipv6 address 2001:12:39:68::16/64
+ no shutdown
+!
+interface GigabitEthernet0/0/0/4
+ ipv4 address 12.39.162.16 255.255.255.0
+ ipv6 address fe80::16 link-local
+ ipv6 address 2001:12:39:162::16/64
+ no shutdown
+!
+interface GigabitEthernet0/0/0/5
+ ipv4 address 33.56.162.16 255.255.255.0
+ ipv6 address fe80::16 link-local
+ ipv6 address 2001:33:56:162::16/64
+ no shutdown
+!
+interface GigabitEthernet0/0/0/6
+ vrf RED
+ ipv4 address 12.39.167.16 255.255.255.0
+ ipv6 address fe80::16 link-local
+ ipv6 address 2001:12:39:167::16/64
+ load-interval 30
+ no shutdown
+!
+interface GigabitEthernet0/0/0/6.71 l2transport
+ encapsulation dot1q 71
+!
+interface GigabitEthernet0/0/0/6.81 l2transport
+ encapsulation dot1q 81
+ rewrite ingress tag pop 1 symmetric
+ mtu 1518
+!
+interface GigabitEthernet0/0/0/6.101 l2transport
+ encapsulation dot1q 101
+ rewrite ingress tag pop 1 symmetric
+!
+interface GigabitEthernet0/0/0/7
+ shutdown
+!
+interface GigabitEthernet0/0/0/8
+ shutdown
+!
+interface GigabitEthernet0/0/0/9
+ shutdown
+!
+extcommunity-set opaque TE-RED
+  131
+end-set
+!
+route-policy DROP
+  drop
+end-policy
+!
+route-policy PASS
+  pass
+end-policy
+!
+route-policy SET-TE-RED
+  set extcommunity color TE-RED
+  pass
+end-policy
+!
+router isis AS1239
+ is-type level-2-only
+ net 49.1239.0000.0000.0016.00
+ distribute link-state
+ log adjacency changes
+ affinity-map RED bit-position 10
+ address-family ipv4 unicast
+  metric-style wide
+  advertise link attributes
+  mpls traffic-eng level-2-only
+  mpls traffic-eng router-id Loopback0
+  segment-routing mpls sr-prefer
+  mpls ldp auto-config
+ !
+ address-family ipv6 unicast
+  metric-style wide
+  segment-routing srv6
+   locator AS1239_SR
+    level 2
+ !
+ flex-algo 131
+  advertise-definition
+  affinity exclude-any RED
+ !
+ interface Bundle-Ether1516
+  suppressed
+  point-to-point
+  address-family ipv4 unicast
+  !
+  address-family ipv6 unicast
+ !
+ interface Loopback0
+  address-family ipv4 unicast
+   prefix-sid index 16
+   prefix-sid algorithm 131 index 1316
+  !
+  address-family ipv6 unicast
+ !
+ interface GigabitEthernet0/0/0/2
+  suppressed
+  point-to-point
+  address-family ipv4 unicast
+  !
+  address-family ipv6 unicast
+ !
+ interface GigabitEthernet0/0/0/3
+  suppressed
+  affinity flex-algo RED
+  point-to-point
+  address-family ipv4 unicast
+  !
+  address-family ipv6 unicast
+ !
+ interface GigabitEthernet0/0/0/4
+  suppressed
+  point-to-point
+  address-family ipv4 unicast
+  !
+  address-family ipv6 unicast
+!
+router ospf RED72
+ vrf RED
+  router-id 12.39.167.16
+  redistribute bgp 1239 metric 10 metric-type 1
+  area 0
+   interface GigabitEthernet0/0/0/6
+    network point-to-point
+!
+router ospfv3 RED72
+ vrf RED
+  router-id 12.39.167.16
+  redistribute bgp 1239 metric 10 metric-type 1
+  area 0
+   interface GigabitEthernet0/0/0/6
+    network point-to-point
+!
+router bgp 1239
+ address-family ipv4 unicast
+ !
+ address-family vpnv4 unicast
+ !
+ address-family ipv6 unicast
+ !
+ address-family vpnv6 unicast
+ !
+ address-family l2vpn evpn
+ !
+ af-group AF-AS1239-V4 address-family ipv4 unicast
+  next-hop-self
+  route-policy PASS in
+  route-policy PASS out
+ !
+ af-group AF-AS1239-V6 address-family ipv6 unicast
+  next-hop-self
+  route-policy PASS in
+  route-policy PASS out
+ !
+ af-group AF-AS1239-EVPN address-family l2vpn evpn
+  route-policy PASS in
+  route-policy PASS out
+ !
+ af-group AF-AS1239-VPNV4 address-family vpnv4 unicast
+  route-policy PASS in
+  route-policy PASS out
+ !
+ af-group AF-AS1239-VPNV6 address-family vpnv6 unicast
+  route-policy PASS in
+  route-policy PASS out
+ !
+ session-group SG-AS1239
+  remote-as 1239
+  update-source Loopback0
+ !
+ neighbor 12.39.162.23
+  remote-as 3356
+  address-family ipv4 unicast
+   route-policy PASS in
+   route-policy PASS out
+ !
+ neighbor 12.39.255.17
+  use session-group SG-AS1239
+  address-family ipv4 unicast
+   use af-group AF-AS1239-V4
+  !
+  address-family vpnv4 unicast
+   use af-group AF-AS1239-VPNV4
+  !
+  address-family vpnv6 unicast
+   use af-group AF-AS1239-VPNV6
+  !
+  address-family l2vpn evpn
+   use af-group AF-AS1239-EVPN
+ !
+ neighbor 33.56.162.21
+  remote-as 3356
+  address-family ipv4 unicast
+   route-policy PASS in
+   route-policy PASS out
+ !
+ neighbor 2001:12:39:162::23
+  remote-as 3356
+  address-family ipv6 unicast
+   route-policy PASS in
+   route-policy PASS out
+ !
+ neighbor 2001:12:39:255::17
+  use session-group SG-AS1239
+  address-family ipv6 unicast
+   use af-group AF-AS1239-V6
+ !
+ neighbor 2001:33:56:162::21
+  remote-as 3356
+  address-family ipv6 unicast
+   route-policy PASS in
+   route-policy PASS out
+ !
+ vrf RED
+  rd 1239:100
+  address-family ipv4 unicast
+   redistribute ospf RED72 metric 10
+  !
+  address-family ipv6 unicast
+   redistribute ospfv3 RED72 metric 10
+!
+l2vpn
+ xconnect group 1116
+  p2p RED7172
+   interface GigabitEthernet0/0/0/6.71
+   neighbor ipv4 12.39.255.18 pw-id 1116
+ !
+ xconnect group 1316
+  p2p BLUE82RED72
+   interface GigabitEthernet0/0/0/6.81
+   neighbor ipv4 12.39.255.13 pw-id 8272
+ !
+ xconnect group EVPN-VPWS
+  p2p PE11-PE16
+   interface GigabitEthernet0/0/0/6.101
+   neighbor evpn evi 101 target 101 source 101
+!
+mpls oam
+!
+mpls traffic-eng
+!
+mpls ldp
+ router-id 12.39.255.16
+!
+segment-routing
+ traffic-eng
+  on-demand color 131
+   dynamic
+    affinity
+     exclude-any
+      name RED
+  !
+  pcc
+   source-address ipv4 12.39.255.16
+   pce address ipv4 12.39.255.17
+   !
+   pce address ipv4 12.39.255.18
+ !
+ srv6
+  encapsulation
+   source-address fc00:0:1216::1
+  !
+  locators
+   locator AS1239_SR
+    micro-segment behavior unode psp-usd
+    prefix fc00:0:1216::/48
+!
+mpls label range table 0 121600 121699
+telnet vrf default ipv4 server max-servers 10
+telnet vrf Mgmt-intf ipv4 server max-servers 10
+end

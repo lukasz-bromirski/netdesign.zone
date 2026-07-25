@@ -1,0 +1,130 @@
+Building configuration...
+
+Current configuration : 7595 bytes
+!
+! Last configuration change at Mon Jan 1 01:00:01 2026 by cisco
+!
+version 17.9
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service call-home
+platform qfp utilization monitor load 80
+platform punt-keepalive disable-kernel-core
+platform console serial
+!
+hostname P25
+!
+boot-start-marker
+boot-end-marker
+!
+vrf definition MGMNT
+ rd 999:999
+ !
+ address-family ipv4
+ exit-address-family
+ !
+ address-family ipv6
+ exit-address-family
+!
+no logging console
+no aaa new-model
+ip icmp rate-limit unreachable 1
+!
+no ip domain lookup
+ip domain name netdesign.zone
+!
+login on-success log
+ipv6 unicast-routing
+!
+subscriber templating
+!
+multilink bundle-name authenticated
+!
+license udi pid C8000V sn 9U4HS930VIW
+license boot level network-advantage addon dna-advantage
+diagnostic bootup level minimal
+memory free low-watermark processor 63718
+!
+spanning-tree extend system-id
+!
+enable password cisco
+!
+username cisco privilege 15 password 0 cisco
+!
+redundancy
+!
+interface Loopback0
+ ip address 33.56.255.25 255.255.255.255
+ ipv6 address 2001:33:56:255::25/128
+!
+interface GigabitEthernet1
+ ip address 33.56.15.25 255.255.255.0
+ negotiation auto
+ ipv6 address FE80::25 link-local
+ ipv6 address 2001:33:56:15::25/64
+ no mop enabled
+ no mop sysid
+ no shutdown
+!
+interface GigabitEthernet2
+ ip address 33.56.25.25 255.255.255.0
+ negotiation auto
+ ipv6 address FE80::25 link-local
+ ipv6 address 2001:33:56:25::25/64
+ no mop enabled
+ no mop sysid
+ no shutdown
+!
+interface GigabitEthernet3
+ ip address 33.56.45.25 255.255.255.0
+ negotiation auto
+ ipv6 address FE80::25 link-local
+ ipv6 address 2001:33:56:45::25/64
+ no mop enabled
+ no mop sysid
+ no shutdown
+!
+interface GigabitEthernet4
+ ip address 33.56.35.25 255.255.255.0
+ negotiation auto
+ ipv6 address FE80::25 link-local
+ ipv6 address 2001:33:56:35::25/64
+ no mop enabled
+ no mop sysid
+ no shutdown
+!
+no ip forward-protocol nd
+no ip http server
+no ip http secure-server
+!
+control-plane
+!
+mgcp behavior rsip-range tgcp-only
+mgcp behavior comedia-role none
+mgcp behavior comedia-check-media-src disable
+mgcp behavior comedia-sdp-force disable
+!
+mgcp profile default
+!
+line con 0
+ exec-timeout 0 0
+ privilege level 15
+ password cisco
+ logging synchronous
+ stopbits 1
+line aux 0
+line vty 0 4
+ exec-timeout 0 0
+ privilege level 15
+ password cisco
+ login local
+ length 0
+ transport input telnet ssh
+!
+call-home
+ contact-email-addr sch-smart-licensing@cisco.com
+ profile "CiscoTAC-1"
+  no active
+  destination transport-method http
+!
+end

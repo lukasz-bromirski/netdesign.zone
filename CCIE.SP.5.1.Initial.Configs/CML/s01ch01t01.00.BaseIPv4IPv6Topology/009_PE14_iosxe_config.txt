@@ -1,0 +1,147 @@
+Building configuration...
+
+Current configuration : 7950 bytes
+!
+! Last configuration change at Mon Jan 1 01:00:01 2026 by cisco
+!
+version 17.3
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service call-home
+platform qfp utilization monitor load 80
+platform punt-keepalive disable-kernel-core
+platform console serial
+!
+hostname PE14
+!
+boot-start-marker
+boot-end-marker
+!
+no logging console
+enable password cisco
+!
+no aaa new-model
+ip icmp rate-limit unreachable 1
+!
+no ip domain lookup
+ip domain name netdesign.zone
+!
+login on-success log
+ipv6 unicast-routing
+!
+subscriber templating
+!
+multilink bundle-name authenticated
+!
+license udi pid CSR1000V sn 92OJAWIULZP
+diagnostic bootup level minimal
+memory free low-watermark processor 71465
+!
+spanning-tree extend system-id
+!
+username cisco privilege 15 password 0 cisco
+!
+redundancy
+!
+interface Loopback0
+ ip address 12.39.255.14 255.255.255.255
+ ipv6 address 2001:12:39:255::14/128
+!
+interface GigabitEthernet1
+ ip address 12.39.45.14 255.255.255.0
+ load-interval 30
+ negotiation auto
+ ipv6 address FE80::14 link-local
+ ipv6 address 2001:12:39:45::14/64
+ 
+ no mop enabled
+ no mop sysid
+ no shutdown
+!
+interface GigabitEthernet2
+ ip address 12.39.14.14 255.255.255.0
+ load-interval 30
+ negotiation auto
+ ipv6 address FE80::14 link-local
+ ipv6 address 2001:12:39:14::14/64
+ no mop enabled
+ no mop sysid
+ no shutdown
+!
+interface GigabitEthernet3
+ ip address 12.39.47.14 255.255.255.0
+ load-interval 30
+ negotiation auto
+ ipv6 address FE80::14 link-local
+ ipv6 address 2001:12:39:47::14/64
+ no mop enabled
+ no mop sysid
+ no shutdown
+!
+interface GigabitEthernet4
+ ip address 12.39.148.14 255.255.255.0
+ load-interval 30
+ negotiation auto
+ ipv6 address FE80::14 link-local
+ ipv6 address 2001:12:39:148::14/64
+ no mop enabled
+ no mop sysid
+ no shutdown
+!
+interface GigabitEthernet5
+ ip address 12.39.147.14 255.255.255.0
+ load-interval 30
+ negotiation auto
+ ipv6 address FE80::14 link-local
+ ipv6 address 2001:12:39:147::14/64
+ no mop enabled
+ no mop sysid
+ no shutdown
+!
+interface GigabitEthernet6
+ ip address 12.39.149.14 255.255.255.0
+ load-interval 30
+ negotiation auto
+ ipv6 address FE80::14 link-local
+ ipv6 address 2001:12:39:149::14/64
+ no mop enabled
+ no mop sysid
+ no shutdown
+!
+interface GigabitEthernet7
+ no ip address
+ negotiation auto
+ no mop enabled
+ no mop sysid
+!
+interface GigabitEthernet8
+ no ip address
+ negotiation auto
+ no mop enabled
+ no mop sysid
+!
+no ip forward-protocol nd
+no ip http server
+no ip http secure-server
+!
+control-plane
+!
+line con 0
+ exec-timeout 0 0
+ privilege level 15
+ password cisco
+ logging synchronous
+ stopbits 1
+line vty 0 4
+ exec-timeout 0 0
+ password cisco
+ login local
+ transport input telnet ssh
+!
+call-home
+ contact-email-addr sch-smart-licensing@cisco.com
+ profile "CiscoTAC-1"
+  no active
+  destination transport-method http
+!
+end

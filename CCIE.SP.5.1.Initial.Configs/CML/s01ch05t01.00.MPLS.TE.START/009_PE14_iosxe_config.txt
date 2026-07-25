@@ -1,0 +1,214 @@
+Building configuration...
+
+Current configuration : 6841 bytes
+!
+! Last configuration change at Mon Jan 1 01:00:01 2026 by cisco
+!
+version 17.3
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service call-home
+platform qfp utilization monitor load 80
+platform punt-keepalive disable-kernel-core
+platform console serial
+!
+hostname PE14
+!
+boot-start-marker
+boot-end-marker
+!
+vrf definition MGMNT
+ rd 999:999
+ !
+ address-family ipv4
+ exit-address-family
+ !
+ address-family ipv6
+ exit-address-family
+!
+no logging console
+enable password cisco
+!
+no aaa new-model
+ip icmp rate-limit unreachable 1
+!
+no ip domain lookup
+ip domain name netdesign.zone
+!
+login on-success log
+ipv6 unicast-routing
+!
+subscriber templating
+!
+mpls label range 121400 121499
+multilink bundle-name authenticated
+!
+license udi pid CSR1000V sn 9CWAYD854CU
+diagnostic bootup level minimal
+memory free low-watermark processor 71465
+!
+spanning-tree extend system-id
+!
+username cisco privilege 15 password 0 cisco
+!
+redundancy
+!
+interface Loopback0
+ ip address 12.39.255.14 255.255.255.255
+ ip router isis AS1239
+ ipv6 address 2001:12:39:255::14/128
+ ipv6 router isis AS1239
+!
+interface GigabitEthernet1
+ ip address 12.39.45.14 255.255.255.0
+ ip router isis AS1239
+ load-interval 30
+ negotiation auto
+ ipv6 address FE80::14 link-local
+ ipv6 address 2001:12:39:45::14/64
+ ipv6 router isis AS1239
+ no shutdown
+ no mop sysid
+ isis network point-to-point
+ no isis advertise prefix
+!
+interface GigabitEthernet2
+ ip address 12.39.14.14 255.255.255.0
+ ip router isis AS1239
+ load-interval 30
+ negotiation auto
+ ipv6 address FE80::14 link-local
+ ipv6 address 2001:12:39:14::14/64
+ ipv6 router isis AS1239
+ no shutdown
+ no mop sysid
+ isis network point-to-point
+ no isis advertise prefix
+!
+interface GigabitEthernet3
+ ip address 12.39.47.14 255.255.255.0
+ ip router isis AS1239
+ load-interval 30
+ negotiation auto
+ ipv6 address FE80::14 link-local
+ ipv6 address 2001:12:39:47::14/64
+ ipv6 router isis AS1239
+ no shutdown
+ no mop sysid
+ isis network point-to-point
+ no isis advertise prefix
+!
+interface GigabitEthernet4
+ ip address 12.39.148.14 255.255.255.0
+ load-interval 30
+ negotiation auto
+ ipv6 address FE80::14 link-local
+ ipv6 address 2001:12:39:148::14/64
+ no shutdown
+ no mop sysid
+!
+interface GigabitEthernet5
+ ip address 12.39.147.14 255.255.255.0
+ load-interval 30
+ negotiation auto
+ ipv6 address FE80::14 link-local
+ ipv6 address 2001:12:39:147::14/64
+ no shutdown
+ no mop sysid
+!
+interface GigabitEthernet6
+ ip address 12.39.149.14 255.255.255.0
+ load-interval 30
+ negotiation auto
+ ipv6 address FE80::14 link-local
+ ipv6 address 2001:12:39:149::14/64
+ no shutdown
+ no mop sysid
+!
+interface GigabitEthernet7
+ no ip address
+ shutdown
+ negotiation auto
+ no shutdown
+ no mop sysid
+!
+interface GigabitEthernet8
+ no ip address
+ shutdown
+ negotiation auto
+ no shutdown 
+ no mop sysid
+!
+router isis AS1239
+ net 49.1239.0000.0000.0014.00
+ is-type level-2-only
+ metric-style wide
+ !
+ address-family ipv6
+  multi-topology
+ exit-address-family
+ mpls ldp autoconfig
+!
+router bgp 1239
+ template peer-policy AS1239_PEER
+  next-hop-self
+  send-community both
+ exit-peer-policy
+ !
+ template peer-session AS1239_SESSION
+  remote-as 1239
+  update-source Loopback0
+ exit-peer-session
+ !
+ bgp log-neighbor-changes
+ no bgp default ipv4-unicast
+ neighbor 12.39.147.71 remote-as 109
+ neighbor 12.39.148.81 remote-as 109
+ neighbor 12.39.255.17 inherit peer-session AS1239_SESSION
+ neighbor 2001:12:39:147::71 remote-as 109
+ neighbor 2001:12:39:148::81 remote-as 109
+ neighbor 2001:12:39:255::17 inherit peer-session AS1239_SESSION
+ !
+ address-family ipv4
+  neighbor 12.39.147.71 activate
+  neighbor 12.39.148.81 activate
+  neighbor 12.39.255.17 activate
+  neighbor 12.39.255.17 inherit peer-policy AS1239_PEER
+ exit-address-family
+ !
+ address-family ipv6
+  neighbor 2001:12:39:147::71 activate
+  neighbor 2001:12:39:148::81 activate
+  neighbor 2001:12:39:255::17 activate
+  neighbor 2001:12:39:255::17 inherit peer-policy AS1239_PEER
+ exit-address-family
+!
+no ip forward-protocol nd
+no ip http server
+no ip http secure-server
+!
+mpls ldp router-id Loopback0
+!
+control-plane
+!
+line con 0
+ exec-timeout 0 0
+ privilege level 15
+ password cisco
+ logging synchronous
+ stopbits 1
+line vty 0 4
+ exec-timeout 0 0
+ password cisco
+ login local
+ transport input telnet ssh
+!
+call-home
+ ! If contact email address in call-home is configured as sch-smart-licensing@cisco.com
+ ! the email address configured in Cisco Smart License Portal will be used as contact email address to send SCH notifications.
+ contact-email-addr sch-smart-licensing@cisco.com
+ profile "CiscoTAC-1"
+  active
+  destination transport-method http
+!
+end

@@ -1,0 +1,180 @@
+Building configuration...
+
+Current configuration : 8485 bytes
+!
+! Last configuration change at Mon Jan 1 01:00:01 2026 by cisco
+!
+version 17.9
+service timestamps debug datetime msec
+service timestamps log datetime msec
+service sequence-numbers
+no service call-home
+platform qfp utilization monitor load 80
+platform punt-keepalive disable-kernel-core
+platform console serial
+!
+hostname RED-71
+!
+boot-start-marker
+boot-end-marker
+!
+vrf definition MGMNT
+ rd 999:999
+ !
+ address-family ipv4
+ exit-address-family
+ !
+ address-family ipv6
+ exit-address-family
+!
+no logging console
+no aaa new-model
+ip icmp rate-limit unreachable 1
+!
+no ip domain lookup
+ip domain name netdesign.zone
+!
+login on-success log
+ipv6 unicast-routing
+!
+subscriber templating
+!
+multilink bundle-name authenticated
+!
+license udi pid C8000V sn 9UFZV6VRK75
+license boot level network-advantage addon dna-advantage
+diagnostic bootup level minimal
+memory free low-watermark processor 63718
+!
+spanning-tree extend system-id
+!
+enable password cisco
+!
+username cisco privilege 15 password 0 cisco
+!
+redundancy
+!
+interface Loopback0
+ ip address 109.109.255.1 255.255.255.255
+ ip ospf 71 area 0
+ ipv6 address 2001:109:109:255::1/128
+ ipv6 ospf 71 area 0
+!
+interface GigabitEthernet1
+ ip address 12.39.171.71 255.255.255.0
+ ip ospf network point-to-point
+ ip ospf 71 area 0
+ negotiation auto
+ ipv6 address FE80::71 link-local
+ ipv6 address 2001:12:39:171::71/64
+ ipv6 ospf 71 area 0
+ ipv6 ospf network point-to-point
+ no mop enabled
+ no mop sysid
+ no shutdown
+!
+interface GigabitEthernet1.71
+ encapsulation dot1Q 71
+ ip address 10.71.72.71 255.255.255.0
+ ipv6 address FE80::71 link-local
+!
+interface GigabitEthernet2
+ ip address 12.39.147.71 255.255.255.0
+ ip ospf network point-to-point
+ ip ospf 71 area 0
+ no shutdown
+ negotiation auto
+ ipv6 address FE80::71 link-local
+ ipv6 address 2001:12:39:147::71/64
+ ipv6 ospf 71 area 0
+ no mop enabled
+ no mop sysid
+!
+interface GigabitEthernet2.100
+ encapsulation dot1Q 100
+ ip address 100.100.100.71 255.255.255.0
+!
+interface GigabitEthernet3
+ ip address 172.16.66.1 255.255.255.0
+ no shutdown
+ negotiation auto
+ ipv6 address FE80::1 link-local
+ ipv6 address 2001:DB8:7181::71/64
+ no mop enabled
+ no mop sysid
+!
+interface GigabitEthernet4
+ no ip address
+ shutdown
+ negotiation auto
+ no mop enabled
+ no mop sysid
+!
+router ospfv3 71
+ router-id 109.109.255.1
+ !
+ address-family ipv6 unicast
+ exit-address-family
+!
+router ospf 71
+ router-id 109.109.255.1
+!
+router bgp 109
+ bgp router-id 109.109.255.1
+ bgp log-neighbor-changes
+ no bgp default ipv4-unicast
+ neighbor 12.39.147.14 remote-as 1239
+ neighbor 12.39.171.11 remote-as 1239
+ neighbor 2001:12:39:147::14 remote-as 1239
+ neighbor 2001:12:39:171::11 remote-as 1239
+ neighbor 2001:DB8:7181::81 remote-as 109
+ neighbor 172.16.66.254 remote-as 109
+ !
+ address-family ipv4
+  network 109.109.0.0 mask 255.255.0.0
+  network 109.109.255.1 mask 255.255.255.255
+  neighbor 12.39.147.14 activate
+  neighbor 12.39.171.11 activate
+  neighbor 172.16.66.254 activate
+ exit-address-family
+ !
+ address-family ipv6
+  network 2001:109:109::/48
+  network 2001:109:109:255::1/128
+  neighbor 2001:12:39:147::14 activate
+  neighbor 2001:12:39:171::11 activate
+  neighbor 2001:DB8:7181::81 activate
+ exit-address-family
+!
+no ip forward-protocol nd
+no ip http server
+no ip http secure-server
+!
+ip route 109.109.0.0 255.255.0.0 Null0
+!
+ipv6 route 2001:109:109::/48 Null0
+!
+control-plane
+!
+line con 0
+ exec-timeout 0 0
+ privilege level 15
+ password cisco
+ logging synchronous
+ stopbits 1
+line aux 0
+line vty 0 4
+ exec-timeout 0 0
+ privilege level 15
+ password cisco
+ login local
+ length 0
+ transport input telnet ssh
+!
+call-home
+ contact-email-addr sch-smart-licensing@cisco.com
+ profile "CiscoTAC-1"
+  no active
+  destination transport-method http
+!
+end

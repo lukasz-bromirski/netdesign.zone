@@ -1,0 +1,281 @@
+
+Building configuration...
+!! IOS XR Configuration 7.9.2
+!! Last configuration change at Mon Jan 1 01:00:01 2026 by cisco
+!
+hostname P17
+logging console disable
+service timestamps log datetime msec
+service timestamps debug datetime msec
+domain name netdesign.zone
+domain lookup disable
+username cisco
+ group root-lr
+ group cisco-support
+ password 7 045802150C2E
+!
+username admin
+ group root-lr
+ group cisco-support
+ password 7 045802150C2E
+!
+username lab
+ group root-lr
+ group cisco-support
+ password 7 14141B180F0B
+!
+vrf MGMNT
+ rd 999:999
+ address-family ipv4 unicast
+ !
+ address-family ipv6 unicast
+!
+line template vty
+ timestamp disable
+ exec-timeout 0 0
+!
+line console
+ timestamp disable
+ exec-timeout 0 0
+ absolute-timeout 0
+ session-timeout 0
+!
+line default
+ timestamp disable
+ exec-timeout 0 0
+ absolute-timeout 0
+ session-timeout 0
+!
+icmp ipv4 rate-limit unreachable disable
+call-home
+ contact smart-licensing
+ profile CiscoTAC-1
+  destination transport-method email disable
+  destination transport-method http
+!
+interface Loopback0
+ ipv4 address 12.39.255.17 255.255.255.255
+ ipv6 address 2001:12:39:255::17/128
+!
+interface MgmtEth0/RP0/CPU0/0
+ shutdown
+!
+interface GigabitEthernet0/0/0/0
+ ipv4 address 12.39.171.17 255.255.255.0
+ ipv6 address fe80::17 link-local
+ ipv6 address 2001:12:39:171::17/64
+ no shutdown
+!
+interface GigabitEthernet0/0/0/1
+ ipv4 address 12.39.178.17 255.255.255.0
+ ipv6 address fe80::17 link-local
+ ipv6 address 2001:12:39:178::17/64
+ no shutdown
+!
+interface GigabitEthernet0/0/0/2
+ ipv4 address 12.39.17.17 255.255.255.0
+ ipv6 address fe80::17 link-local
+ ipv6 address 2001:12:39:17::17/64
+ no shutdown
+!
+interface GigabitEthernet0/0/0/3
+ ipv4 address 12.39.47.17 255.255.255.0
+ ipv6 address fe80::17 link-local
+ ipv6 address 2001:12:39:47::17/64
+ no shutdown
+!
+interface GigabitEthernet0/0/0/4
+ ipv4 address 12.39.27.17 255.255.255.0
+ ipv6 address fe80::17 link-local
+ ipv6 address 2001:12:39:27::17/64
+ no shutdown
+!
+route-policy DROP
+  drop
+end-policy
+!
+route-policy PASS
+  pass
+end-policy
+!
+router static
+ address-family ipv4 unicast
+  12.39.0.0/16 Null0
+ !
+ address-family ipv6 unicast
+  2001:12:39::/48 Null0
+!
+router isis AS1239
+ is-type level-2-only
+ net 49.1239.0000.0000.0017.00
+ address-family ipv4 unicast
+  metric-style wide
+  mpls traffic-eng level-2-only
+  mpls traffic-eng router-id Loopback0
+  mpls ldp auto-config
+ !
+ address-family ipv6 unicast
+  metric-style wide
+ !
+ interface Loopback0
+  address-family ipv4 unicast
+  !
+  address-family ipv6 unicast
+ !
+ interface GigabitEthernet0/0/0/0
+  suppressed
+  point-to-point
+  address-family ipv4 unicast
+  !
+  address-family ipv6 unicast
+ !
+ interface GigabitEthernet0/0/0/1
+  suppressed
+  point-to-point
+  address-family ipv4 unicast
+  !
+  address-family ipv6 unicast
+ !
+ interface GigabitEthernet0/0/0/2
+  suppressed
+  point-to-point
+  address-family ipv4 unicast
+  !
+  address-family ipv6 unicast
+ !
+ interface GigabitEthernet0/0/0/3
+  suppressed
+  point-to-point
+  address-family ipv4 unicast
+  !
+  address-family ipv6 unicast
+ !
+ interface GigabitEthernet0/0/0/4
+  suppressed
+  point-to-point
+  address-family ipv4 unicast
+  !
+  address-family ipv6 unicast
+!
+router bgp 1239
+ address-family ipv4 unicast
+  network 12.39.0.0/16
+ !
+ address-family ipv6 unicast
+  network 2001:12:39::/48
+ !
+ af-group AF-AS1239-V4 address-family ipv4 unicast
+  route-policy PASS in
+  route-reflector-client
+  route-policy PASS out
+ !
+ af-group AF-AS1239-V6 address-family ipv6 unicast
+  route-policy PASS in
+  route-reflector-client
+  route-policy PASS out
+ !
+ session-group SG-AS1239
+  remote-as 1239
+  update-source Loopback0
+ !
+ neighbor 12.39.255.11
+  use session-group SG-AS1239
+  address-family ipv4 unicast
+   use af-group AF-AS1239-V4
+ !
+ neighbor 12.39.255.12
+  use session-group SG-AS1239
+  address-family ipv4 unicast
+   use af-group AF-AS1239-V4
+ !
+ neighbor 12.39.255.13
+  use session-group SG-AS1239
+  address-family ipv4 unicast
+   use af-group AF-AS1239-V4
+ !
+ neighbor 12.39.255.14
+  use session-group SG-AS1239
+  address-family ipv4 unicast
+   use af-group AF-AS1239-V4
+ !
+ neighbor 12.39.255.15
+  use session-group SG-AS1239
+  address-family ipv4 unicast
+   use af-group AF-AS1239-V4
+ !
+ neighbor 12.39.255.16
+  use session-group SG-AS1239
+  address-family ipv4 unicast
+   use af-group AF-AS1239-V4
+ !
+ neighbor 12.39.255.18
+  use session-group SG-AS1239
+  address-family ipv4 unicast
+   use af-group AF-AS1239-V4
+ !
+ neighbor 2001:12:39:255::11
+  use session-group SG-AS1239
+  address-family ipv6 unicast
+   use af-group AF-AS1239-V6
+ !
+ neighbor 2001:12:39:255::12
+  use session-group SG-AS1239
+  address-family ipv6 unicast
+   use af-group AF-AS1239-V6
+ !
+ neighbor 2001:12:39:255::13
+  use session-group SG-AS1239
+  address-family ipv6 unicast
+   use af-group AF-AS1239-V6
+ !
+ neighbor 2001:12:39:255::14
+  use session-group SG-AS1239
+  address-family ipv6 unicast
+   use af-group AF-AS1239-V6
+ !
+ neighbor 2001:12:39:255::15
+  use session-group SG-AS1239
+  address-family ipv6 unicast
+   use af-group AF-AS1239-V6
+ !
+ neighbor 2001:12:39:255::16
+  use session-group SG-AS1239
+  address-family ipv6 unicast
+   use af-group AF-AS1239-V6
+ !
+ neighbor 2001:12:39:255::18
+  use session-group SG-AS1239
+  address-family ipv6 unicast
+   use af-group AF-AS1239-V6
+!
+mpls oam
+!
+rsvp
+ interface GigabitEthernet0/0/0/0
+ !
+ interface GigabitEthernet0/0/0/1
+ !
+ interface GigabitEthernet0/0/0/2
+ !
+ interface GigabitEthernet0/0/0/3
+ !
+ interface GigabitEthernet0/0/0/4
+!
+mpls traffic-eng
+ interface GigabitEthernet0/0/0/0
+ !
+ interface GigabitEthernet0/0/0/1
+ !
+ interface GigabitEthernet0/0/0/2
+ !
+ interface GigabitEthernet0/0/0/3
+ !
+ interface GigabitEthernet0/0/0/4
+!
+mpls ldp
+ router-id 12.39.255.17
+!
+mpls label range table 0 121700 121799
+telnet vrf default ipv4 server max-servers 10
+telnet vrf Mgmt-intf ipv4 server max-servers 10
+end

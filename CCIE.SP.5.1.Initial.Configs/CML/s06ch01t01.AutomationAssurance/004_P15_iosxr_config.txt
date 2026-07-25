@@ -1,0 +1,198 @@
+
+Building configuration...
+!! IOS XR Configuration 7.9.2
+!! Last configuration change at Mon Jan 1 01:00:01 2026 by cisco
+!
+hostname P15
+logging console disable
+service timestamps log datetime msec
+service timestamps debug datetime msec
+domain name netdesign.zone
+domain lookup disable
+username cisco
+ group root-lr
+ group cisco-support
+ password 7 045802150C2E
+!
+username admin
+ group root-lr
+ group cisco-support
+ password 7 121A0C041104
+!
+username lab
+ group root-lr
+ group cisco-support
+ password 7 030752180500
+!
+vrf MGMNT
+ rd 999:999
+ address-family ipv4 unicast
+ !
+ address-family ipv6 unicast
+!
+line template vty
+ timestamp disable
+ exec-timeout 0 0
+!
+line console
+ timestamp disable
+ exec-timeout 0 0
+ absolute-timeout 0
+ session-timeout 0
+!
+line default
+ timestamp disable
+ exec-timeout 0 0
+ absolute-timeout 0
+ session-timeout 0
+!
+icmp ipv4 rate-limit unreachable disable
+call-home
+ service active
+ contact smart-licensing
+ profile CiscoTAC-1
+  active
+  destination transport-method email disable
+  destination transport-method http
+!
+interface Bundle-Ether1516
+ ipv4 address 12.39.56.15 255.255.255.0
+ ipv6 address fe80::15 link-local
+ ipv6 address 2001:12:39:56::15/64
+ load-interval 30
+ no shutdown
+!
+interface Loopback0
+ ipv4 address 12.39.255.15 255.255.255.255
+ ipv6 address 2001:12:39:255::15/128
+!
+interface MgmtEth0/RP0/CPU0/0
+ vrf MGMNT
+ ipv4 address 172.16.0.15 255.255.255.0
+ no shutdown
+!
+interface GigabitEthernet0/0/0/0
+ bundle id 1516 mode active
+ load-interval 30
+ no shutdown
+!
+interface GigabitEthernet0/0/0/1
+ bundle id 1516 mode active
+ load-interval 30
+ no shutdown
+!
+interface GigabitEthernet0/0/0/2
+ ipv4 address 12.39.45.15 255.255.255.0
+ ipv6 address fe80::15 link-local
+ ipv6 address 2001:12:39:45::15/64
+ load-interval 30
+ no shutdown
+!
+interface GigabitEthernet0/0/0/3
+ ipv4 address 12.39.25.15 255.255.255.0
+ ipv6 address fe80::15 link-local
+ ipv6 address 2001:12:39:25::16/64
+ load-interval 30
+ no shutdown
+!
+interface GigabitEthernet0/0/0/4
+ ipv4 address 12.39.58.15 255.255.255.0
+ ipv6 address fe80::15 link-local
+ ipv6 address 2001:12:39:58::15/64
+ load-interval 30
+ no shutdown
+!
+route-policy DROP
+  drop
+end-policy
+!
+route-policy PASS
+  pass
+end-policy
+!
+router static
+ vrf MGMNT
+  address-family ipv4 unicast
+   0.0.0.0/0 172.16.0.1
+!
+router isis AS1239
+ is-type level-2-only
+ net 49.1239.0000.0000.0015.00
+ log adjacency changes
+ address-family ipv4 unicast
+  metric-style wide
+  mpls ldp auto-config
+ !
+ address-family ipv6 unicast
+  metric-style wide
+ !
+ interface Bundle-Ether1516
+  suppressed
+  point-to-point
+  address-family ipv4 unicast
+  !
+  address-family ipv6 unicast
+ !
+ interface Loopback0
+  address-family ipv4 unicast
+  !
+  address-family ipv6 unicast
+ !
+ interface GigabitEthernet0/0/0/2
+  suppressed
+  point-to-point
+  address-family ipv4 unicast
+  !
+  address-family ipv6 unicast
+ !
+ interface GigabitEthernet0/0/0/3
+  suppressed
+  point-to-point
+  address-family ipv4 unicast
+  !
+  address-family ipv6 unicast
+ !
+ interface GigabitEthernet0/0/0/4
+  suppressed
+  point-to-point
+  address-family ipv4 unicast
+  !
+  address-family ipv6 unicast
+!
+router bgp 1239
+ address-family ipv4 unicast
+ !
+ address-family ipv6 unicast
+ !
+ af-group AF-AS1239-V4 address-family ipv4 unicast
+  route-policy PASS in
+  route-policy PASS out
+ !
+ af-group AF-AS1239-V6 address-family ipv6 unicast
+  route-policy PASS in
+  route-policy PASS out
+ !
+ session-group SG-AS1239
+  remote-as 1239
+  update-source Loopback0
+ !
+ neighbor 12.39.255.17
+  use session-group SG-AS1239
+  address-family ipv4 unicast
+   use af-group AF-AS1239-V4
+ !
+ neighbor 2001:12:39:255::17
+  use session-group SG-AS1239
+  address-family ipv6 unicast
+   use af-group AF-AS1239-V6
+!
+mpls ldp
+ router-id 12.39.255.15
+!
+mpls label range table 0 121500 121599
+ssh server v2
+ssh server vrf MGMNT
+telnet vrf MGMNT ipv4 server max-servers 10
+telnet vrf default ipv4 server max-servers 10
+telnet vrf Mgmt-intf ipv4 server max-servers 10
+end

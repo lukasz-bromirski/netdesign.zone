@@ -1,0 +1,199 @@
+Building configuration...
+
+Current configuration : 6916 bytes
+!
+! Last configuration change at Mon Jan 1 01:00:01 2026 by cisco
+!
+version 17.9
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service call-home
+platform qfp utilization monitor load 80
+platform punt-keepalive disable-kernel-core
+platform console serial
+!
+hostname PE22
+!
+boot-start-marker
+boot-end-marker
+!
+vrf definition MGMNT
+ rd 999:999
+ !
+ address-family ipv4
+ exit-address-family
+ !
+ address-family ipv6
+ exit-address-family
+!
+no logging console
+no aaa new-model
+ip icmp rate-limit unreachable 1
+!
+no ip domain lookup
+ip domain name netdesign.zone
+!
+login on-success log
+ipv6 unicast-routing
+!
+subscriber templating
+!
+mpls label range 332200 332299
+!
+multilink bundle-name authenticated
+!
+license udi pid C8000V sn 9XTLTVPHHQX
+license boot level network-advantage addon dna-advantage
+diagnostic bootup level minimal
+memory free low-watermark processor 63718
+!
+spanning-tree extend system-id
+!
+enable password cisco
+!
+username cisco privilege 15 password 0 cisco
+!
+redundancy
+!
+interface Loopback0
+ ip address 33.56.255.22 255.255.255.255
+ ip ospf 3356 area 0
+ ipv6 address 2001:33:56:255::22/128
+ ospfv3 3356 ipv6 area 0
+!
+interface GigabitEthernet1
+ ip address 33.56.12.22 255.255.255.0
+ ip ospf network point-to-point
+ ip ospf prefix-suppression
+ ip ospf 3356 area 0
+ negotiation auto
+ ipv6 address FE80::22 link-local
+ ipv6 address 2001:33:56:12::22/64
+ ospfv3 network point-to-point
+ ospfv3 prefix-suppression
+ ospfv3 3356 ipv6 area 0
+ no shutdown
+ no mop sysid
+!
+interface GigabitEthernet2
+ ip address 33.56.24.22 255.255.255.0
+ ip ospf network point-to-point
+ ip ospf prefix-suppression
+ ip ospf 3356 area 0
+ negotiation auto
+ ipv6 address FE80::22 link-local
+ ipv6 address 2001:33:56:24::22/64
+ ospfv3 network point-to-point
+ ospfv3 prefix-suppression
+ ospfv3 3356 ipv6 area 0
+ no shutdown
+ no mop sysid
+!
+interface GigabitEthernet3
+ ip address 33.56.25.22 255.255.255.0
+ ip ospf network point-to-point
+ ip ospf prefix-suppression
+ ip ospf 3356 area 0
+ negotiation auto
+ ipv6 address FE80::22 link-local
+ ipv6 address 2001:33:56:25::22/64
+ ospfv3 network point-to-point
+ ospfv3 prefix-suppression
+ ospfv3 3356 ipv6 area 0
+ no shutdown
+ no mop sysid
+!
+interface GigabitEthernet4
+ ip address 33.56.229.22 255.255.255.0
+ negotiation auto
+ ipv6 address FE80::22 link-local
+ ipv6 address 2001:33:56:229::22/64
+ no shutdown
+ no mop sysid
+!
+interface GigabitEthernet5
+ ip address 33.56.227.22 255.255.255.0
+ negotiation auto
+ ipv6 address FE80::22 link-local
+ ipv6 address 2001:33:56:227::22/64
+ no shutdown
+ no mop sysid
+!
+interface GigabitEthernet6
+ ip address 33.56.228.22 255.255.255.0
+ negotiation auto
+ ipv6 address FE80::22 link-local
+ ipv6 address 2001:33:56:228::22/64
+ no shutdown
+ no mop sysid
+!
+router ospfv3 3356
+ auto-cost reference-bandwidth 100000
+ !
+ address-family ipv6 unicast
+  area 2224 virtual-link 33.56.255.24
+ exit-address-family
+!
+router ospf 3356
+ auto-cost reference-bandwidth 100000
+ mpls ldp autoconfig
+!
+router bgp 3356
+ bgp router-id 33.56.255.22
+ bgp log-neighbor-changes
+ no bgp default ipv4-unicast
+ neighbor 2001:33:56:227::74 remote-as 144
+ neighbor 2001:33:56:228::84 remote-as 144
+ neighbor 2001:33:56:255::25 remote-as 3356
+ neighbor 2001:33:56:255::25 update-source Loopback0
+ neighbor 33.56.227.74 remote-as 144
+ neighbor 33.56.228.84 remote-as 144
+ neighbor 33.56.255.25 remote-as 3356
+ neighbor 33.56.255.25 update-source Loopback0
+ !
+ address-family ipv4
+  neighbor 33.56.227.74 activate
+  neighbor 33.56.228.84 activate
+  neighbor 33.56.255.25 activate
+  neighbor 33.56.255.25 next-hop-self
+ exit-address-family
+ !
+ address-family ipv6
+  neighbor 2001:33:56:227::74 activate
+  neighbor 2001:33:56:228::84 activate
+  neighbor 2001:33:56:255::25 activate
+  neighbor 2001:33:56:255::25 next-hop-self
+ exit-address-family
+!
+no ip forward-protocol nd
+no ip http server
+no ip http secure-server
+!
+ip bgp-community new-format
+!
+mpls ldp router-id Loopback0
+!
+control-plane
+!
+line con 0
+ exec-timeout 0 0
+ privilege level 15
+ password cisco
+ logging synchronous
+ stopbits 1
+line aux 0
+line vty 0 4
+ exec-timeout 0 0
+ privilege level 15
+ password cisco
+ login local
+ length 0
+ transport input telnet ssh
+!
+call-home
+ contact-email-addr sch-smart-licensing@cisco.com
+ profile "CiscoTAC-1"
+  no active
+  destination transport-method http
+!
+end
