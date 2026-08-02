@@ -1,0 +1,40 @@
+<config-template xmlns="http://tail-f.com/ns/config/1.0">
+  <devices xmlns="http://tail-f.com/ns/ncs">
+    <device>
+      <name>{/device}</name>
+      <config>
+
+        <!-- Branch taken for cisco-iosxr-cli-7.49 devices -->
+        <interface xmlns="http://tail-f.com/ned/cisco-ios-xr">
+          <Loopback>
+            <id>{/loopback-id}</id>
+            <description>Managed by NSO loopback-service - do not touch</description>
+            <ipv4>
+              <address>
+                <ip>{/ipv4-address}</ip>
+                <mask>255.255.255.255</mask>
+              </address>
+            </ipv4>
+          </Loopback>
+        </interface>
+
+        <!-- Branch taken for cisco-ios-cli-6.92 devices -->
+        <interface xmlns="urn:ios">
+          <Loopback>
+            <name>{/loopback-id}</name>
+            <description>Managed by NSO loopback-service - do not touch</description>
+            <ip>
+              <address>
+                <primary>
+                  <address>{/ipv4-address}</address>
+                  <mask>255.255.255.255</mask>
+                </primary>
+              </address>
+            </ip>
+          </Loopback>
+        </interface>
+
+      </config>
+    </device>
+  </devices>
+</config-template>

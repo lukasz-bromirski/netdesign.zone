@@ -1,0 +1,43 @@
+module loopback-service {
+
+  namespace "http://netdesign.zone/loopback-service";
+  prefix loopback-service;
+
+  import ietf-inet-types { prefix inet; }
+  import tailf-common    { prefix tailf; }
+  import tailf-ncs       { prefix ncs; }
+
+  description "CCIE SP v5.1 workbook - loopback provisioning service";
+
+  list loopback-service {
+    key name;
+
+    uses ncs:service-data;
+    ncs:servicepoint loopback-service-servicepoint;
+
+    leaf name {
+      tailf:info "Unique service instance name";
+      type string;
+    }
+
+    leaf device {
+      tailf:info "Target PE router";
+      mandatory true;
+      type leafref {
+        path "/ncs:devices/ncs:device/ncs:name";
+      }
+    }
+
+    leaf loopback-id {
+      tailf:info "Loopback interface number (100-199 reserved for services)";
+      mandatory true;
+      type uint16 { range "100..199"; }
+    }
+
+    leaf ipv4-address {
+      tailf:info "Loopback /32 address";
+      mandatory true;
+      type inet:ipv4-address;
+    }
+  }
+}
